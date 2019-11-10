@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tetukon"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="right"
+            android:text="@string/color_r"
+            android:textColor="@color/red"
+            android:textSize="24dp" />
+
+        <TextView
+            android:id="@+id/text_r_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:textColor="@color/red"
+            android:textSize="24dp" />
+
+        <SeekBar
+            android:id="@+id/seekbar_r"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:max="255"
+            android:progressBackgroundTint="@color/sumi"
+            android:progressTint="@color/red"
+            android:thumbTint="@color/red" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="right"
+            android:text="@string/color_g"
+            android:textColor="@color/green"
+            android:textSize="24dp" />
+
+        <TextView
+            android:id="@+id/text_g_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:textColor="@color/green"
+            android:textSize="24dp" />
+
+        <SeekBar
+            android:id="@+id/seekbar_g"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:max="255"
+            android:progressBackgroundTint="@color/sumi"
+            android:progressTint="@color/green"
+            android:thumbTint="@color/green" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="right"
+            android:text="@string/color_b"
+            android:textColor="@color/blue"
+            android:textSize="24dp" />
+
+        <TextView
+            android:id="@+id/text_b_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:textColor="@color/blue"
+            android:textSize="24dp" />
+
+        <SeekBar
+            android:id="@+id/seekbar_b"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:max="255"
+            android:progressBackgroundTint="@color/sumi"
+            android:progressTint="@color/blue"
+            android:thumbTint="@color/blue" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:id="@+id/layout_sample"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp">
+
+            <FrameLayout
+                android:id="@+id/frame_sample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/text_sample_background"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="88"
+                    android:textColor="@color/sumi"
+                    android:textSize="96dp" />
+
+                <TextView
+                    android:id="@+id/text_sample"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:textSize="96dp" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/text_now_week_sample"
+                fontPath="fonts/KSblockblock.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_sample"
+                android:textColor="@color/vert_prairie"
+                android:visibility="gone"
+                android:textSize="96dp" />
+
+            <TextView
+                android:id="@+id/text_divide_hour_and_minute_sample"
+                fontPath="fonts/7barSPBd.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_sample"
+                android:textColor="@color/vert_prairie"
+                android:visibility="gone"
+                android:textSize="96dp" />
+
+
+            <TextView
+                android:id="@+id/text_sample_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_now_week_sample"
+                android:layout_centerInParent="true"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/button_default_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_default_color_style"/>
+
+
+            <ImageButton
+                android:id="@+id/button_color_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_ok_style"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/unify_time_colors"
+                android:textColor="@color/snow_white"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_unify_colors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:theme="@style/AppTheme.CheckBox"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

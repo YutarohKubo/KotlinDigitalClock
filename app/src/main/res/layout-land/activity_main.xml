@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:text="88"
                     android:textColor="@color/sumi"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_day"
@@ -38,16 +38,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
             </FrameLayout>
 
             <TextView
+                android:id="@+id/text_title_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/frame_now_day"
                 android:layout_centerInParent="true"
                 android:text="DAY"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -71,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:text="88"
                     android:textColor="@color/sumi"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_month"
@@ -79,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
             </FrameLayout>
 
@@ -89,6 +91,7 @@
                 android:layout_below="@+id/frame_now_month"
                 android:layout_centerInParent="true"
                 android:text="MONTH"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -112,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:text="8888"
                     android:textColor="@color/sumi"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_year"
@@ -120,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="96dp" />
+                    android:textSize="@dimen/text_size_date" />
 
             </FrameLayout>
 
@@ -130,6 +133,7 @@
                 android:layout_below="@+id/frame_now_year"
                 android:layout_centerInParent="true"
                 android:text="YEAR"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -148,14 +152,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/vert_prairie"
-                android:textSize="64dp" />
+                android:textSize="@dimen/text_size_week" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_now_week"
                 android:layout_centerInParent="true"
+                android:visibility="invisible"
                 android:text="a"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/black" />
 
         </RelativeLayout>
@@ -186,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:text="88"
                     android:textColor="@color/sumi"
-                    android:textSize="144dp" />
+                    android:textSize="@dimen/text_size_hour_and_minute" />
 
                 <TextView
                     android:id="@+id/text_now_hour"
@@ -194,7 +200,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="144dp" />
+                    android:textSize="@dimen/text_size_hour_and_minute" />
 
             </FrameLayout>
 
@@ -204,6 +210,7 @@
                 android:layout_below="@+id/frame_now_hour"
                 android:layout_centerInParent="true"
                 android:text="HOUR"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -223,7 +230,7 @@
                 android:layout_marginRight="8dp"
                 android:text=":"
                 android:textColor="@color/vert_prairie"
-                android:textSize="144dp" />
+                android:textSize="@dimen/text_size_hour_and_minute" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -231,7 +238,9 @@
                 android:layout_below="@+id/text_divide_hour_and_minute"
                 android:layout_centerInParent="true"
                 android:text="a"
-                android:textColor="@color/black" />
+                android:textSize="@dimen/text_size_title"
+                android:textColor="@color/black"
+                android:visibility="invisible"/>
 
         </RelativeLayout>
 
@@ -253,7 +262,7 @@
                     android:layout_height="wrap_content"
                     android:text="88"
                     android:textColor="@color/sumi"
-                    android:textSize="144dp" />
+                    android:textSize="@dimen/text_size_hour_and_minute" />
 
                 <TextView
                     android:id="@+id/text_now_minute"
@@ -261,7 +270,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="144dp" />
+                    android:textSize="@dimen/text_size_hour_and_minute" />
 
             </FrameLayout>
 
@@ -271,6 +280,7 @@
                 android:layout_below="@+id/frame_now_minute"
                 android:layout_centerInParent="true"
                 android:text="MINUTE"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -295,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:text="88"
                     android:textColor="@color/sumi"
-                    android:textSize="64dp" />
+                    android:textSize="@dimen/text_size_second" />
 
                 <TextView
                     android:id="@+id/text_now_second"
@@ -303,7 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="64dp" />
+                    android:textSize="@dimen/text_size_second" />
 
             </FrameLayout>
 
@@ -313,6 +323,7 @@
                 android:layout_below="@+id/frame_now_second"
                 android:layout_centerInParent="true"
                 android:text="SECOND"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/snow_white" />
 
         </RelativeLayout>
@@ -347,7 +358,7 @@
                 android:layout_height="wrap_content"
                 android:text="88:88"
                 android:textColor="@color/sumi"
-                android:textSize="48dp" />
+                android:textSize="@dimen/text_size_alarm_time" />
 
             <TextView
                 android:id="@+id/text_top_alarm_time"
@@ -355,7 +366,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/vert_prairie"
-                android:textSize="48dp" />
+                android:textSize="@dimen/text_size_alarm_time" />
 
         </FrameLayout>
 

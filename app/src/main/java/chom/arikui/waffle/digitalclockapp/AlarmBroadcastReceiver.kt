@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import java.text.SimpleDateFormat
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
@@ -15,19 +16,11 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(p0: Context?, p1: Intent?) {
-        if (p0 is MainActivity) {
-            val alarmTimeArray = p0.alarmTime.split(":")
-            if (Integer.parseInt(alarmTimeArray[0]) == Integer.parseInt(hourFormat.format(p0.nowTime))
-                    && Integer.parseInt(alarmTimeArray[1]) == Integer.parseInt(minuteFormat.format(p0.nowTime))
-                    && p0.alarmCheckState
-                    && !p0.isAlarmRinging) {
-                p0.showAlarmRingingDialog()
-                p0.soundAlarm()
-                Log.i(TAG, "ringing alarm")
-            } /*else {
-                Log.i(TAG, "stop alarm")
-                p0.stopAlarm()
-            }*/
-        }
+        Log.i(TAG, "Launch Receiver")
+            val startActivityIntent = Intent(p0, AlarmRingingActivity::class.java)
+            startActivityIntent.putExtra("alarm_uri", p1?.getStringExtra("alarm_uri"))
+            startActivityIntent.putExtra("alarm_time", p1?.getStringExtra("alarm_time"))
+            startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            p0?.startActivity(startActivityIntent)
     }
 }

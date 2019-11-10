@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Digital Clock</string>
+    <string name="app_name">デジタル時計</string>
     <string name="alarm_time">Alarm time</string>
     <string name="switch_alarm_on">On</string>
     <string name="switch_alarm_off">Off</string>
@@ -9,7 +9,7 @@
     <string name="color_g">G</string>
     <string name="color_b">B</string>
     <string name="ok">OK</string>
-    <string name="unify_time_colors">unify\ntime colors</string>
-    <string name="unify_time_colors_dialog_message">All time colors will be unified.\nIs it OK?</string>
-    <string name="confirming_app_finish_dialog_message">This app will be closed.\nIs it OK?</string>
+    <string name="unify_time_colors">表示色の\n統一</string>
+    <string name="unify_time_colors_dialog_message">全ての表示時間の色を\nこの色に統一します.\nよろしいですか?</string>
+    <string name="confirming_app_finish_dialog_message">アプリを終了します.\nよろしいですか?</string>
 </resources>

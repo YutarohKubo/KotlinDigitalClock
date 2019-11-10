@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alarm"
+        android:textSize="64dp"
+        android:textColor="@color/snow_white"/>
+
+    <FrameLayout
+        android:id="@+id/frame_now_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
+
+        <TextView
+            android:id="@+id/text_alarm_time_now_ringing_background"
+            fontPath="fonts/7barSPBd.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="88:88"
+            android:textColor="@color/sumi"
+            android:textSize="96dp" />
+
+        <TextView
+            android:id="@+id/text_alarm_time_now_ringing"
+            fontPath="fonts/7barSPBd.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/vert_prairie"
+            android:textSize="96dp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/button_alarm_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_stop_style" />
+
+    </LinearLayout>
+
+</LinearLayout>

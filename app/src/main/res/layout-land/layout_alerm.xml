@@ -8,13 +8,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/button_change_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/alarm_time" />
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_set_alarm_style" />
 
         <FrameLayout
             android:id="@+id/frame_alarm_time"
