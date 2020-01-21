@@ -59,7 +59,7 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         private const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         private const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
 
-        private const val isTest = true
+        private const val isTest = false
     }
 
     lateinit var textNowDay: TextView
@@ -604,14 +604,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
             textNowMinute.setTextColor(sampleText.currentTextColor)
             textNowSecond.setTextColor(sampleText.currentTextColor)
             textTopAlarmTime.setTextColor(sampleText.currentTextColor)
-            NewAppWidget.updateTextNowDayColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowMonthColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowYearColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowWeekColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowHourColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextDivideHourAndMinuteColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowMinuteColor(this, sampleText.currentTextColor)
-            NewAppWidget.updateTextNowSecondColor(this, sampleText.currentTextColor)
             saveTextColor(textNowDay, NOW_DAY_COLOR_FILE_NAME)
             saveTextColor(textNowMonth, NOW_MONTH_COLOR_FILE_NAME)
             saveTextColor(textNowYear, NOW_YEAR_COLOR_FILE_NAME)
@@ -630,38 +622,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
                 dialog.show(supportFragmentManager, TAG)
             } else {
                 targetText.setTextColor(sampleText.currentTextColor)
-                when (v.id) {
-                    R.id.frame_now_day -> {
-                        NewAppWidget.updateTextNowDayColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_now_month -> {
-                        NewAppWidget.updateTextNowMonthColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_now_year -> {
-                        NewAppWidget.updateTextNowYearColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.text_now_week -> {
-                        NewAppWidget.updateTextNowWeekColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_now_hour -> {
-                        NewAppWidget.updateTextNowHourColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.text_divide_hour_and_minute -> {
-                        NewAppWidget.updateTextDivideHourAndMinuteColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_now_minute -> {
-                        NewAppWidget.updateTextNowMinuteColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_now_second -> {
-                        NewAppWidget.updateTextNowSecondColor(this, sampleText.currentTextColor)
-                    }
-                    R.id.frame_top_alarm_time -> {
-                        //do nothing
-                    }
-                    else -> {
-                        throw IllegalArgumentException()
-                    }
-                }
                 saveTextColor(targetText, colorFileName)
                 colorPopup?.dismiss()
             }

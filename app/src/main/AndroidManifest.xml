@@ -27,16 +27,6 @@
         <receiver
             android:name=".AlarmBroadcastReceiver"
             android:process=":remote" />
-        <receiver android:name=".NewAppWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="update_week" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/new_app_widget_info" />
-        </receiver>
     </application>
 
 </manifest>
