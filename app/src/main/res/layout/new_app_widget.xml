@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_area"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/date_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:id="@+id/layout_now_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/frame_now_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextClock
+                    android:id="@+id/text_now_day"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="dd"
+                    android:format24Hour="dd"
+                    android:textSize="@dimen/text_size_date_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/text_title_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_day"
+                android:layout_centerInParent="true"
+                android:text="DAY"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_now_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/layout_now_day">
+
+            <FrameLayout
+                android:id="@+id/frame_now_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextClock
+                    android:id="@+id/text_now_month"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="MM"
+                    android:format24Hour="MM"
+                    android:textSize="@dimen/text_size_date_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_month"
+                android:layout_centerInParent="true"
+                android:text="MONTH"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_now_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/layout_now_month">
+
+            <FrameLayout
+                android:id="@+id/frame_now_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextClock
+                    android:id="@+id/text_now_year"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="yyyy"
+                    android:format24Hour="yyyy"
+                    android:textSize="@dimen/text_size_date_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_year"
+                android:layout_centerInParent="true"
+                android:text="YEAR"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_now_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/layout_now_year"
+            android:layout_alignBottom="@+id/layout_now_year"
+            android:layout_marginLeft="20dp">
+
+            <TextView
+                android:id="@+id/text_now_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/vert_prairie"
+                android:textSize="@dimen/text_size_week_widget" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_now_week"
+                android:layout_centerInParent="true"
+                android:visibility="invisible"
+                android:text="a"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/black" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/time_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:id="@+id/layout_now_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/frame_now_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextClock
+                    android:id="@+id/text_now_hour"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="hh"
+                    android:format24Hour="HH"
+                    android:textSize="@dimen/text_size_hour_and_minute_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_hour"
+                android:layout_centerInParent="true"
+                android:text="HOUR"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_divide_hour_and_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/layout_now_hour">
+
+            <TextView
+                android:id="@+id/text_divide_hour_and_minute"
+                fontPath="fonts/7barSPBd.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text=":"
+                android:textColor="@color/vert_prairie"
+                android:textSize="@dimen/text_size_hour_and_minute_widget" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_divide_hour_and_minute"
+                android:layout_centerInParent="true"
+                android:text="a"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/black"
+                android:visibility="invisible"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_now_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/layout_divide_hour_and_minute">
+
+            <FrameLayout
+                android:id="@+id/frame_now_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextClock
+                    android:id="@+id/text_now_minute"
+                    fontPath="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="mm"
+                    android:format24Hour="mm"
+                    android:textSize="@dimen/text_size_hour_and_minute_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_minute"
+                android:layout_centerInParent="true"
+                android:text="MINUTE"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_now_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_now_hour"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/layout_now_minute">
+
+            <FrameLayout
+                android:id="@+id/frame_now_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextClock
+                    android:id="@+id/text_now_second"
+                    android:fontFamily="fonts/7barSPBd.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/vert_prairie"
+                    android:format12Hour="ss"
+                    android:format24Hour="ss"
+                    android:textSize="@dimen/text_size_second_widget" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/frame_now_second"
+                android:layout_centerInParent="true"
+                android:text="SECOND"
+                android:textSize="@dimen/text_size_title_widget"
+                android:textColor="@color/snow_white" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

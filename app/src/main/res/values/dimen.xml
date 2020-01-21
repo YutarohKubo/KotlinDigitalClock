@@ -6,4 +6,10 @@
     <dimen name="text_size_second">64dp</dimen>
     <dimen name="text_size_title">14dp</dimen>
     <dimen name="text_size_alarm_time">48dp</dimen>
+    <dimen name="text_size_date_widget">15dp</dimen>
+    <dimen name="text_size_week_widget">10dp</dimen>
+    <dimen name="text_size_hour_and_minute_widget">30dp</dimen>
+    <dimen name="text_size_second_widget">10dp</dimen>
+    <dimen name="text_size_title_widget">6dp</dimen>
+    <dimen name="text_size_alarm_time_widget">48dp</dimen>
 </resources>

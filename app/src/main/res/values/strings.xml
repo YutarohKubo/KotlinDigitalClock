@@ -12,4 +12,6 @@
     <string name="unify_time_colors">unify\ntime colors</string>
     <string name="unify_time_colors_dialog_message">All time colors will be unified.\nIs it OK?</string>
     <string name="confirming_app_finish_dialog_message">This app will be closed.\nIs it OK?</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

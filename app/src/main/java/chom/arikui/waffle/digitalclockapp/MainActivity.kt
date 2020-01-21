@@ -59,7 +59,7 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         private const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         private const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
 
-        private const val isTest = false
+        private const val isTest = true
     }
 
     lateinit var textNowDay: TextView
@@ -84,6 +84,9 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     var isTryPlayingAlarm = false
     var switchAlarm: Switch? = null
     var textNowSound: TextView? = null
+
+    private lateinit var mInterAdOpenApp: InterstitialAd
+    private lateinit var mInterAdCloseApp: InterstitialAd
 
     private val timerHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -126,6 +129,37 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this, "ca-app-pub-6669415411907480~4341324631")
+        val adRequest = AdRequest.Builder().build()
+
+        mInterAdOpenApp = InterstitialAd(this)
+        mInterAdCloseApp = InterstitialAd(this)
+
+        mInterAdOpenApp.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                //showInterstitial(mInterAdOpenApp)
+            }
+        }
+
+        mInterAdCloseApp.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                super.onAdClosed()
+                mInterAdCloseApp.loadAd(adRequest)
+            }
+        }
+
+        if (isTest) {
+            mInterAdOpenApp.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+            mInterAdCloseApp.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            mInterAdOpenApp.adUnitId = "ca-app-pub-6669415411907480/3930261093"
+            mInterAdCloseApp.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+        }
+
+        //mInterAdOpenApp.loadAd(adRequest)
+        mInterAdCloseApp.loadAd(adRequest)
 
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -220,7 +254,11 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     }
 
     override fun onBackPressed() {
-
+        showInterstitial(mInterAdCloseApp)
+        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message)) {
+            finish()
+        }
+        dialog.show(supportFragmentManager, TAG)
     }
 
     private fun showInterstitial(ad: InterstitialAd) {
@@ -566,6 +604,14 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
             textNowMinute.setTextColor(sampleText.currentTextColor)
             textNowSecond.setTextColor(sampleText.currentTextColor)
             textTopAlarmTime.setTextColor(sampleText.currentTextColor)
+            NewAppWidget.updateTextNowDayColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowMonthColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowYearColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowWeekColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowHourColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextDivideHourAndMinuteColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowMinuteColor(this, sampleText.currentTextColor)
+            NewAppWidget.updateTextNowSecondColor(this, sampleText.currentTextColor)
             saveTextColor(textNowDay, NOW_DAY_COLOR_FILE_NAME)
             saveTextColor(textNowMonth, NOW_MONTH_COLOR_FILE_NAME)
             saveTextColor(textNowYear, NOW_YEAR_COLOR_FILE_NAME)
@@ -584,6 +630,38 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
                 dialog.show(supportFragmentManager, TAG)
             } else {
                 targetText.setTextColor(sampleText.currentTextColor)
+                when (v.id) {
+                    R.id.frame_now_day -> {
+                        NewAppWidget.updateTextNowDayColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_now_month -> {
+                        NewAppWidget.updateTextNowMonthColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_now_year -> {
+                        NewAppWidget.updateTextNowYearColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.text_now_week -> {
+                        NewAppWidget.updateTextNowWeekColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_now_hour -> {
+                        NewAppWidget.updateTextNowHourColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.text_divide_hour_and_minute -> {
+                        NewAppWidget.updateTextDivideHourAndMinuteColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_now_minute -> {
+                        NewAppWidget.updateTextNowMinuteColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_now_second -> {
+                        NewAppWidget.updateTextNowSecondColor(this, sampleText.currentTextColor)
+                    }
+                    R.id.frame_top_alarm_time -> {
+                        //do nothing
+                    }
+                    else -> {
+                        throw IllegalArgumentException()
+                    }
+                }
                 saveTextColor(targetText, colorFileName)
                 colorPopup?.dismiss()
             }

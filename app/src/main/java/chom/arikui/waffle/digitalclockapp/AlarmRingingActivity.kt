@@ -1,5 +1,7 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
@@ -49,6 +51,11 @@ class AlarmRingingActivity : AppCompatActivity() {
             if (mediaPlayer?.isPlaying!!) {
                 mediaPlayer?.stop()
             }
+            val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(applicationContext, AlarmBroadcastReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            pendingIntent.cancel()
+            alarmManager.cancel(pendingIntent)
             finish()
         }
 
