@@ -59,7 +59,7 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         private const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         private const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
 
-        private const val isTest = true
+        private const val isTest = false
     }
 
     lateinit var textNowDay: TextView
