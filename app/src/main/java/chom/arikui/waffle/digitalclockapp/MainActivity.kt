@@ -14,8 +14,8 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.*
-import android.support.v7.app.AppCompatActivity
-import android.support.v4.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.*
 import android.widget.*
