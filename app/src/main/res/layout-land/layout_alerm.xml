@@ -29,7 +29,7 @@
 
             <TextView
                 android:id="@+id/text_alarm_time_background"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="88:88"
@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/text_alarm_time"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/vert_prairie"

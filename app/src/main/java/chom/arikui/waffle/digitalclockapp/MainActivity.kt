@@ -13,21 +13,23 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
-import android.os.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.io.*
 
 class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
 
@@ -633,10 +635,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
 
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
     private fun loadAlarmTime() {

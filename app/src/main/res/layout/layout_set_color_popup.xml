@@ -138,7 +138,7 @@
 
                 <TextView
                     android:id="@+id/text_sample_background"
-                    fontPath="fonts/7barSPBd.ttf"
+                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="88"
@@ -147,7 +147,7 @@
 
                 <TextView
                     android:id="@+id/text_sample"
-                    fontPath="fonts/7barSPBd.ttf"
+                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vert_prairie"
@@ -157,7 +157,7 @@
 
             <TextView
                 android:id="@+id/text_now_week_sample"
-                fontPath="fonts/KSblockblock.ttf"
+                android:fontFamily="@font/ksblockblock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/frame_sample"
@@ -167,7 +167,7 @@
 
             <TextView
                 android:id="@+id/text_divide_hour_and_minute_sample"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/frame_sample"

@@ -20,7 +20,7 @@
 
             <TextView
                 android:id="@+id/text_now_date_background"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/text_now_date"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/text_now_time_background"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/text_now_time"
-                fontPath="fonts/7barSPBd.ttf"
+                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

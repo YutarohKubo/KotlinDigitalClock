@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class AlarmRingingActivity : AppCompatActivity() {
 
@@ -72,10 +71,6 @@ class AlarmRingingActivity : AppCompatActivity() {
         if (mediaPlayer?.isPlaying!!) {
             mediaPlayer?.stop()
         }
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
     private fun hideSystemUI() {
