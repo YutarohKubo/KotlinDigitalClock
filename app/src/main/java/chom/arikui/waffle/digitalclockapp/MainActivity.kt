@@ -59,7 +59,7 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         private const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         private const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
 
-        private const val isTest = false
+        private const val isTest = true
     }
 
     lateinit var textNowDay: TextView
@@ -85,7 +85,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     var switchAlarm: Switch? = null
     var textNowSound: TextView? = null
 
-    private lateinit var mInterAdOpenApp: InterstitialAd
     private lateinit var mInterAdCloseApp: InterstitialAd
 
     private val timerHandler = object : Handler() {
@@ -130,18 +129,10 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MobileAds.initialize(this, "ca-app-pub-6669415411907480~4341324631")
+        MobileAds.initialize(this) {}
         val adRequest = AdRequest.Builder().build()
 
-        mInterAdOpenApp = InterstitialAd(this)
         mInterAdCloseApp = InterstitialAd(this)
-
-        mInterAdOpenApp.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                //showInterstitial(mInterAdOpenApp)
-            }
-        }
 
         mInterAdCloseApp.adListener = object : AdListener() {
             override fun onAdClosed() {
@@ -151,14 +142,11 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         }
 
         if (isTest) {
-            mInterAdOpenApp.adUnitId = "ca-app-pub-3940256099942544/1033173712"
             mInterAdCloseApp.adUnitId = "ca-app-pub-3940256099942544/1033173712"
         } else {
-            mInterAdOpenApp.adUnitId = "ca-app-pub-6669415411907480/3930261093"
             mInterAdCloseApp.adUnitId = "ca-app-pub-6669415411907480/8088997953"
         }
 
-        //mInterAdOpenApp.loadAd(adRequest)
         mInterAdCloseApp.loadAd(adRequest)
 
         //Screenがスリープ状態になるのを拒否
@@ -254,16 +242,16 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     }
 
     override fun onBackPressed() {
-        showInterstitial(mInterAdCloseApp)
+        showInterstitial()
         val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message)) {
             finish()
         }
         dialog.show(supportFragmentManager, TAG)
     }
 
-    private fun showInterstitial(ad: InterstitialAd) {
-        if (ad.isLoaded) {
-            ad.show()
+    private fun showInterstitial() {
+        if (mInterAdCloseApp.isLoaded) {
+            mInterAdCloseApp.show()
         }
     }
 
