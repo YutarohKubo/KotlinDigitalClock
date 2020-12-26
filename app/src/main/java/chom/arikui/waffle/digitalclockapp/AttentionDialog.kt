@@ -11,7 +11,7 @@ class AttentionDialog : DialogFragment() {
 
         lateinit var callbackOk: () -> Unit?
 
-        public fun newInstance(sentence: String, buttonOkCallback: () -> Unit?): AttentionDialog {
+        fun newInstance(sentence: String, buttonOkCallback: () -> Unit?): AttentionDialog {
             val dialog = AttentionDialog()
             val args = Bundle()
             args.putString("text", sentence)

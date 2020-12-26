@@ -2,12 +2,9 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Point
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -18,20 +15,21 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainAct"
@@ -44,25 +42,12 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         private val minuteFormat = SimpleDateFormat("mm")
         private val secondFormat = SimpleDateFormat("ss")
         private const val RELOAD_TIME_HANDLE_ID = 1
-        private const val ALARM_MONITOR_HANDLE_ID = 2
-        private const val DEFAULT_COLOR_RED_VALUE = 127
-        private const val DEFAULT_COLOR_GREEN_VALUE = 176
-        private const val DEFAULT_COLOR_BLUE_VALUE = 0
-        private const val ALARM_TIME_FILE_NAME = "alarm_time.dc"
-        private const val NOW_ALARM_SOUND_FINE_NAME = "now_alarm_sound.dc"
-        private const val ALARM_SOUND_CHECK_STATE_FILE_NAME = "alarm_sound_check_state.dc"
-        private const val NOW_DAY_COLOR_FILE_NAME = "now_day_color.dc"
-        private const val NOW_MONTH_COLOR_FILE_NAME = "now_month_color.dc"
-        private const val NOW_YEAR_COLOR_FILE_NAME = "now_year_color.dc"
-        private const val NOW_WEEK_COLOR_FILE_NAME = "now_week_color.dc"
-        private const val NOW_HOUR_COLOR_FILE_NAME = "now_hour_color.dc"
-        private const val DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME = "divide_hour_and_minute_color.dc"
-        private const val NOW_MINUTE_COLOR_FILE_NAME = "now_minute_color.dc"
-        private const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
-        private const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
 
         private const val isTest = false
     }
+
+    lateinit var settingDataHolder: ClockSettingDataHolder
+    lateinit var fileIOWrapper: FileIOWrapper
 
     lateinit var textNowDay: TextView
     lateinit var textNowMonth: TextView
@@ -74,18 +59,10 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     lateinit var textNowSecond: TextView
     lateinit var textTopAlarmTime: TextView
 
-    private var alarmPopup: PopupWindow? = null
-    private var colorPopup: PopupWindow? = null
-    private val listAlarmData = arrayListOf<RingtoneData>()
+    val listAlarmData = arrayListOf<RingtoneData>()
     private var mp: MediaPlayer = MediaPlayer()
     private var imageAlarm: ImageView? = null
     var nowTime = Date()
-    var alarmTime = "00:00"
-    private var nowAlarmSound: RingtoneData? = null
-    var alarmCheckState = false
-    var isTryPlayingAlarm = false
-    var switchAlarm: Switch? = null
-    var textNowSound: TextView? = null
 
     private lateinit var mInterAdCloseApp: InterstitialAd
 
@@ -159,47 +136,49 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        loadNowAlarmSound()
-        loadAlarmTime()
-        loadAlarmCheckState()
+        settingDataHolder = ClockSettingDataHolder()
+        fileIOWrapper = FileIOWrapper(this)
+        fileIOWrapper.loadNowAlarmSound()
+        fileIOWrapper.loadAlarmTime()
+        fileIOWrapper.loadAlarmCheckState()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
             switchAlarmResource()
             top_alarm_area.setOnClickListener { _ ->
-                showAlarmPopup()
+                val popupAlarm = PopupAlarm(this)
+                popupAlarm.showPopup()
             }
 
-            textTopAlarmTime = text_top_alarm_time
-            textTopAlarmTime.text = alarmTime
-
-            frame_now_day.setOnLongClickListener(this)
+            frame_now_day.setOnLongClickListener(mLongClickListener)
             textNowDay = text_now_day
-            loadTextColor(textNowDay, NOW_DAY_COLOR_FILE_NAME)
-            frame_now_month.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+            frame_now_month.setOnLongClickListener(mLongClickListener)
             textNowMonth = text_now_month
-            loadTextColor(textNowMonth, NOW_MONTH_COLOR_FILE_NAME)
-            frame_now_year.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+            frame_now_year.setOnLongClickListener(mLongClickListener)
             textNowYear = text_now_year
-            loadTextColor(textNowYear, NOW_YEAR_COLOR_FILE_NAME)
-            text_now_week.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+            text_now_week.setOnLongClickListener(mLongClickListener)
             textNowWeek = text_now_week
-            loadTextColor(textNowWeek, NOW_WEEK_COLOR_FILE_NAME)
-            frame_now_hour.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+            frame_now_hour.setOnLongClickListener(mLongClickListener)
             textNowHour = text_now_hour
-            loadTextColor(textNowHour, NOW_HOUR_COLOR_FILE_NAME)
-            text_divide_hour_and_minute.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+            text_divide_hour_and_minute.setOnLongClickListener(mLongClickListener)
             textDivideHourAndMinute = text_divide_hour_and_minute
-            loadTextColor(textDivideHourAndMinute, DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
-            frame_now_minute.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+            frame_now_minute.setOnLongClickListener(mLongClickListener)
             textNowMinute = text_now_minute
-            loadTextColor(textNowMinute, NOW_MINUTE_COLOR_FILE_NAME)
-            frame_now_second.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+            frame_now_second.setOnLongClickListener(mLongClickListener)
             textNowSecond = text_now_second
-            loadTextColor(textNowSecond, NOW_SECOND_COLOR_FILE_NAME)
-            frame_top_alarm_time.setOnLongClickListener(this)
+            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
             textTopAlarmTime = text_top_alarm_time
-            loadTextColor(textTopAlarmTime, TOP_ALARM_TIME_COLOR_FILE_NAME)
+            textTopAlarmTime.text = settingDataHolder.alarmTime
+            fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            updateClockView()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val topAlarmArea = top_alarm_area
@@ -213,7 +192,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
                 mlpTimeArea.topMargin = 80
                 timeArea.layoutParams = mlpTimeArea
             }
-
         }
 
         val reloadTimeThread = Thread {
@@ -224,7 +202,6 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         }
 
         reloadTimeThread.start()
-
     }
 
     override fun onResume() {
@@ -257,7 +234,18 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         }
     }
 
-    private fun loadAlarmData() {
+    private val mLongClickListener = object : View.OnLongClickListener {
+        override fun onLongClick(v: View?): Boolean {
+            if (v == null) {
+                return false
+            }
+            val popupColor = PopupColor(this@MainActivity)
+            popupColor.showPopup(v)
+            return true
+        }
+    }
+
+    fun loadAlarmData() {
         val manager = RingtoneManager(this)
         manager.setType(RingtoneManager.TYPE_ALL)
         val cursor = manager.cursor
@@ -269,23 +257,21 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
     }
 
     fun switchAlarmResource() =
-            if (alarmCheckState) {
+            if (settingDataHolder.alarmCheckState) {
                 imageAlarm?.setImageResource(R.drawable.icon_alarm_setting)
-                textNowSound?.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
             } else {
                 imageAlarm?.setImageResource(R.drawable.icon_alarm_normal)
-                textNowSound?.setTextColor(ContextCompat.getColor(this, R.color.pamplemousse))
             }
 
-    private fun startAlarmManager() {
+    fun startAlarmManager() {
         val intent = Intent(this, AlarmBroadcastReceiver::class.java)
-        intent.putExtra("check_alarm", alarmCheckState)
-        intent.putExtra("alarm_uri", nowAlarmSound?.uri)
-        intent.putExtra("alarm_time", alarmTime)
+        intent.putExtra("check_alarm", settingDataHolder.alarmCheckState)
+        intent.putExtra("alarm_uri", settingDataHolder.nowAlarmSound?.uri)
+        intent.putExtra("alarm_time", settingDataHolder.alarmTime)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (alarmCheckState) {
-            val timeArray = alarmTime.split(":").map { it.trim() }
+        if (settingDataHolder.alarmCheckState) {
+            val timeArray = settingDataHolder.alarmTime.split(":").map { it.trim() }
             val cal = Calendar.getInstance()
             val calForService = Calendar.getInstance()
             cal.time = nowTime
@@ -312,8 +298,8 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         }
     }
 
-    private fun soundAlarm() {
-        mp = MediaPlayer.create(this, Uri.parse(nowAlarmSound?.uri))
+    fun soundAlarm() {
+        mp = MediaPlayer.create(this, Uri.parse(settingDataHolder.nowAlarmSound?.uri))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mp.setAudioAttributes(
                     AudioAttributes
@@ -327,502 +313,25 @@ class MainActivity() : AppCompatActivity(), View.OnLongClickListener {
         mp.start()
     }
 
-    private fun stopAlarm() {
+    fun stopAlarm() {
         if (mp.isPlaying) {
             mp.stop()
         }
     }
 
-    private fun showAlarmPopup() {
-        alarmPopup = PopupWindow(this)
-        val popupView = layoutInflater.inflate(R.layout.layout_alerm, null)
-        val textAlarmTime = popupView.findViewById<TextView>(R.id.text_alarm_time)
-        popupView.findViewById<ImageButton>(R.id.button_change_alarm_time).setOnClickListener { _ ->
-            val timeArray = alarmTime.split(":").map { it.trim() }
-            val dialog = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                alarmTime = String.format("%02d:%02d", hourOfDay, minute)
-                textAlarmTime.text = alarmTime
-                textTopAlarmTime.text = alarmTime
-                saveAlarmTime()
-                startAlarmManager()
-            }, Integer.parseInt(timeArray[0]), Integer.parseInt(timeArray[1]), true)
-
-            dialog.show()
-        }
-
-
-        textNowSound = popupView.findViewById(R.id.text_now_sound) as TextView
-        switchAlarmResource()
-        switchAlarm = popupView.findViewById(R.id.switch_alarm) as Switch
-        textNowSound?.text = nowAlarmSound?.title
-        textAlarmTime.text = alarmTime
-        textAlarmTime.setTextColor(textTopAlarmTime.currentTextColor)
-        switchAlarm?.isChecked = alarmCheckState
-        switchAlarm?.setOnCheckedChangeListener { view, isChecked ->
-            alarmCheckState = isChecked
-            switchAlarmResource()
-            saveAlarmCheckState()
-            startAlarmManager()
-            if (isChecked) {
-                Toast.makeText(this, "Alarm on", Toast.LENGTH_SHORT).show()
-            }
-        }
-        val imageListenMusic = popupView.findViewById(R.id.image_listen_music) as ImageView
-        imageListenMusic.setOnClickListener { view ->
-            if (isTryPlayingAlarm) {
-                stopAlarm()
-                (view as ImageView).setImageResource(R.drawable.play_music)
-                isTryPlayingAlarm = false
-            } else {
-                soundAlarm()
-                (view as ImageView).setImageResource(R.drawable.stop_music)
-                isTryPlayingAlarm = true
-            }
-        }
-        val listAlarm = popupView.findViewById<ListView>(R.id.list_sounds)
-        val adapterAlarm = AdapterListAlarm(this, R.layout.layout_alerm_item, listAlarmData)
-        listAlarm.adapter = adapterAlarm
-        listAlarm.setOnItemClickListener { parent, view, position, id ->
-            val listView = parent as ListView
-            nowAlarmSound = listView.getItemAtPosition(position) as RingtoneData
-            textNowSound?.text = nowAlarmSound?.title
-            saveNowAlarmSound()
-            if (isTryPlayingAlarm) {
-                stopAlarm()
-                soundAlarm()
-            }
-        }
-
-
-        alarmPopup?.contentView = popupView
-        alarmPopup?.isOutsideTouchable = true
-        alarmPopup?.isFocusable = true
-        alarmPopup?.setOnDismissListener {
-            if (mp.isPlaying) {
-                mp.stop()
-            }
-            isTryPlayingAlarm = false
-        }
-
-        val d = windowManager.defaultDisplay
-        var p2 = Point()
-        // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p2)
-
-        alarmPopup?.width = p2.x - 200
-        alarmPopup?.height = p2.y - 180
-
-        // 画面中央に表示
-        alarmPopup?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
-    }
-
-    private fun showColorPopup (v: View) {
-        colorPopup = PopupWindow(this)
-        val popupView = layoutInflater.inflate(R.layout.layout_set_color_popup, null)
-        val textRValue = popupView.findViewById<TextView>(R.id.text_r_value)
-        val textGValue = popupView.findViewById<TextView>(R.id.text_g_value)
-        val textBValue = popupView.findViewById<TextView>(R.id.text_b_value)
-        val seekBarRed = popupView.findViewById<SeekBar>(R.id.seekbar_r)
-        val seekBarGreen = popupView.findViewById<SeekBar>(R.id.seekbar_g)
-        val seekBarBlue = popupView.findViewById<SeekBar>(R.id.seekbar_b)
-        val sampleBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
-        var sampleText = popupView.findViewById<TextView>(R.id.text_sample)
-        val sampleTextTitle = popupView.findViewById<TextView>(R.id.text_sample_title)
-        val buttonDefaultColor = popupView.findViewById<ImageButton>(R.id.button_default_color)
-        val buttonColorOk = popupView.findViewById<ImageButton>(R.id.button_color_ok)
-        val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
-
-        lateinit var targetText: TextView
-        var colorFileName = ""
-
-        when (v.id) {
-            R.id.frame_now_day -> {
-                targetText = textNowDay
-                sampleText.text = textNowDay.text
-                sampleTextTitle.text = "DAY"
-                sampleText.setTextColor(textNowDay.currentTextColor)
-                colorFileName = NOW_DAY_COLOR_FILE_NAME
-            }
-            R.id.frame_now_month -> {
-                targetText = textNowMonth
-                sampleText.text = textNowMonth.text
-                sampleTextTitle.text = "MONTH"
-                sampleText.setTextColor(textNowMonth.currentTextColor)
-                colorFileName = NOW_MONTH_COLOR_FILE_NAME
-            }
-            R.id.frame_now_year -> {
-                targetText = textNowYear
-                sampleBackground.text = "8888"
-                sampleText.text = textNowYear.text
-                sampleTextTitle.text = "YEAR"
-                sampleText.setTextColor(textNowYear.currentTextColor)
-                colorFileName = NOW_YEAR_COLOR_FILE_NAME
-            }
-            R.id.text_now_week -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
-                sampleText = popupView.findViewById<TextView>(R.id.text_now_week_sample)
-                sampleText.visibility = View.VISIBLE
-                targetText = textNowWeek
-                sampleText.text = textNowWeek.text
-                sampleTextTitle.text = "WEEK of day"
-                sampleText.setTextColor(textNowWeek.currentTextColor)
-                colorFileName = NOW_WEEK_COLOR_FILE_NAME
-            }
-            R.id.frame_now_hour -> {
-                targetText = textNowHour
-                sampleText.text = textNowHour.text
-                sampleTextTitle.text = "HOUR"
-                sampleText.setTextColor(textNowHour.currentTextColor)
-                colorFileName = NOW_HOUR_COLOR_FILE_NAME
-            }
-            R.id.text_divide_hour_and_minute -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
-                popupView.findViewById<TextView>(R.id.text_sample_title).visibility = View.GONE
-                sampleText = popupView.findViewById<TextView>(R.id.text_divide_hour_and_minute_sample)
-                sampleText.visibility = View.VISIBLE
-                targetText = textDivideHourAndMinute
-                sampleText.text = textDivideHourAndMinute.text
-                sampleText.setTextColor(textDivideHourAndMinute.currentTextColor)
-                colorFileName = DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME
-            }
-            R.id.frame_now_minute -> {
-                targetText = textNowMinute
-                sampleText.text = textNowMinute.text
-                sampleTextTitle.text = "MINUTE"
-                sampleText.setTextColor(textNowMinute.currentTextColor)
-                colorFileName = NOW_MINUTE_COLOR_FILE_NAME
-            }
-            R.id.frame_now_second -> {
-                targetText = textNowSecond
-                sampleText.text = textNowSecond.text
-                sampleTextTitle.text = "SECOND"
-                sampleText.setTextColor(textNowSecond.currentTextColor)
-                colorFileName = NOW_SECOND_COLOR_FILE_NAME
-            }
-            R.id.frame_top_alarm_time -> {
-                targetText = textTopAlarmTime
-                sampleBackground.text = "88:88"
-                sampleText.text = textTopAlarmTime.text
-                sampleTextTitle.text = "ALARM TIME"
-                sampleText.setTextColor(textTopAlarmTime.currentTextColor)
-                colorFileName = TOP_ALARM_TIME_COLOR_FILE_NAME
-            }
-            else -> {
-                throw IllegalArgumentException()
-            }
-        }
-
-        val redValue = Color.red(sampleText.currentTextColor)
-        val greenValue = Color.green(sampleText.currentTextColor)
-        val blueValue = Color.blue(sampleText.currentTextColor)
-        textRValue.text = redValue.toString()
-        textGValue.text = greenValue.toString()
-        textBValue.text = blueValue.toString()
-        seekBarRed.progress = redValue
-        seekBarGreen.progress = greenValue
-        seekBarBlue.progress = blueValue
-
-        seekBarRed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                textRValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(progress, seekBarGreen.progress, seekBarBlue.progress))
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-        })
-
-        seekBarGreen.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                textGValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, progress, seekBarBlue.progress))
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-        })
-
-        seekBarBlue.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                textBValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, seekBarGreen.progress, progress))
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-        })
-
-        buttonDefaultColor.setOnClickListener { _ ->
-            textRValue.text = DEFAULT_COLOR_RED_VALUE.toString()
-            textGValue.text = DEFAULT_COLOR_GREEN_VALUE.toString()
-            textBValue.text = DEFAULT_COLOR_BLUE_VALUE.toString()
-            seekBarRed.progress = DEFAULT_COLOR_RED_VALUE
-            seekBarGreen.progress = DEFAULT_COLOR_GREEN_VALUE
-            seekBarBlue.progress = DEFAULT_COLOR_BLUE_VALUE
-            sampleText.setTextColor(Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE))
-        }
-
-        //色統一チェックボックスチェック時において、OKボタン押下時の出現アラートダイアログのOKボタンのコールバック
-        val dialogOkCallback = {
-            textNowDay.setTextColor(sampleText.currentTextColor)
-            textNowMonth.setTextColor(sampleText.currentTextColor)
-            textNowYear.setTextColor(sampleText.currentTextColor)
-            textNowWeek.setTextColor(sampleText.currentTextColor)
-            textNowHour.setTextColor(sampleText.currentTextColor)
-            textDivideHourAndMinute.setTextColor(sampleText.currentTextColor)
-            textNowMinute.setTextColor(sampleText.currentTextColor)
-            textNowSecond.setTextColor(sampleText.currentTextColor)
-            textTopAlarmTime.setTextColor(sampleText.currentTextColor)
-            saveTextColor(textNowDay, NOW_DAY_COLOR_FILE_NAME)
-            saveTextColor(textNowMonth, NOW_MONTH_COLOR_FILE_NAME)
-            saveTextColor(textNowYear, NOW_YEAR_COLOR_FILE_NAME)
-            saveTextColor(textNowWeek, NOW_WEEK_COLOR_FILE_NAME)
-            saveTextColor(textNowHour, NOW_HOUR_COLOR_FILE_NAME)
-            saveTextColor(textDivideHourAndMinute, DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
-            saveTextColor(textNowMinute, NOW_MINUTE_COLOR_FILE_NAME)
-            saveTextColor(textNowSecond, NOW_SECOND_COLOR_FILE_NAME)
-            saveTextColor(textTopAlarmTime, TOP_ALARM_TIME_COLOR_FILE_NAME)
-            colorPopup?.dismiss()
-        }
-
-        buttonColorOk.setOnClickListener { _ ->
-            if (checkBoxUnifyColor.isChecked) {
-                val dialog = AttentionDialog.newInstance(resources.getString(R.string.unify_time_colors_dialog_message), dialogOkCallback)
-                dialog.show(supportFragmentManager, TAG)
-            } else {
-                targetText.setTextColor(sampleText.currentTextColor)
-                saveTextColor(targetText, colorFileName)
-                colorPopup?.dismiss()
-            }
-        }
-
-        colorPopup?.contentView = popupView
-        colorPopup?.isOutsideTouchable = true
-        colorPopup?.isFocusable = true
-
-        val d = windowManager.defaultDisplay
-        var p2 = Point()
-        // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p2)
-
-        colorPopup?.width = p2.x - 200
-        colorPopup?.height = p2.y - 120
-
-        // 画面中央に表示
-        colorPopup?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+    fun updateClockView() {
+        textNowDay.setTextColor(settingDataHolder.colorDay)
+        textNowMonth.setTextColor(settingDataHolder.colorMonth)
+        textNowYear.setTextColor(settingDataHolder.colorYear)
+        textNowWeek.setTextColor(settingDataHolder.colorWeek)
+        textNowHour.setTextColor(settingDataHolder.colorHour)
+        textDivideHourAndMinute.setTextColor(settingDataHolder.colorDivideTime)
+        textNowMinute.setTextColor(settingDataHolder.colorMinute)
+        textNowSecond.setTextColor(settingDataHolder.colorSecond)
+        textTopAlarmTime.setTextColor(settingDataHolder.colorTopAlarmTime)
     }
 
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    }
-
-    private fun loadAlarmTime() {
-
-        try {
-            BufferedReader(InputStreamReader(this.openFileInput(ALARM_TIME_FILE_NAME))).use {
-                val line = it.readLine()
-                if (line != null) {
-                    alarmTime = line
-                }
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun saveAlarmTime() {
-        try {
-            BufferedWriter(OutputStreamWriter(this.openFileOutput(ALARM_TIME_FILE_NAME, Context.MODE_PRIVATE))).use {
-                val builder = StringBuilder()
-                builder.append(alarmTime)
-                builder.append(System.getProperty("line.separator"))
-                it.write(builder.toString())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadNowAlarmSound() {
-
-        loadAlarmData()
-
-        try {
-            BufferedReader(InputStreamReader(this.openFileInput(NOW_ALARM_SOUND_FINE_NAME))).use {
-                val line = it.readLine()
-                if (line != null) {
-                    for (data in listAlarmData) {
-                        if (line == data.uri) {
-                            nowAlarmSound = data
-                            break
-                        }
-                    }
-                }
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            if (nowAlarmSound == null) {
-                //Uriが見当たらなかった場合、listAlarmDataの一番上をアラーム音に設定する
-                nowAlarmSound = listAlarmData[0]
-            }
-        }
-    }
-
-    private fun saveNowAlarmSound() {
-        try {
-            BufferedWriter(OutputStreamWriter(this.openFileOutput(NOW_ALARM_SOUND_FINE_NAME, Context.MODE_PRIVATE))).use {
-                val builder = StringBuilder()
-                builder.append(nowAlarmSound?.uri)
-                builder.append(System.getProperty("line.separator"))
-                it.write(builder.toString())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadAlarmCheckState() {
-
-        try {
-            BufferedReader(InputStreamReader(this.openFileInput(ALARM_SOUND_CHECK_STATE_FILE_NAME))).use {
-                val line = it.readLine()
-                if (line != null) {
-                    alarmCheckState = line.toBoolean()
-                }
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun saveAlarmCheckState() {
-        try {
-            BufferedWriter(OutputStreamWriter(this.openFileOutput(ALARM_SOUND_CHECK_STATE_FILE_NAME, Context.MODE_PRIVATE))).use {
-                val builder = StringBuilder()
-                builder.append(alarmCheckState)
-                builder.append(System.getProperty("line.separator"))
-                it.write(builder.toString())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadTextColor(text: TextView, fileName: String) {
-
-        try {
-            BufferedReader(InputStreamReader(this.openFileInput(fileName))).use {
-                var redValue = 0
-                var greenValue = 0
-                var blueValue = 0
-                val line1 = it.readLine()
-                if (line1 == null) {
-                    text.setTextColor(Color.rgb(127, 176, 0))
-                    return
-                }
-                redValue = Integer.parseInt(line1)
-                val line2 = it.readLine()
-                if (line2 == null) {
-                    text.setTextColor(Color.rgb(127, 176, 0))
-                    return
-                }
-                greenValue = Integer.parseInt(line2)
-                val line3 = it.readLine()
-                if (line3 == null) {
-                    text.setTextColor(Color.rgb(127, 176, 0))
-                    return
-                }
-                blueValue = Integer.parseInt(line3)
-                text.setTextColor(Color.rgb(redValue, greenValue, blueValue))
-            }
-        } catch (e: IOException) {
-            text.setTextColor(Color.rgb(127, 176, 0))
-            e.printStackTrace()
-        }
-    }
-
-    private fun saveTextColor(text: TextView, fileName: String) {
-        try {
-            BufferedWriter(OutputStreamWriter(this.openFileOutput(fileName, Context.MODE_PRIVATE))).use {
-                val redValue = Color.red(text.currentTextColor)
-                val greenValue = Color.green(text.currentTextColor)
-                val blueValue = Color.blue(text.currentTextColor)
-                val builder = StringBuilder()
-                builder.append(redValue.toString())
-                builder.append(System.getProperty("line.separator"))
-                builder.append(greenValue.toString())
-                builder.append(System.getProperty("line.separator"))
-                builder.append(blueValue.toString())
-                builder.append(System.getProperty("line.separator"))
-                it.write(builder.toString())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onLongClick(v: View?): Boolean {
-
-        if (v == null) {
-            return false
-        }
-
-        showColorPopup(v)
-
-        return true
-    }
-
-
-    class AdapterListAlarm(val context: Context, val resource: Int, val dataList: List<RingtoneData>) : BaseAdapter() {
-
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-
-            val item = getItem(p0) as RingtoneData
-            var convertView = p1
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(resource, null)
-            }
-
-            val textAlarmTitle = convertView!!.findViewById(R.id.text_alarm_title) as TextView
-            textAlarmTitle.text = item.title
-
-            return convertView
-        }
-
-        override fun getItem(p0: Int): Any {
-            return dataList[p0]
-        }
-
-        override fun getItemId(p0: Int): Long {
-            return 0
-        }
-
-        override fun getCount(): Int {
-            return dataList.size
-        }
-
     }
 }
