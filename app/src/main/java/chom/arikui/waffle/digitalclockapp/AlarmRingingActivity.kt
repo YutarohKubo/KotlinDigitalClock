@@ -52,7 +52,7 @@ class AlarmRingingActivity : AppCompatActivity() {
             }
             val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(applicationContext, AlarmBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             pendingIntent.cancel()
             alarmManager.cancel(pendingIntent)
             finish()

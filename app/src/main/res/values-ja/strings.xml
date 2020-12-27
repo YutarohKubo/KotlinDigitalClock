@@ -12,4 +12,5 @@
     <string name="unify_time_colors">表示色の\n統一</string>
     <string name="unify_time_colors_dialog_message">全ての表示時間の色を\nこの色に統一します.\nよろしいですか?</string>
     <string name="confirming_app_finish_dialog_message">アプリを終了します.\nよろしいですか?</string>
+    <string name="need_to_allow_display_over_other_apps">アラーム機能を有効にするために、ポップアップウィンドウを許可する必要があります.\n設定画面へ移動しますか?</string>
 </resources>

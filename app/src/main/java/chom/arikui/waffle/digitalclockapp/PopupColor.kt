@@ -193,7 +193,8 @@ class PopupColor(private val activity: MainActivity) {
 
         buttonColorOk.setOnClickListener { _ ->
             if (checkBoxUnifyColor.isChecked) {
-                val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message), dialogOkCallback)
+                val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message))
+                dialog.okListener = dialogOkCallback
                 dialog.show(activity.supportFragmentManager, TAG)
             } else {
                 when (v.id) {

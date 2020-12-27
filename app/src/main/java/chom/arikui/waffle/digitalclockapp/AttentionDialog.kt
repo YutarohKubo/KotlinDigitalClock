@@ -9,17 +9,17 @@ class AttentionDialog : DialogFragment() {
 
     companion object {
 
-        lateinit var callbackOk: () -> Unit?
-
-        fun newInstance(sentence: String, buttonOkCallback: () -> Unit?): AttentionDialog {
+        fun newInstance(sentence: String): AttentionDialog {
             val dialog = AttentionDialog()
             val args = Bundle()
             args.putString("text", sentence)
             dialog.arguments = args
-            callbackOk = buttonOkCallback
             return dialog
         }
     }
+
+    var okListener: (() -> Unit)? = null
+    var negListener: (() -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -29,10 +29,10 @@ class AttentionDialog : DialogFragment() {
 
         return builder.setIcon(R.mipmap.ico_attention1).setTitle("Attention")
                 .setMessage(bundle?.getString("text")).setPositiveButton("Yes"){ dialog, which ->
-                    callbackOk()
+                    okListener?.let { it() }
                 }
                 .setNegativeButton("No"){ dialog, which ->
-
+                    negListener?.let { it() }
                 }.create()
     }
 }

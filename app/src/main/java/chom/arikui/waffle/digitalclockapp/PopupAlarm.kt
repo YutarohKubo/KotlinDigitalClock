@@ -2,6 +2,8 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.app.TimePickerDialog
 import android.graphics.Point
+import android.os.Build
+import android.provider.Settings
 import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
@@ -9,8 +11,11 @@ import androidx.core.content.ContextCompat
 
 class PopupAlarm(private val activity: MainActivity) {
 
+    var popupWindow: PopupWindow? = null
     private lateinit var textNowSound: TextView
+    lateinit var switchAlarm: SwitchCompat
     private val settingDataHolder = activity.settingDataHolder
+    private val fileIOWrapper = activity.fileIOWrapper
     private var isTryPlayingAlarm = false
 
     companion object {
@@ -18,9 +23,8 @@ class PopupAlarm(private val activity: MainActivity) {
     }
 
     fun showPopup() {
-        val popupWindow = PopupWindow(activity)
+        popupWindow = PopupWindow(activity)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_alerm, null)
-        val fileIOWrapper = activity.fileIOWrapper
 
         val textAlarmTime = popupView.findViewById<TextView>(R.id.text_alarm_time)
         popupView.findViewById<ImageButton>(R.id.button_change_alarm_time).setOnClickListener { _ ->
@@ -39,7 +43,7 @@ class PopupAlarm(private val activity: MainActivity) {
 
         textNowSound = popupView.findViewById(R.id.text_now_sound)
         switchAlarmResource()
-        val switchAlarm = popupView.findViewById<SwitchCompat>(R.id.switch_alarm)
+        switchAlarm = popupView.findViewById(R.id.switch_alarm)
         textNowSound.text = settingDataHolder.nowAlarmSound?.title
         if (settingDataHolder.alarmCheckState) {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
@@ -48,14 +52,19 @@ class PopupAlarm(private val activity: MainActivity) {
         }
         textAlarmTime.text = settingDataHolder.alarmTime
         textAlarmTime.setTextColor(settingDataHolder.colorTopAlarmTime)
-        switchAlarm?.isChecked = settingDataHolder.alarmCheckState
-        switchAlarm?.setOnCheckedChangeListener { _, isChecked ->
-            settingDataHolder.alarmCheckState = isChecked
-            switchAlarmResource()
-            fileIOWrapper.saveAlarmCheckState()
-            activity.startAlarmManager()
+        switchAlarm.isChecked = settingDataHolder.alarmCheckState
+        switchAlarm.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
-                Toast.makeText(activity, "Alarm on", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(activity)) {
+                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps))
+                    dialog.okListener = activity::gotoSettingOverlay
+                    dialog.negListener = { view.isChecked = false }
+                    dialog.show(activity.supportFragmentManager, TAG)
+                } else {
+                    processSwitchAlarmChanging(true)
+                }
+            } else {
+                processSwitchAlarmChanging(false)
             }
         }
         val imageListenMusic = popupView.findViewById(R.id.image_listen_music) as ImageView
@@ -78,16 +87,17 @@ class PopupAlarm(private val activity: MainActivity) {
             settingDataHolder.nowAlarmSound = listView.getItemAtPosition(position) as RingtoneData
             textNowSound.text = settingDataHolder.nowAlarmSound?.title
             fileIOWrapper.saveNowAlarmSound()
+            activity.startAlarmManager()
             if (isTryPlayingAlarm) {
                 activity.stopAlarm()
                 activity.soundAlarm()
             }
         }
 
-        popupWindow.contentView = popupView
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isFocusable = true
-        popupWindow.setOnDismissListener {
+        popupWindow?.contentView = popupView
+        popupWindow?.isOutsideTouchable = true
+        popupWindow?.isFocusable = true
+        popupWindow?.setOnDismissListener {
             activity.stopAlarm()
             isTryPlayingAlarm = false
         }
@@ -97,11 +107,11 @@ class PopupAlarm(private val activity: MainActivity) {
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 
-        popupWindow.width = p2.x - 200
-        popupWindow.height = p2.y - 180
+        popupWindow?.width = p2.x - 200
+        popupWindow?.height = p2.y - 180
 
         // 画面中央に表示
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+        popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
     }
 
     private fun switchAlarmResource() {
@@ -110,6 +120,16 @@ class PopupAlarm(private val activity: MainActivity) {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
         } else {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.pamplemousse))
+        }
+    }
+
+    fun processSwitchAlarmChanging(isChecked: Boolean) {
+        settingDataHolder.alarmCheckState = isChecked
+        switchAlarmResource()
+        fileIOWrapper.saveAlarmCheckState()
+        activity.startAlarmManager()
+        if (isChecked) {
+            Toast.makeText(activity, "Alarm on", Toast.LENGTH_SHORT).show()
         }
     }
 

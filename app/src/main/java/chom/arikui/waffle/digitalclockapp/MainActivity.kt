@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         private val minuteFormat = SimpleDateFormat("mm")
         private val secondFormat = SimpleDateFormat("ss")
         private const val RELOAD_TIME_HANDLE_ID = 1
+        private const val OVERLAY_PERMISSION_REQ_CODE = 2000
 
         private const val isTest = false
     }
@@ -63,6 +65,8 @@ class MainActivity : AppCompatActivity() {
     private var mp: MediaPlayer = MediaPlayer()
     private var imageAlarm: ImageView? = null
     var nowTime = Date()
+
+    private var mPopupAlarm: PopupAlarm? = null
 
     private lateinit var mInterAdCloseApp: InterstitialAd
 
@@ -146,8 +150,8 @@ class MainActivity : AppCompatActivity() {
             imageAlarm = image_alarm
             switchAlarmResource()
             top_alarm_area.setOnClickListener { _ ->
-                val popupAlarm = PopupAlarm(this)
-                popupAlarm.showPopup()
+                mPopupAlarm = PopupAlarm(this)
+                mPopupAlarm?.showPopup()
             }
 
             frame_now_day.setOnLongClickListener(mLongClickListener)
@@ -206,7 +210,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        startAlarmManager()
+        resetAlarmState()
     }
 
     override fun onPause() {
@@ -222,10 +226,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         showInterstitial()
-        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message)) {
-            finish()
-        }
+        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message))
+        dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
+    }
+
+    /**
+     * ポップアップウィンドウを許可設定画面へ遷移する
+     */
+    fun gotoSettingOverlay() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
+        } else {
+            Log.i(TAG, "Setting overlay is invalid for api " + Build.VERSION.SDK_INT)
+        }
     }
 
     private fun showInterstitial() {
@@ -239,8 +254,8 @@ class MainActivity : AppCompatActivity() {
             if (v == null) {
                 return false
             }
-            val popupColor = PopupColor(this@MainActivity)
-            popupColor.showPopup(v)
+            val mPopupColor = PopupColor(this@MainActivity)
+            mPopupColor.showPopup(v)
             return true
         }
     }
@@ -263,12 +278,32 @@ class MainActivity : AppCompatActivity() {
                 imageAlarm?.setImageResource(R.drawable.icon_alarm_normal)
             }
 
+    private fun resetAlarmState() {
+        Log.i(TAG, "mPopupAlarm = " + mPopupAlarm?.popupWindow + "isShowing = " + mPopupAlarm?.popupWindow?.isShowing)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Log.d(TAG, "Ringing Alarm overlay is invalid for api " + Build.VERSION.SDK_INT)
+            startAlarmManager()
+            return
+        }
+        // アラームポップアップが出ていない場合は、ポップアップ許可設定画面で設定して戻ってきたわけではないので、
+        // アラームポップアップに対しては何も操作せずに抜ける
+        if (mPopupAlarm == null || mPopupAlarm!!.popupWindow == null || !(mPopupAlarm!!.popupWindow!!.isShowing)) {
+            startAlarmManager()
+            return
+        }
+        if (Settings.canDrawOverlays(this)) {
+            mPopupAlarm?.processSwitchAlarmChanging(true)
+        } else {
+            mPopupAlarm?.switchAlarm?.isChecked = false
+        }
+    }
+
     fun startAlarmManager() {
         val intent = Intent(this, AlarmBroadcastReceiver::class.java)
         intent.putExtra("check_alarm", settingDataHolder.alarmCheckState)
         intent.putExtra("alarm_uri", settingDataHolder.nowAlarmSound?.uri)
         intent.putExtra("alarm_time", settingDataHolder.alarmTime)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (settingDataHolder.alarmCheckState) {
             val timeArray = settingDataHolder.alarmTime.split(":").map { it.trim() }
