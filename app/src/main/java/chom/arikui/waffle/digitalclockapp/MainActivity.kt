@@ -283,13 +283,21 @@ class MainActivity : AppCompatActivity() {
             }
 
     private fun resetAlarmState() {
-        // ポップアップ許可設定画面から戻ってきた場合でなければ、アラームポップアップに対しては何も操作せずに抜ける
-        if (!mLaunchOverlaySetting) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Log.d(TAG, "Ringing Alarm overlay is invalid for api " + Build.VERSION.SDK_INT)
             startAlarmManager()
             return
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Log.d(TAG, "Ringing Alarm overlay is invalid for api " + Build.VERSION.SDK_INT)
+        // 他のアプリに重ねての表示が許可されていなければ、アラームをオフにする(UIにも反映する)
+        if (!Settings.canDrawOverlays(this)) {
+            if (settingDataHolder.alarmCheckState) {
+                settingDataHolder.alarmCheckState = false
+                fileIOWrapper.saveAlarmCheckState()
+                switchAlarmResource()
+            }
+        }
+        // ポップアップ許可設定画面から戻ってきた場合でなければ、アラームポップアップに対しては何も操作せずに抜ける
+        if (!mLaunchOverlaySetting) {
             startAlarmManager()
             return
         }
