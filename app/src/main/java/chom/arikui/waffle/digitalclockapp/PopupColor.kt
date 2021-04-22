@@ -178,7 +178,7 @@ class PopupColor(private val activity: MainActivity) {
             settingDataHolder.colorMinute = sampleText.currentTextColor
             settingDataHolder.colorSecond = sampleText.currentTextColor
             settingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
-            activity.updateClockView()
+            activity.updateClockColor()
             fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
             fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
             fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)

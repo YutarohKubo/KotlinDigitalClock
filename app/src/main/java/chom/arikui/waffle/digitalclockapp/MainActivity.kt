@@ -12,8 +12,6 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -27,10 +25,12 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private const val TAG = "MainAct"
@@ -42,11 +42,13 @@ class MainActivity : AppCompatActivity() {
         private val hourFormat = SimpleDateFormat("HH")
         private val minuteFormat = SimpleDateFormat("mm")
         private val secondFormat = SimpleDateFormat("ss")
-        private const val RELOAD_TIME_HANDLE_ID = 1
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
 
-        private const val isTest = false
+        private const val isTest = true
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     lateinit var settingDataHolder: ClockSettingDataHolder
     lateinit var fileIOWrapper: FileIOWrapper
@@ -71,44 +73,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mInterAdCloseApp: InterstitialAd
 
     private var mLaunchOverlaySetting = false
-
-    private val timerHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                RELOAD_TIME_HANDLE_ID -> {
-                    val cal = Calendar.getInstance()
-                    nowTime = cal.time
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        if (text_now_date != null) {
-                            text_now_date.text = dateFormat.format(nowTime)
-                            text_now_time.text = timeFormat.format(nowTime)
-                        }
-                    } else if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        if (text_now_day != null) {
-                            text_now_day.text = dayFormat.format(nowTime)
-                            text_now_month.text = monthFormat.format(nowTime)
-                            text_now_year.text = yearFormat.format(nowTime)
-                            text_now_week.text = when (cal.get(Calendar.DAY_OF_WEEK)) {
-                                Calendar.SUNDAY -> "SUN"
-                                Calendar.MONDAY -> "MON"
-                                Calendar.TUESDAY -> "TUE"
-                                Calendar.WEDNESDAY -> "WED"
-                                Calendar.THURSDAY -> "THU"
-                                Calendar.FRIDAY -> "FRI"
-                                Calendar.SATURDAY -> "SAT"
-                                else -> "ERR"
-                            }
-                            text_now_hour.text = hourFormat.format(nowTime)
-                            text_now_minute.text = minuteFormat.format(nowTime)
-                            text_now_second.text = secondFormat.format(nowTime)
-                        }
-                    } else {
-
-                    }
-                }
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = settingDataHolder.alarmTime
             fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
-            updateClockView()
+            updateClockColor()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val topAlarmArea = top_alarm_area
@@ -200,14 +164,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val reloadTimeThread = Thread {
+        launch {
             while (true) {
-                timerHandler.sendEmptyMessage(RELOAD_TIME_HANDLE_ID)
-                Thread.sleep(1)
+                updateClockDisplay()
+                delay(10)
             }
         }
-
-        reloadTimeThread.start()
     }
 
     override fun onResume() {
@@ -232,6 +194,39 @@ class MainActivity : AppCompatActivity() {
         val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message))
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
+    }
+
+    /**
+     * 時計の表示更新
+     */
+    private fun updateClockDisplay() {
+        val cal = Calendar.getInstance()
+        nowTime = cal.time
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (text_now_date != null) {
+                text_now_date.text = dateFormat.format(nowTime)
+                text_now_time.text = timeFormat.format(nowTime)
+            }
+        } else {
+            if (text_now_day != null) {
+                text_now_day.text = dayFormat.format(nowTime)
+                text_now_month.text = monthFormat.format(nowTime)
+                text_now_year.text = yearFormat.format(nowTime)
+                text_now_week.text = when (cal.get(Calendar.DAY_OF_WEEK)) {
+                    Calendar.SUNDAY -> "SUN"
+                    Calendar.MONDAY -> "MON"
+                    Calendar.TUESDAY -> "TUE"
+                    Calendar.WEDNESDAY -> "WED"
+                    Calendar.THURSDAY -> "THU"
+                    Calendar.FRIDAY -> "FRI"
+                    Calendar.SATURDAY -> "SAT"
+                    else -> "ERR"
+                }
+                text_now_hour.text = hourFormat.format(nowTime)
+                text_now_minute.text = minuteFormat.format(nowTime)
+                text_now_second.text = secondFormat.format(nowTime)
+            }
+        }
     }
 
     /**
@@ -370,7 +365,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun updateClockView() {
+    /**
+     * 時計の色更新
+     */
+    fun updateClockColor() {
         textNowDay.setTextColor(settingDataHolder.colorDay)
         textNowMonth.setTextColor(settingDataHolder.colorMonth)
         textNowYear.setTextColor(settingDataHolder.colorYear)
