@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/time_area_overlay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="6dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingBottom="2dp"
+    android:background="@color/black">
+
+    <RelativeLayout
+        android:id="@+id/layout_now_hour_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_now_hour_background_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barspbd"
+            android:text="88"
+            android:textColor="@color/sumi"
+            android:textSize="@dimen/text_size_hour_and_minute_overlay" />
+
+        <TextView
+            android:id="@+id/text_now_hour_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barspbd"
+            android:textColor="@color/vert_prairie"
+            android:textSize="@dimen/text_size_hour_and_minute_overlay" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_divide_hour_and_minute_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/layout_now_hour_overlay">
+
+        <TextView
+            android:id="@+id/text_divide_hour_and_minute_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:fontFamily="@font/barspbd"
+            android:text=":"
+            android:textColor="@color/vert_prairie"
+            android:textSize="@dimen/text_size_hour_and_minute_overlay" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_now_minute_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/layout_divide_hour_and_minute_overlay">
+
+        <TextView
+            android:id="@+id/text_now_minute_background_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barspbd"
+            android:text="88"
+            android:textColor="@color/sumi"
+            android:textSize="@dimen/text_size_hour_and_minute_overlay" />
+
+        <TextView
+            android:id="@+id/text_now_minute_overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barspbd"
+            android:textColor="@color/vert_prairie"
+            android:textSize="@dimen/text_size_hour_and_minute_overlay" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_now_second_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/layout_now_hour_overlay"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/layout_now_minute_overlay">
+
+            <TextView
+                android:id="@+id/text_now_second_background_overlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
+                android:text="88"
+                android:textColor="@color/sumi"
+                android:textSize="@dimen/text_size_second_overlay" />
+
+            <TextView
+                android:id="@+id/text_now_second_overlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
+                android:textColor="@color/vert_prairie"
+                android:textSize="@dimen/text_size_second_overlay" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -134,6 +134,8 @@ class MainActivity : AppCompatActivity() {
 
         mInterAdCloseApp.loadAd(adRequest)
 
+        stopService(Intent(this@MainActivity, DigitalClockService::class.java))
+
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
@@ -186,6 +188,15 @@ class MainActivity : AppCompatActivity() {
             fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
             updateClockView()
 
+            val buttonStart = start_service
+            val buttonStop = stop_service
+            buttonStart.setOnClickListener { _ ->
+                startService(Intent(this@MainActivity, DigitalClockService::class.java))
+            }
+            buttonStop.setOnClickListener { _ ->
+                stopService(Intent(this@MainActivity, DigitalClockService::class.java))
+            }
+
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val topAlarmArea = top_alarm_area
                 val lp = topAlarmArea.layoutParams
@@ -225,6 +236,12 @@ class MainActivity : AppCompatActivity() {
         if (mp.isPlaying) {
             mp.stop()
         }
+        val serviceIntent = Intent(this@MainActivity, DigitalClockService::class.java)
+        serviceIntent.putExtra(EventIdUtil.COLOR_HOUR, settingDataHolder.colorHour)
+        serviceIntent.putExtra(EventIdUtil.COLOR_DIVIDE_TIME, settingDataHolder.colorDivideTime)
+        serviceIntent.putExtra(EventIdUtil.COLOR_MINUTE, settingDataHolder.colorMinute)
+        serviceIntent.putExtra(EventIdUtil.COLOR_SECOND, settingDataHolder.colorSecond)
+        startService(serviceIntent)
     }
 
     override fun onBackPressed() {
