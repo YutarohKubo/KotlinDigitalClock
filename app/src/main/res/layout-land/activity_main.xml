@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:orientation="vertical"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/date_area"
@@ -25,18 +25,18 @@
 
                 <TextView
                     android:id="@+id/text_now_day_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="88"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_day"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_date" />
 
@@ -49,8 +49,8 @@
                 android:layout_below="@+id/frame_now_day"
                 android:layout_centerInParent="true"
                 android:text="DAY"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -68,18 +68,18 @@
 
                 <TextView
                     android:id="@+id/text_now_month_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="88"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_month"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_date" />
 
@@ -91,8 +91,8 @@
                 android:layout_below="@+id/frame_now_month"
                 android:layout_centerInParent="true"
                 android:text="MONTH"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -110,18 +110,18 @@
 
                 <TextView
                     android:id="@+id/text_now_year_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="8888"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_date" />
 
                 <TextView
                     android:id="@+id/text_now_year"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_date" />
 
@@ -133,8 +133,8 @@
                 android:layout_below="@+id/frame_now_year"
                 android:layout_centerInParent="true"
                 android:text="YEAR"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -142,15 +142,15 @@
             android:id="@+id/layout_now_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/layout_now_year"
             android:layout_alignBottom="@+id/layout_now_year"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/layout_now_year">
 
             <TextView
                 android:id="@+id/text_now_week"
-                android:fontFamily="@font/ksblockblock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/ksblockblock"
                 android:textColor="@color/vert_prairie"
                 android:textSize="@dimen/text_size_week" />
 
@@ -159,10 +159,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_now_week"
                 android:layout_centerInParent="true"
-                android:visibility="invisible"
                 android:text="a"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_title"
-                android:textColor="@color/black" />
+                android:visibility="invisible" />
 
         </RelativeLayout>
 
@@ -187,18 +187,18 @@
 
                 <TextView
                     android:id="@+id/text_now_hour_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="88"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_hour_and_minute" />
 
                 <TextView
                     android:id="@+id/text_now_hour"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_hour_and_minute" />
 
@@ -210,8 +210,8 @@
                 android:layout_below="@+id/frame_now_hour"
                 android:layout_centerInParent="true"
                 android:text="HOUR"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -223,11 +223,11 @@
 
             <TextView
                 android:id="@+id/text_divide_hour_and_minute"
-                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:fontFamily="@font/barspbd"
                 android:text=":"
                 android:textColor="@color/vert_prairie"
                 android:textSize="@dimen/text_size_hour_and_minute" />
@@ -238,9 +238,9 @@
                 android:layout_below="@+id/text_divide_hour_and_minute"
                 android:layout_centerInParent="true"
                 android:text="a"
-                android:textSize="@dimen/text_size_title"
                 android:textColor="@color/black"
-                android:visibility="invisible"/>
+                android:textSize="@dimen/text_size_title"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 
@@ -257,18 +257,18 @@
 
                 <TextView
                     android:id="@+id/text_now_minute_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="88"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_hour_and_minute" />
 
                 <TextView
                     android:id="@+id/text_now_minute"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_hour_and_minute" />
 
@@ -280,8 +280,8 @@
                 android:layout_below="@+id/frame_now_minute"
                 android:layout_centerInParent="true"
                 android:text="MINUTE"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -300,18 +300,18 @@
 
                 <TextView
                     android:id="@+id/text_now_second_background"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:text="88"
                     android:textColor="@color/sumi"
                     android:textSize="@dimen/text_size_second" />
 
                 <TextView
                     android:id="@+id/text_now_second"
-                    android:fontFamily="@font/barspbd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_second" />
 
@@ -323,8 +323,8 @@
                 android:layout_below="@+id/frame_now_second"
                 android:layout_centerInParent="true"
                 android:text="SECOND"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/snow_white" />
+                android:textColor="@color/snow_white"
+                android:textSize="@dimen/text_size_title" />
 
         </RelativeLayout>
 
@@ -335,36 +335,48 @@
         android:id="@+id/top_alarm_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="20dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/image_alarm"
+        <RelativeLayout
+            android:id="@+id/button_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_alarm_normal"/>
+            android:background="@drawable/grad_silver_background_shape">
+
+            <ImageView
+                android:id="@+id/image_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="4dp"
+                android:src="@drawable/icon_alarm_off" />
+
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/frame_top_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_alarm"
-            android:layout_alignBottom="@id/image_alarm">
+            android:paddingTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignBottom="@id/button_alarm"
+            android:layout_toRightOf="@id/button_alarm">
 
             <TextView
                 android:id="@+id/text_top_alarm_time_background"
-                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
                 android:text="88:88"
                 android:textColor="@color/sumi"
                 android:textSize="@dimen/text_size_alarm_time" />
 
             <TextView
                 android:id="@+id/text_top_alarm_time"
-                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
                 android:textColor="@color/vert_prairie"
                 android:textSize="@dimen/text_size_alarm_time" />
 

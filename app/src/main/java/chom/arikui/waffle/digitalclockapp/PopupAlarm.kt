@@ -5,6 +5,7 @@ import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
+import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -27,7 +28,7 @@ class PopupAlarm(private val activity: MainActivity) {
         val popupView = activity.layoutInflater.inflate(R.layout.layout_alerm, null)
 
         val textAlarmTime = popupView.findViewById<TextView>(R.id.text_alarm_time)
-        popupView.findViewById<ImageButton>(R.id.button_change_alarm_time).setOnClickListener { _ ->
+        popupView.findViewById<View>(R.id.button_alarm_time_setting).setOnClickListener { _ ->
             val timeArray = settingDataHolder.alarmTime.split(":").map { it.trim() }
             val dialog = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 settingDataHolder.alarmTime = String.format("%02d:%02d", hourOfDay, minute)

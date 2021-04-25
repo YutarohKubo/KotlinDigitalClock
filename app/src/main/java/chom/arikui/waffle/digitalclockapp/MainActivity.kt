@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
             switchAlarmResource()
-            top_alarm_area.setOnClickListener { _ ->
+            button_alarm.setOnClickListener { _ ->
                 mPopupAlarm = PopupAlarm(this)
                 mPopupAlarm?.showPopup()
             }
@@ -294,9 +294,9 @@ class MainActivity : AppCompatActivity() {
 
     fun switchAlarmResource() =
             if (settingDataHolder.alarmCheckState) {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_setting)
+                imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
             } else {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_normal)
+                imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
             }
 
     private fun resetAlarmState() {
