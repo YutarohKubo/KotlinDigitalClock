@@ -22,12 +22,13 @@ class DigitalClockService : Service(), CoroutineScope {
 
     companion object {
         private const val TAG = "DigitalClockService"
-        private const val RELOAD_TIME_HANDLE_ID = 1
         const val CLOCK_NOTIFICATION_ID = 1
         private val hourFormat = SimpleDateFormat("HH")
         private val minuteFormat = SimpleDateFormat("mm")
         private val secondFormat = SimpleDateFormat("ss")
         private val defaultColor = Color.rgb(ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE)
+        private const val TRANSPARENT_MOVING = 0.5f
+        private const val TRANSPARENT_NORMAL = 1.0f
     }
 
     override val coroutineContext: CoroutineContext
@@ -96,21 +97,22 @@ class DigitalClockService : Service(), CoroutineScope {
         val colorMinute = intent?.getIntExtra(EventIdUtil.COLOR_MINUTE, defaultColor) ?: defaultColor
         val colorSecond = intent?.getIntExtra(EventIdUtil.COLOR_SECOND, defaultColor) ?: defaultColor
         initClockColor(colorHour, colorDivideTime, colorMinute, colorSecond)
-        clockView?.setOnClickListener { _ ->
-            startActivity(Intent(application, MainActivity::class.java).apply {
-                setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            })
-        }
         clockView?.setOnTouchListener { v, event ->
             val newDx = event.rawX.toInt()
             val newDy = event.rawY.toInt()
             when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    v.alpha = TRANSPARENT_MOVING
+                }
                 MotionEvent.ACTION_MOVE -> {
                     val centerX = newDx - (v.width / 2)
                     val centerY = newDy - (v.height / 2)
                     params.x = centerX
                     params.y = centerY
                     windowManager?.updateViewLayout(v, params)
+                }
+                MotionEvent.ACTION_UP -> {
+                    v.alpha = TRANSPARENT_NORMAL
                 }
             }
             true
