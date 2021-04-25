@@ -256,7 +256,7 @@ class PopupColor(private val activity: MainActivity) {
         popupWindow.isFocusable = true
 
         val d = activity.windowManager.defaultDisplay
-        var p2 = Point()
+        val p2 = Point()
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 

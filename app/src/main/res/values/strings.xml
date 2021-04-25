@@ -19,4 +19,5 @@
     <string name="clock_hide">Hide clock</string>
     <string name="home">Home</string>
     <string name="finish_app">Exit</string>
+    <string name="setting_always_show_clock">Clock can be displayed on the home screen, etc.</string>
 </resources>

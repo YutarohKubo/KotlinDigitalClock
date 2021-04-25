@@ -148,14 +148,18 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = settingDataHolder.alarmTime
             fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            image_setting.setOnClickListener { _ ->
+                val popupSetting = PopupSetting(this)
+                popupSetting.showPopup()
+            }
             updateClockColor()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
-                val topAlarmArea = top_alarm_area
-                val lp = topAlarmArea.layoutParams
+                val bottomArea = bottom_area
+                val lp = bottomArea.layoutParams
                 val mlp = lp as ViewGroup.MarginLayoutParams
                 mlp.topMargin = 40
-                topAlarmArea.layoutParams = mlp
+                bottomArea.layoutParams = mlp
                 val timeArea = time_area
                 val lpTimeArea = timeArea.layoutParams
                 val mlpTimeArea = lpTimeArea as ViewGroup.MarginLayoutParams

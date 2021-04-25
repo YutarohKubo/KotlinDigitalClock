@@ -328,15 +328,14 @@
 
         </RelativeLayout>
 
-
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/top_alarm_area"
-        android:layout_width="wrap_content"
+        android:id="@+id/bottom_area"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:orientation="horizontal">
+        android:layout_marginRight="20dp">
 
         <RelativeLayout
             android:id="@+id/button_alarm"
@@ -381,6 +380,16 @@
                 android:textSize="@dimen/text_size_alarm_time" />
 
         </FrameLayout>
+
+        <ImageView
+            android:id="@+id/image_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/button_setting_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/button_alarm"/>
 
     </RelativeLayout>
 
