@@ -2,45 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/tetukon">
+    android:background="@color/tetukon"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/button_change_alarm_time"
+        <RelativeLayout
+            android:id="@+id/button_alarm_time_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_set_alarm_style" />
+            android:background="@drawable/grad_silver_background_shape">
+
+            <ImageView
+                android:id="@+id/image_alarm_time_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="4dp"
+                android:src="@drawable/icon_alarm_time_setting" />
+
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/frame_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/button_change_alarm_time"
-            android:layout_alignBottom="@id/button_change_alarm_time">
+            android:paddingTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignBottom="@id/button_alarm_time_setting"
+            android:layout_toRightOf="@id/button_alarm_time_setting">
 
             <TextView
                 android:id="@+id/text_alarm_time_background"
-                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
                 android:text="88:88"
                 android:textColor="@color/sumi"
                 android:textSize="32dp" />
 
             <TextView
                 android:id="@+id/text_alarm_time"
-                android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/barspbd"
                 android:textColor="@color/vert_prairie"
                 android:textSize="32dp" />
 
@@ -57,16 +68,16 @@
             android:id="@+id/switch_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="@string/switch_alarm_on"
-            android:textOff="@string/switch_alarm_off"/>
+            android:textOff="@string/switch_alarm_off"
+            android:textOn="@string/switch_alarm_on" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/icon_music" />
 
         <TextView
@@ -74,16 +85,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="18dp"
-            android:textColor="@color/pamplemousse"/>
+            android:textColor="@color/pamplemousse"
+            android:textSize="18dp" />
 
         <ImageView
             android:id="@+id/image_listen_music"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/play_music"/>
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/play_music" />
 
     </LinearLayout>
 

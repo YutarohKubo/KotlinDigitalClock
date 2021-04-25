@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
             switchAlarmResource()
-            top_alarm_area.setOnClickListener { _ ->
+            button_alarm.setOnClickListener { _ ->
                 mPopupAlarm = PopupAlarm(this)
                 mPopupAlarm?.showPopup()
             }
@@ -172,6 +172,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        stopService(Intent(this, DigitalClockService::class.java))
+    }
+
     override fun onResume() {
         super.onResume()
         resetAlarmState()
@@ -180,6 +185,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onPause() {
         super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val serviceIntent = Intent(this, DigitalClockService::class.java)
+        serviceIntent.putExtra(EventIdUtil.COLOR_HOUR, settingDataHolder.colorHour)
+        serviceIntent.putExtra(EventIdUtil.COLOR_DIVIDE_TIME, settingDataHolder.colorDivideTime)
+        serviceIntent.putExtra(EventIdUtil.COLOR_MINUTE, settingDataHolder.colorMinute)
+        serviceIntent.putExtra(EventIdUtil.COLOR_SECOND, settingDataHolder.colorSecond)
+        startService(serviceIntent)
     }
 
     override fun onDestroy() {
@@ -272,9 +287,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     fun switchAlarmResource() =
             if (settingDataHolder.alarmCheckState) {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_setting)
+                imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
             } else {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_normal)
+                imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
             }
 
     private fun resetAlarmState() {
