@@ -6,17 +6,19 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat
-import android.graphics.Point
-import android.os.Handler
 import android.os.IBinder
-import android.os.Message
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class DigitalClockService : Service() {
+class DigitalClockService : Service(), CoroutineScope {
 
     companion object {
         private const val TAG = "DigitalClockService"
@@ -28,6 +30,9 @@ class DigitalClockService : Service() {
         private val defaultColor = Color.rgb(ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE)
     }
 
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
+
     private var clockView: View? = null
     private var textHour: TextView? = null
     private var textDivideTime: TextView? = null
@@ -36,32 +41,9 @@ class DigitalClockService : Service() {
     private var windowManager: WindowManager? = null
     private var nowTime = Date()
 
-    // ディスプレイのサイズを格納する
-    val displaySize: Point by lazy {
-        val display = windowManager?.defaultDisplay
-        val size = Point()
-        display?.getSize(size)
-        size
-    }
-
-    private lateinit var timerHandler: Handler
-
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate() : instance to string : $this")
-        timerHandler = object : Handler(mainLooper) {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    RELOAD_TIME_HANDLE_ID -> {
-                        val cal = Calendar.getInstance()
-                        nowTime = cal.time
-                        textHour?.text = hourFormat.format(nowTime)
-                        textMinute?.text = minuteFormat.format(nowTime)
-                        textSecond?.text = secondFormat.format(nowTime)
-                    }
-                }
-            }
-        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -135,14 +117,12 @@ class DigitalClockService : Service() {
         }
         windowManager?.addView(clockView, params)
 
-        val reloadTimeThread = Thread {
+        launch {
             while (true) {
-                timerHandler.sendEmptyMessage(RELOAD_TIME_HANDLE_ID)
-                Thread.sleep(1)
+                updateClockDisplay()
+                delay(10)
             }
         }
-
-        reloadTimeThread.start()
         return START_STICKY
     }
 
@@ -153,6 +133,17 @@ class DigitalClockService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * 時計の表示更新
+     */
+    private fun updateClockDisplay() {
+        val cal = Calendar.getInstance()
+        nowTime = cal.time
+        textHour?.text = hourFormat.format(nowTime)
+        textMinute?.text = minuteFormat.format(nowTime)
+        textSecond?.text = secondFormat.format(nowTime)
     }
 
     private fun initClockColor(colorHour: Int, colorDivideTime: Int, colorMinute: Int, colorSecond: Int) {
