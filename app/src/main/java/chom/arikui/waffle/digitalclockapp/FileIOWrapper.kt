@@ -68,8 +68,10 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             e.printStackTrace()
         } finally {
             if (mSettingDataHolder.nowAlarmSound == null) {
-                //Uriが見当たらなかった場合、listAlarmDataの一番上をアラーム音に設定する
-                mSettingDataHolder.nowAlarmSound = mActivity.listAlarmData[0]
+                if (mActivity.listAlarmData.size > 0) {
+                    //Uriが見当たらなかった場合、listAlarmDataの一番上をアラーム音に設定する
+                    mSettingDataHolder.nowAlarmSound = mActivity.listAlarmData[0]
+                }
             }
         }
     }
