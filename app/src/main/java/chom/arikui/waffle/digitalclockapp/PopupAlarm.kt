@@ -57,7 +57,7 @@ class PopupAlarm(private val activity: MainActivity) {
         switchAlarm.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(activity)) {
-                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps))
+                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps_to_enable_alarm))
                     dialog.okListener = activity::gotoSettingOverlay
                     dialog.negListener = { view.isChecked = false }
                     dialog.show(activity.supportFragmentManager, TAG)

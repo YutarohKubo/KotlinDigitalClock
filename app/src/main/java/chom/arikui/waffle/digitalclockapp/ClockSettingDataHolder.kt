@@ -13,6 +13,7 @@ class ClockSettingDataHolder() {
     var alarmTime = "00:00"
     var nowAlarmSound: RingtoneData? = null
     var alarmCheckState = false
+    var validOverlayClock = false
 
     var colorDay = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
     var colorMonth = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)

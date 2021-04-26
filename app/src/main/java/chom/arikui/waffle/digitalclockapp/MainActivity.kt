@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     var nowTime = Date()
 
     private var mPopupAlarm: PopupAlarm? = null
+    private var mPopupSetting: PopupSetting? = null
 
     private lateinit var mInterAdCloseApp: InterstitialAd
 
@@ -148,9 +149,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = settingDataHolder.alarmTime
             fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
-            image_setting.setOnClickListener { _ ->
-                val popupSetting = PopupSetting(this)
-                popupSetting.showPopup()
+
+            // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
+            // ギアメニューキーを非表示にする
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                image_setting.visibility = View.VISIBLE
+                image_setting.setOnClickListener { _ ->
+                    mPopupSetting = PopupSetting(this)
+                    mPopupSetting?.showPopup()
+                }
+            } else {
+                image_setting.visibility = View.GONE
             }
             updateClockColor()
 
@@ -184,6 +193,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     override fun onResume() {
         super.onResume()
         resetAlarmState()
+        resetOverlayClockState()
         mLaunchOverlaySetting = false
     }
 
@@ -193,12 +203,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onStop() {
         super.onStop()
-        val serviceIntent = Intent(this, DigitalClockService::class.java)
-        serviceIntent.putExtra(EventIdUtil.COLOR_HOUR, settingDataHolder.colorHour)
-        serviceIntent.putExtra(EventIdUtil.COLOR_DIVIDE_TIME, settingDataHolder.colorDivideTime)
-        serviceIntent.putExtra(EventIdUtil.COLOR_MINUTE, settingDataHolder.colorMinute)
-        serviceIntent.putExtra(EventIdUtil.COLOR_SECOND, settingDataHolder.colorSecond)
-        startService(serviceIntent)
+        if (settingDataHolder.validOverlayClock) {
+            val serviceIntent = Intent(this, DigitalClockService::class.java)
+            serviceIntent.putExtra(EventIdUtil.COLOR_HOUR, settingDataHolder.colorHour)
+            serviceIntent.putExtra(EventIdUtil.COLOR_DIVIDE_TIME, settingDataHolder.colorDivideTime)
+            serviceIntent.putExtra(EventIdUtil.COLOR_MINUTE, settingDataHolder.colorMinute)
+            serviceIntent.putExtra(EventIdUtil.COLOR_SECOND, settingDataHolder.colorSecond)
+            startService(serviceIntent)
+        }
     }
 
     override fun onDestroy() {
@@ -252,13 +264,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
      * ポップアップウィンドウを許可設定画面へ遷移する
      */
     fun gotoSettingOverlay() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mLaunchOverlaySetting = true
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
-        } else {
-            Log.i(TAG, "Setting overlay is invalid for api " + Build.VERSION.SDK_INT)
-        }
+        mLaunchOverlaySetting = true
+        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
     }
 
     private fun showInterstitial() {
@@ -315,7 +323,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             startAlarmManager()
             return
         }
-        // アラームポップアップが出ていない場合は、ポップアップ許可設定画面で設定して戻ってきたわけではないので、
+        // アラームポップアップが出ていない場合は、
         // アラームポップアップに対しては何も操作せずに抜ける
         if (mPopupAlarm == null || mPopupAlarm!!.popupWindow == null || !(mPopupAlarm!!.popupWindow!!.isShowing)) {
             startAlarmManager()
@@ -325,6 +333,34 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             mPopupAlarm?.processSwitchAlarmChanging(true)
         } else {
             mPopupAlarm?.switchAlarm?.isChecked = false
+        }
+    }
+
+    private fun resetOverlayClockState() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            Log.d(TAG, "Overlay clock is invalid for api " + Build.VERSION.SDK_INT)
+            return
+        }
+        // 他のアプリに重ねての表示が許可されていなければ、
+        // ホーム画面などで時計を表示させないようにする
+        if (!Settings.canDrawOverlays(this)) {
+            if (settingDataHolder.validOverlayClock) {
+                settingDataHolder.validOverlayClock = false
+            }
+        }
+        // ポップアップ許可設定画面から戻ってきた場合でなければ、設定ポップアップに対しては何も操作せずに抜ける
+        if (!mLaunchOverlaySetting) {
+            return
+        }
+        // 設定ポップアップが出ていない場合は、
+        // 設定ポップアップに対しては何も操作せずに抜ける
+        if (mPopupSetting == null || mPopupSetting!!.popupWindow == null || !(mPopupSetting!!.popupWindow!!.isShowing)) {
+            return
+        }
+        if (Settings.canDrawOverlays(this)) {
+            mPopupSetting?.processCheckOverlayChanging(true)
+        } else {
+            mPopupSetting?.checkOverlayClock?.isChecked = false
         }
     }
 

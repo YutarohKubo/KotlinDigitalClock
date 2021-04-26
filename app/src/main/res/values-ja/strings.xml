@@ -13,7 +13,8 @@
     <string name="unify_time_colors">表示色の\n統一</string>
     <string name="unify_time_colors_dialog_message">全ての表示時間の色を\nこの色に統一します.\nよろしいですか?</string>
     <string name="confirming_app_finish_dialog_message">アプリを終了します.\nよろしいですか?</string>
-    <string name="need_to_allow_display_over_other_apps">アラーム機能を有効にするために、ポップアップウィンドウを許可する必要があります.\n設定画面へ移動しますか?</string>
+    <string name="need_to_allow_display_over_other_apps_to_enable_alarm">アラーム機能を有効にするために、ポップアップウィンドウを許可する必要があります.\n設定画面へ移動しますか?</string>
+    <string name="need_to_allow_display_over_other_apps_to_enable_overlay_clock">本機能を有効にするために、ポップアップウィンドウを許可する必要があります.\n設定画面へ移動しますか?</string>
     <string name="description_notification">時計への操作を表示します</string>
     <string name="clock_visible">時計表示</string>
     <string name="clock_hide">時計非表示</string>
