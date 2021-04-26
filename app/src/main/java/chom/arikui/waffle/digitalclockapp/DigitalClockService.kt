@@ -1,6 +1,7 @@
 package chom.arikui.waffle.digitalclockapp
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -41,6 +42,9 @@ class DigitalClockService : Service(), CoroutineScope {
     private var textSecond: TextView? = null
     private var windowManager: WindowManager? = null
     private var nowTime = Date()
+    
+    private var switchDisplayReceiver: BroadcastReceiver? = null
+    private var exitReceiver: BroadcastReceiver? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -54,13 +58,13 @@ class DigitalClockService : Service(), CoroutineScope {
         startForeground(CLOCK_NOTIFICATION_ID, notification)
 
         // Notification押下時のPendingIntent受信先のレシーバー登録
-        val switchDisplayReceiver = notificationCreator.SwitchDisplayReceiver()
+        switchDisplayReceiver = notificationCreator.SwitchDisplayReceiver()
         val switchDisplayFilter = IntentFilter(NotificationCreator.ACTION_SWITCH_DISPLAY)
         registerReceiver(switchDisplayReceiver, switchDisplayFilter)
         notificationCreator.clockDisplayListener = { visibility ->
             clockView?.visibility = if (visibility) View.VISIBLE else View.GONE
         }
-        val exitReceiver = notificationCreator.ExitReceiver()
+        exitReceiver = notificationCreator.ExitReceiver()
         val exitFilter = IntentFilter(NotificationCreator.ACTION_EXIT)
         registerReceiver(exitReceiver, exitFilter)
 
@@ -87,6 +91,15 @@ class DigitalClockService : Service(), CoroutineScope {
         params.gravity = Gravity.TOP or Gravity.START
         // 左上から、およそステータスバーの高さ分だけ下にずらして表示する
         params.y += CalculateUtil.convertDp2Px(50, this).toInt()
+
+        // 万が一以前のViewが画面上に残っていた場合は、windowから削除する
+        if (clockView != null) {
+            try {
+                windowManager?.removeView(clockView)
+            } catch (e: IllegalArgumentException) {
+                e.printStackTrace()
+            }
+        }
         clockView = inflater.inflate(R.layout.layout_clock_overlay, null)
         textHour = clockView?.findViewById(R.id.text_now_hour_overlay)
         textDivideTime = clockView?.findViewById(R.id.text_divide_hour_and_minute_overlay)
@@ -131,6 +144,8 @@ class DigitalClockService : Service(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
         windowManager?.removeView(clockView)
+        unregisterReceiver(switchDisplayReceiver)
+        unregisterReceiver(exitReceiver)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
