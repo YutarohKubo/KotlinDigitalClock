@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         private val secondFormat = SimpleDateFormat("ss")
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
 
-        private const val isTest = true
+        private const val isTest = false
     }
 
     override val coroutineContext: CoroutineContext
