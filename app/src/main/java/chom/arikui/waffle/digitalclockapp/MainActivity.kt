@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -118,6 +119,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             imageAlarm = image_alarm
             switchAlarmResource()
             button_alarm.setOnClickListener { _ ->
+                if (listAlarmData.size == 0) {
+                    Toast.makeText(this, getString(R.string.alert_no_alarm_data), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 mPopupAlarm = PopupAlarm(this)
                 mPopupAlarm?.showPopup()
             }
@@ -402,6 +407,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     fun soundAlarm() {
+        if (settingDataHolder.nowAlarmSound?.uri == null) {
+            // アラームが存在せず、uriがnullである場合は、returnで抜ける
+            return
+        }
         mp = MediaPlayer.create(this, Uri.parse(settingDataHolder.nowAlarmSound?.uri))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mp.setAudioAttributes(
