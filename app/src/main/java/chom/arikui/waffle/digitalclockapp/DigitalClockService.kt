@@ -115,6 +115,10 @@ class DigitalClockService : Service(), CoroutineScope {
         val colorDivideTime = intent?.getIntExtra(EventIdUtil.COLOR_DIVIDE_TIME, memoryDivideTime) ?: memoryDivideTime
         val colorMinute = intent?.getIntExtra(EventIdUtil.COLOR_MINUTE, memoryColorMinute) ?: memoryColorMinute
         val colorSecond = intent?.getIntExtra(EventIdUtil.COLOR_SECOND, memoryColorSecond) ?: memoryColorSecond
+        memoryColorHour = colorHour
+        memoryDivideTime = colorDivideTime
+        memoryColorMinute = colorMinute
+        memoryColorSecond = colorSecond
         initClockColor(colorHour, colorDivideTime, colorMinute, colorSecond)
         clockView?.setOnTouchListener { v, event ->
             val newDx = event.rawX.toInt()
