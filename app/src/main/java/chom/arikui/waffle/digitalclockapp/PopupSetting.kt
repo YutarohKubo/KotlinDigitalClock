@@ -18,7 +18,6 @@ class PopupSetting(private val activity: MainActivity) {
         private const val TAG = "POPUP_SETTING"
     }
 
-    // Todo 実装これから
     fun showPopup() {
         popupWindow = PopupWindow(activity)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_popup_setting, null)

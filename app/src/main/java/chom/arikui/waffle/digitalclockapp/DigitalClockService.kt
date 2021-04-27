@@ -46,6 +46,12 @@ class DigitalClockService : Service(), CoroutineScope {
     private var switchDisplayReceiver: BroadcastReceiver? = null
     private var exitReceiver: BroadcastReceiver? = null
 
+    // サービスが再起動した場合に、時計の色を復元する各種変数
+    private var memoryColorHour = defaultColor
+    private var memoryDivideTime = defaultColor
+    private var memoryColorMinute = defaultColor
+    private var memoryColorSecond = defaultColor
+
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate() : instance to string : $this")
@@ -105,10 +111,10 @@ class DigitalClockService : Service(), CoroutineScope {
         textDivideTime = clockView?.findViewById(R.id.text_divide_hour_and_minute_overlay)
         textMinute = clockView?.findViewById(R.id.text_now_minute_overlay)
         textSecond = clockView?.findViewById(R.id.text_now_second_overlay)
-        val colorHour = intent?.getIntExtra(EventIdUtil.COLOR_HOUR, defaultColor) ?: defaultColor
-        val colorDivideTime = intent?.getIntExtra(EventIdUtil.COLOR_DIVIDE_TIME, defaultColor) ?: defaultColor
-        val colorMinute = intent?.getIntExtra(EventIdUtil.COLOR_MINUTE, defaultColor) ?: defaultColor
-        val colorSecond = intent?.getIntExtra(EventIdUtil.COLOR_SECOND, defaultColor) ?: defaultColor
+        val colorHour = intent?.getIntExtra(EventIdUtil.COLOR_HOUR, memoryColorHour) ?: memoryColorHour
+        val colorDivideTime = intent?.getIntExtra(EventIdUtil.COLOR_DIVIDE_TIME, memoryDivideTime) ?: memoryDivideTime
+        val colorMinute = intent?.getIntExtra(EventIdUtil.COLOR_MINUTE, memoryColorMinute) ?: memoryColorMinute
+        val colorSecond = intent?.getIntExtra(EventIdUtil.COLOR_SECOND, memoryColorSecond) ?: memoryColorSecond
         initClockColor(colorHour, colorDivideTime, colorMinute, colorSecond)
         clockView?.setOnTouchListener { v, event ->
             val newDx = event.rawX.toInt()
