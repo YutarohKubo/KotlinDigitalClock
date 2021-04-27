@@ -8,20 +8,24 @@ class ClockSettingDataHolder() {
         const val DEFAULT_COLOR_RED_VALUE = 127
         const val DEFAULT_COLOR_GREEN_VALUE = 176
         const val DEFAULT_COLOR_BLUE_VALUE = 0
+        private const val DEFAULT_ALARM_TIME = "00:00"
+        private const val DEFAULT_ALARM_CHECK_STATE = false
+        private const val DEFAULT_VALID_OVERLAY_CLOCK = false
+        private val DEFAULT_COLOR = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
     }
 
-    var alarmTime = "00:00"
+    var alarmTime = DEFAULT_ALARM_TIME
     var nowAlarmSound: RingtoneData? = null
-    var alarmCheckState = false
-    var validOverlayClock = false
+    var alarmCheckState = DEFAULT_ALARM_CHECK_STATE
+    var validOverlayClock = DEFAULT_VALID_OVERLAY_CLOCK
 
-    var colorDay = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorMonth = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorYear = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorWeek = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorHour = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorDivideTime = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorMinute = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorSecond = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    var colorTopAlarmTime = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
+    var colorDay = DEFAULT_COLOR
+    var colorMonth = DEFAULT_COLOR
+    var colorYear = DEFAULT_COLOR
+    var colorWeek = DEFAULT_COLOR
+    var colorHour = DEFAULT_COLOR
+    var colorDivideTime = DEFAULT_COLOR
+    var colorMinute = DEFAULT_COLOR
+    var colorSecond = DEFAULT_COLOR
+    var colorTopAlarmTime = DEFAULT_COLOR
 }

@@ -112,6 +112,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         fileIOWrapper.loadNowAlarmSound()
         fileIOWrapper.loadAlarmTime()
         fileIOWrapper.loadAlarmCheckState()
+        fileIOWrapper.loadValidOverlayClock()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
@@ -346,6 +347,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         if (!Settings.canDrawOverlays(this)) {
             if (settingDataHolder.validOverlayClock) {
                 settingDataHolder.validOverlayClock = false
+                fileIOWrapper.saveValidOverlayClock()
             }
         }
         // ポップアップ許可設定画面から戻ってきた場合でなければ、設定ポップアップに対しては何も操作せずに抜ける

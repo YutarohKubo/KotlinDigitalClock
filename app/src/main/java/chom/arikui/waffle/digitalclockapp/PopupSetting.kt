@@ -12,6 +12,7 @@ class PopupSetting(private val activity: MainActivity) {
     var popupWindow: PopupWindow? = null
     lateinit var checkOverlayClock: CheckBox
     private val settingDataHolder = activity.settingDataHolder
+    private val fileIOWrapper = activity.fileIOWrapper
 
     companion object {
         private const val TAG = "POPUP_SETTING"
@@ -55,6 +56,7 @@ class PopupSetting(private val activity: MainActivity) {
 
     fun processCheckOverlayChanging(isChecked: Boolean) {
         settingDataHolder.validOverlayClock = isChecked
+        fileIOWrapper.saveValidOverlayClock()
     }
 
 }

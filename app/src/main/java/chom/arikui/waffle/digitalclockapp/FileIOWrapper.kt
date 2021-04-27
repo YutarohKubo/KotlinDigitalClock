@@ -22,6 +22,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         const val NOW_MINUTE_COLOR_FILE_NAME = "now_minute_color.dc"
         const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
+        const val VALID_OVERLAY_CLOCK_FILE_NAME = "valid_overlay_clock.dc"
     }
 
     fun loadAlarmTime() {
@@ -107,6 +108,32 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(ALARM_SOUND_CHECK_STATE_FILE_NAME, Context.MODE_PRIVATE))).use {
                 val builder = StringBuilder()
                 builder.append(mSettingDataHolder.alarmCheckState)
+                builder.append(System.getProperty("line.separator"))
+                it.write(builder.toString())
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun loadValidOverlayClock() {
+        try {
+            BufferedReader(InputStreamReader(mActivity.openFileInput(VALID_OVERLAY_CLOCK_FILE_NAME))).use {
+                val line = it.readLine()
+                if (line != null) {
+                    mSettingDataHolder.validOverlayClock = line.toBoolean()
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun saveValidOverlayClock() {
+        try {
+            BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(VALID_OVERLAY_CLOCK_FILE_NAME, Context.MODE_PRIVATE))).use {
+                val builder = StringBuilder()
+                builder.append(mSettingDataHolder.validOverlayClock)
                 builder.append(System.getProperty("line.separator"))
                 it.write(builder.toString())
             }
