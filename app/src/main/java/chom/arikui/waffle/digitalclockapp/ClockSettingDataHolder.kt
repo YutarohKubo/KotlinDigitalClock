@@ -2,17 +2,15 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.graphics.Color
 
-class ClockSettingDataHolder() {
+object ClockSettingDataHolder {
 
-    companion object {
-        const val DEFAULT_COLOR_RED_VALUE = 127
-        const val DEFAULT_COLOR_GREEN_VALUE = 176
-        const val DEFAULT_COLOR_BLUE_VALUE = 0
-        private const val DEFAULT_ALARM_TIME = "00:00"
-        private const val DEFAULT_ALARM_CHECK_STATE = false
-        private const val DEFAULT_VALID_OVERLAY_CLOCK = false
-        private val DEFAULT_COLOR = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
-    }
+    const val DEFAULT_COLOR_RED_VALUE = 127
+    const val DEFAULT_COLOR_GREEN_VALUE = 176
+    const val DEFAULT_COLOR_BLUE_VALUE = 0
+    private const val DEFAULT_ALARM_TIME = "00:00"
+    private const val DEFAULT_ALARM_CHECK_STATE = false
+    private const val DEFAULT_VALID_OVERLAY_CLOCK = false
+    private val DEFAULT_COLOR = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
 
     var alarmTime = DEFAULT_ALARM_TIME
     var nowAlarmSound: RingtoneData? = null

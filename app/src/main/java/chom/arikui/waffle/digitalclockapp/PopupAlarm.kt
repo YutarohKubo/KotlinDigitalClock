@@ -15,7 +15,6 @@ class PopupAlarm(private val activity: MainActivity) {
     var popupWindow: PopupWindow? = null
     private lateinit var textNowSound: TextView
     lateinit var switchAlarm: SwitchCompat
-    private val settingDataHolder = activity.settingDataHolder
     private val fileIOWrapper = activity.fileIOWrapper
     private var isTryPlayingAlarm = false
 
@@ -29,12 +28,12 @@ class PopupAlarm(private val activity: MainActivity) {
 
         val textAlarmTime = popupView.findViewById<TextView>(R.id.text_alarm_time)
         popupView.findViewById<View>(R.id.button_alarm_time_setting).setOnClickListener { _ ->
-            val timeArray = settingDataHolder.alarmTime.split(":").map { it.trim() }
+            val timeArray = ClockSettingDataHolder.alarmTime.split(":").map { it.trim() }
             val dialog = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                settingDataHolder.alarmTime = String.format("%02d:%02d", hourOfDay, minute)
-                textAlarmTime.text = settingDataHolder.alarmTime
+                ClockSettingDataHolder.alarmTime = String.format("%02d:%02d", hourOfDay, minute)
+                textAlarmTime.text = ClockSettingDataHolder.alarmTime
                 val textTopAlarmTime = activity.findViewById<TextView>(R.id.text_top_alarm_time)
-                textTopAlarmTime.text = settingDataHolder.alarmTime
+                textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
                 fileIOWrapper.saveAlarmTime()
                 activity.startAlarmManager()
             }, Integer.parseInt(timeArray[0]), Integer.parseInt(timeArray[1]), true)
@@ -45,15 +44,15 @@ class PopupAlarm(private val activity: MainActivity) {
         textNowSound = popupView.findViewById(R.id.text_now_sound)
         switchAlarmResource()
         switchAlarm = popupView.findViewById(R.id.switch_alarm)
-        textNowSound.text = settingDataHolder.nowAlarmSound?.title
-        if (settingDataHolder.alarmCheckState) {
+        textNowSound.text = ClockSettingDataHolder.nowAlarmSound?.title
+        if (ClockSettingDataHolder.alarmCheckState) {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
         } else {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.pamplemousse))
         }
-        textAlarmTime.text = settingDataHolder.alarmTime
-        textAlarmTime.setTextColor(settingDataHolder.colorTopAlarmTime)
-        switchAlarm.isChecked = settingDataHolder.alarmCheckState
+        textAlarmTime.text = ClockSettingDataHolder.alarmTime
+        textAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
+        switchAlarm.isChecked = ClockSettingDataHolder.alarmCheckState
         switchAlarm.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(activity)) {
@@ -85,8 +84,8 @@ class PopupAlarm(private val activity: MainActivity) {
         listAlarm.adapter = adapterAlarm
         listAlarm.setOnItemClickListener { parent, _, position, _ ->
             val listView = parent as ListView
-            settingDataHolder.nowAlarmSound = listView.getItemAtPosition(position) as RingtoneData
-            textNowSound.text = settingDataHolder.nowAlarmSound?.title
+            ClockSettingDataHolder.nowAlarmSound = listView.getItemAtPosition(position) as RingtoneData
+            textNowSound.text = ClockSettingDataHolder.nowAlarmSound?.title
             fileIOWrapper.saveNowAlarmSound()
             activity.startAlarmManager()
             if (isTryPlayingAlarm) {
@@ -117,7 +116,7 @@ class PopupAlarm(private val activity: MainActivity) {
 
     private fun switchAlarmResource() {
         activity.switchAlarmResource()
-        if (settingDataHolder.alarmCheckState) {
+        if (ClockSettingDataHolder.alarmCheckState) {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
         } else {
             textNowSound.setTextColor(ContextCompat.getColor(activity, R.color.pamplemousse))
@@ -125,7 +124,7 @@ class PopupAlarm(private val activity: MainActivity) {
     }
 
     fun processSwitchAlarmChanging(isChecked: Boolean) {
-        settingDataHolder.alarmCheckState = isChecked
+        ClockSettingDataHolder.alarmCheckState = isChecked
         switchAlarmResource()
         fileIOWrapper.saveAlarmCheckState()
         activity.startAlarmManager()

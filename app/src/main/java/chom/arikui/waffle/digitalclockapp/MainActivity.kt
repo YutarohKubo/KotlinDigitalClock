@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    lateinit var settingDataHolder: ClockSettingDataHolder
     lateinit var fileIOWrapper: FileIOWrapper
 
     lateinit var textNowDay: TextView
@@ -108,7 +107,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        settingDataHolder = ClockSettingDataHolder()
         fileIOWrapper = FileIOWrapper(this)
         fileIOWrapper.loadNowAlarmSound()
         fileIOWrapper.loadAlarmTime()
@@ -153,7 +151,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             fileIOWrapper.loadTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
             frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
             textTopAlarmTime = text_top_alarm_time
-            textTopAlarmTime.text = settingDataHolder.alarmTime
+            textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
             fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
 
             // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
@@ -209,13 +207,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onStop() {
         super.onStop()
-        if (settingDataHolder.validOverlayClock) {
-            val serviceIntent = Intent(this, DigitalClockService::class.java)
-            serviceIntent.putExtra(EventIdUtil.COLOR_HOUR, settingDataHolder.colorHour)
-            serviceIntent.putExtra(EventIdUtil.COLOR_DIVIDE_TIME, settingDataHolder.colorDivideTime)
-            serviceIntent.putExtra(EventIdUtil.COLOR_MINUTE, settingDataHolder.colorMinute)
-            serviceIntent.putExtra(EventIdUtil.COLOR_SECOND, settingDataHolder.colorSecond)
-            startService(serviceIntent)
+        if (ClockSettingDataHolder.validOverlayClock) {
+            startService(Intent(this, DigitalClockService::class.java))
         }
     }
 
@@ -304,7 +297,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     fun switchAlarmResource() =
-            if (settingDataHolder.alarmCheckState) {
+            if (ClockSettingDataHolder.alarmCheckState) {
                 imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
             } else {
                 imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
@@ -318,8 +311,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
         // 他のアプリに重ねての表示が許可されていなければ、アラームをオフにする(UIにも反映する)
         if (!Settings.canDrawOverlays(this)) {
-            if (settingDataHolder.alarmCheckState) {
-                settingDataHolder.alarmCheckState = false
+            if (ClockSettingDataHolder.alarmCheckState) {
+                ClockSettingDataHolder.alarmCheckState = false
                 fileIOWrapper.saveAlarmCheckState()
                 switchAlarmResource()
             }
@@ -350,8 +343,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         // 他のアプリに重ねての表示が許可されていなければ、
         // ホーム画面などで時計を表示させないようにする
         if (!Settings.canDrawOverlays(this)) {
-            if (settingDataHolder.validOverlayClock) {
-                settingDataHolder.validOverlayClock = false
+            if (ClockSettingDataHolder.validOverlayClock) {
+                ClockSettingDataHolder.validOverlayClock = false
                 fileIOWrapper.saveValidOverlayClock()
             }
         }
@@ -373,13 +366,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     fun startAlarmManager() {
         val intent = Intent(this, AlarmBroadcastReceiver::class.java)
-        intent.putExtra("check_alarm", settingDataHolder.alarmCheckState)
-        intent.putExtra("alarm_uri", settingDataHolder.nowAlarmSound?.uri)
-        intent.putExtra("alarm_time", settingDataHolder.alarmTime)
+        intent.putExtra("check_alarm", ClockSettingDataHolder.alarmCheckState)
+        intent.putExtra("alarm_uri", ClockSettingDataHolder.nowAlarmSound?.uri)
+        intent.putExtra("alarm_time", ClockSettingDataHolder.alarmTime)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (settingDataHolder.alarmCheckState) {
-            val timeArray = settingDataHolder.alarmTime.split(":").map { it.trim() }
+        if (ClockSettingDataHolder.alarmCheckState) {
+            val timeArray = ClockSettingDataHolder.alarmTime.split(":").map { it.trim() }
             val cal = Calendar.getInstance()
             val calForService = Calendar.getInstance()
             cal.time = nowTime
@@ -407,11 +400,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     fun soundAlarm() {
-        if (settingDataHolder.nowAlarmSound?.uri == null) {
+        if (ClockSettingDataHolder.nowAlarmSound?.uri == null) {
             // アラームが存在せず、uriがnullである場合は、returnで抜ける
             return
         }
-        mp = MediaPlayer.create(this, Uri.parse(settingDataHolder.nowAlarmSound?.uri))
+        mp = MediaPlayer.create(this, Uri.parse(ClockSettingDataHolder.nowAlarmSound?.uri))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mp.setAudioAttributes(
                     AudioAttributes
@@ -435,15 +428,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
      * 時計の色更新
      */
     fun updateClockColor() {
-        textNowDay.setTextColor(settingDataHolder.colorDay)
-        textNowMonth.setTextColor(settingDataHolder.colorMonth)
-        textNowYear.setTextColor(settingDataHolder.colorYear)
-        textNowWeek.setTextColor(settingDataHolder.colorWeek)
-        textNowHour.setTextColor(settingDataHolder.colorHour)
-        textDivideHourAndMinute.setTextColor(settingDataHolder.colorDivideTime)
-        textNowMinute.setTextColor(settingDataHolder.colorMinute)
-        textNowSecond.setTextColor(settingDataHolder.colorSecond)
-        textTopAlarmTime.setTextColor(settingDataHolder.colorTopAlarmTime)
+        textNowDay.setTextColor(ClockSettingDataHolder.colorDay)
+        textNowMonth.setTextColor(ClockSettingDataHolder.colorMonth)
+        textNowYear.setTextColor(ClockSettingDataHolder.colorYear)
+        textNowWeek.setTextColor(ClockSettingDataHolder.colorWeek)
+        textNowHour.setTextColor(ClockSettingDataHolder.colorHour)
+        textDivideHourAndMinute.setTextColor(ClockSettingDataHolder.colorDivideTime)
+        textNowMinute.setTextColor(ClockSettingDataHolder.colorMinute)
+        textNowSecond.setTextColor(ClockSettingDataHolder.colorSecond)
+        textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
     }
 
     private fun hideSystemUI() {

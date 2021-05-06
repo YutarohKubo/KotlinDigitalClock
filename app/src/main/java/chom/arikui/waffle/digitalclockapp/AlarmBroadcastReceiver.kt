@@ -11,8 +11,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "ALMRCVER"
-        private val hourFormat = SimpleDateFormat("HH")
-        private val minuteFormat = SimpleDateFormat("mm")
     }
 
     override fun onReceive(p0: Context?, p1: Intent?) {
