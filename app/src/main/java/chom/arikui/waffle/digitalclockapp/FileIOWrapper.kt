@@ -6,8 +6,6 @@ import java.io.*
 
 class FileIOWrapper(private val mActivity: MainActivity) {
 
-    private val mSettingDataHolder = mActivity.settingDataHolder
-
     companion object {
         private const val TAG = "FILE_IO_WRAPPER"
         const val ALARM_TIME_FILE_NAME = "alarm_time.dc"
@@ -30,7 +28,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             BufferedReader(InputStreamReader(mActivity.openFileInput(ALARM_TIME_FILE_NAME))).use {
                 val line = it.readLine()
                 if (line != null) {
-                    mSettingDataHolder.alarmTime = line
+                    ClockSettingDataHolder.alarmTime = line
                 }
             }
         } catch (e: IOException) {
@@ -42,7 +40,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(ALARM_TIME_FILE_NAME, Context.MODE_PRIVATE))).use {
                 val builder = StringBuilder()
-                builder.append(mSettingDataHolder.alarmTime)
+                builder.append(ClockSettingDataHolder.alarmTime)
                 builder.append(System.getProperty("line.separator"))
                 it.write(builder.toString())
             }
@@ -59,7 +57,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                 if (line != null) {
                     for (data in mActivity.listAlarmData) {
                         if (line == data.uri) {
-                            mSettingDataHolder.nowAlarmSound = data
+                            ClockSettingDataHolder.nowAlarmSound = data
                             break
                         }
                     }
@@ -68,10 +66,10 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
-            if (mSettingDataHolder.nowAlarmSound == null) {
+            if (ClockSettingDataHolder.nowAlarmSound == null) {
                 if (mActivity.listAlarmData.size > 0) {
                     //Uriが見当たらなかった場合、listAlarmDataの一番上をアラーム音に設定する
-                    mSettingDataHolder.nowAlarmSound = mActivity.listAlarmData[0]
+                    ClockSettingDataHolder.nowAlarmSound = mActivity.listAlarmData[0]
                 }
             }
         }
@@ -81,7 +79,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(NOW_ALARM_SOUND_FINE_NAME, Context.MODE_PRIVATE))).use {
                 val builder = StringBuilder()
-                builder.append(mSettingDataHolder.nowAlarmSound?.uri)
+                builder.append(ClockSettingDataHolder.nowAlarmSound?.uri)
                 builder.append(System.getProperty("line.separator"))
                 it.write(builder.toString())
             }
@@ -95,7 +93,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             BufferedReader(InputStreamReader(mActivity.openFileInput(ALARM_SOUND_CHECK_STATE_FILE_NAME))).use {
                 val line = it.readLine()
                 if (line != null) {
-                    mSettingDataHolder.alarmCheckState = line.toBoolean()
+                    ClockSettingDataHolder.alarmCheckState = line.toBoolean()
                 }
             }
         } catch (e: IOException) {
@@ -107,7 +105,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(ALARM_SOUND_CHECK_STATE_FILE_NAME, Context.MODE_PRIVATE))).use {
                 val builder = StringBuilder()
-                builder.append(mSettingDataHolder.alarmCheckState)
+                builder.append(ClockSettingDataHolder.alarmCheckState)
                 builder.append(System.getProperty("line.separator"))
                 it.write(builder.toString())
             }
@@ -121,7 +119,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             BufferedReader(InputStreamReader(mActivity.openFileInput(VALID_OVERLAY_CLOCK_FILE_NAME))).use {
                 val line = it.readLine()
                 if (line != null) {
-                    mSettingDataHolder.validOverlayClock = line.toBoolean()
+                    ClockSettingDataHolder.validOverlayClock = line.toBoolean()
                 }
             }
         } catch (e: IOException) {
@@ -133,7 +131,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(VALID_OVERLAY_CLOCK_FILE_NAME, Context.MODE_PRIVATE))).use {
                 val builder = StringBuilder()
-                builder.append(mSettingDataHolder.validOverlayClock)
+                builder.append(ClockSettingDataHolder.validOverlayClock)
                 builder.append(System.getProperty("line.separator"))
                 it.write(builder.toString())
             }
@@ -155,15 +153,15 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                 val line3 = it.readLine() ?: return
                 blueValue = Integer.parseInt(line3)
                 when (fileName) {
-                    NOW_DAY_COLOR_FILE_NAME -> mSettingDataHolder.colorDay = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_MONTH_COLOR_FILE_NAME -> mSettingDataHolder.colorMonth = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_YEAR_COLOR_FILE_NAME -> mSettingDataHolder.colorYear = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_WEEK_COLOR_FILE_NAME -> mSettingDataHolder.colorWeek = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_HOUR_COLOR_FILE_NAME -> mSettingDataHolder.colorHour = Color.rgb(redValue, greenValue, blueValue)
-                    DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME -> mSettingDataHolder.colorDivideTime = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_MINUTE_COLOR_FILE_NAME -> mSettingDataHolder.colorMinute = Color.rgb(redValue, greenValue, blueValue)
-                    NOW_SECOND_COLOR_FILE_NAME -> mSettingDataHolder.colorSecond = Color.rgb(redValue, greenValue, blueValue)
-                    TOP_ALARM_TIME_COLOR_FILE_NAME -> mSettingDataHolder.colorTopAlarmTime = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_DAY_COLOR_FILE_NAME -> ClockSettingDataHolder.colorDay = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_MONTH_COLOR_FILE_NAME -> ClockSettingDataHolder.colorMonth = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_YEAR_COLOR_FILE_NAME -> ClockSettingDataHolder.colorYear = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_WEEK_COLOR_FILE_NAME -> ClockSettingDataHolder.colorWeek = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_HOUR_COLOR_FILE_NAME -> ClockSettingDataHolder.colorHour = Color.rgb(redValue, greenValue, blueValue)
+                    DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME -> ClockSettingDataHolder.colorDivideTime = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_MINUTE_COLOR_FILE_NAME -> ClockSettingDataHolder.colorMinute = Color.rgb(redValue, greenValue, blueValue)
+                    NOW_SECOND_COLOR_FILE_NAME -> ClockSettingDataHolder.colorSecond = Color.rgb(redValue, greenValue, blueValue)
+                    TOP_ALARM_TIME_COLOR_FILE_NAME -> ClockSettingDataHolder.colorTopAlarmTime = Color.rgb(redValue, greenValue, blueValue)
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -180,49 +178,49 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                 val blueValue: Int
                 when (fileName) {
                     NOW_DAY_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorDay)
-                        greenValue = Color.green(mSettingDataHolder.colorDay)
-                        blueValue = Color.blue(mSettingDataHolder.colorDay)
+                        redValue = Color.red(ClockSettingDataHolder.colorDay)
+                        greenValue = Color.green(ClockSettingDataHolder.colorDay)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorDay)
                     }
                     NOW_MONTH_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorMonth)
-                        greenValue = Color.green(mSettingDataHolder.colorMonth)
-                        blueValue = Color.blue(mSettingDataHolder.colorMonth)
+                        redValue = Color.red(ClockSettingDataHolder.colorMonth)
+                        greenValue = Color.green(ClockSettingDataHolder.colorMonth)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorMonth)
                     }
                     NOW_YEAR_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorYear)
-                        greenValue = Color.green(mSettingDataHolder.colorYear)
-                        blueValue = Color.blue(mSettingDataHolder.colorYear)
+                        redValue = Color.red(ClockSettingDataHolder.colorYear)
+                        greenValue = Color.green(ClockSettingDataHolder.colorYear)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorYear)
                     }
                     NOW_WEEK_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorWeek)
-                        greenValue = Color.green(mSettingDataHolder.colorWeek)
-                        blueValue = Color.blue(mSettingDataHolder.colorWeek)
+                        redValue = Color.red(ClockSettingDataHolder.colorWeek)
+                        greenValue = Color.green(ClockSettingDataHolder.colorWeek)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorWeek)
                     }
                     NOW_HOUR_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorHour)
-                        greenValue = Color.green(mSettingDataHolder.colorHour)
-                        blueValue = Color.blue(mSettingDataHolder.colorHour)
+                        redValue = Color.red(ClockSettingDataHolder.colorHour)
+                        greenValue = Color.green(ClockSettingDataHolder.colorHour)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorHour)
                     }
                     DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorDivideTime)
-                        greenValue = Color.green(mSettingDataHolder.colorDivideTime)
-                        blueValue = Color.blue(mSettingDataHolder.colorDivideTime)
+                        redValue = Color.red(ClockSettingDataHolder.colorDivideTime)
+                        greenValue = Color.green(ClockSettingDataHolder.colorDivideTime)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorDivideTime)
                     }
                     NOW_MINUTE_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorMinute)
-                        greenValue = Color.green(mSettingDataHolder.colorMinute)
-                        blueValue = Color.blue(mSettingDataHolder.colorMinute)
+                        redValue = Color.red(ClockSettingDataHolder.colorMinute)
+                        greenValue = Color.green(ClockSettingDataHolder.colorMinute)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorMinute)
                     }
                     NOW_SECOND_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorSecond)
-                        greenValue = Color.green(mSettingDataHolder.colorSecond)
-                        blueValue = Color.blue(mSettingDataHolder.colorSecond)
+                        redValue = Color.red(ClockSettingDataHolder.colorSecond)
+                        greenValue = Color.green(ClockSettingDataHolder.colorSecond)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorSecond)
                     }
                     TOP_ALARM_TIME_COLOR_FILE_NAME -> {
-                        redValue = Color.red(mSettingDataHolder.colorTopAlarmTime)
-                        greenValue = Color.green(mSettingDataHolder.colorTopAlarmTime)
-                        blueValue = Color.blue(mSettingDataHolder.colorTopAlarmTime)
+                        redValue = Color.red(ClockSettingDataHolder.colorTopAlarmTime)
+                        greenValue = Color.green(ClockSettingDataHolder.colorTopAlarmTime)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorTopAlarmTime)
                     }
                     else -> throw IllegalArgumentException()
                 }

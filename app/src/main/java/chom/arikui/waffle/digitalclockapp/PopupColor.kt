@@ -15,7 +15,6 @@ class PopupColor(private val activity: MainActivity) {
     fun showPopup(v: View) {
         val popupWindow = PopupWindow(activity)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
-        val settingDataHolder = activity.settingDataHolder
         val fileIOWrapper = activity.fileIOWrapper
 
         val textRValue = popupView.findViewById<TextView>(R.id.text_r_value)
@@ -45,18 +44,18 @@ class PopupColor(private val activity: MainActivity) {
             R.id.frame_now_day -> {
                 sampleText.text = textDay.text
                 sampleTextTitle.text = "DAY"
-                sampleText.setTextColor(settingDataHolder.colorDay)
+                sampleText.setTextColor(ClockSettingDataHolder.colorDay)
             }
             R.id.frame_now_month -> {
                 sampleText.text = textMonth.text
                 sampleTextTitle.text = "MONTH"
-                sampleText.setTextColor(settingDataHolder.colorMonth)
+                sampleText.setTextColor(ClockSettingDataHolder.colorMonth)
             }
             R.id.frame_now_year -> {
                 sampleBackground.text = "8888"
                 sampleText.text = textYear.text
                 sampleTextTitle.text = "YEAR"
-                sampleText.setTextColor(settingDataHolder.colorYear)
+                sampleText.setTextColor(ClockSettingDataHolder.colorYear)
             }
             R.id.text_now_week -> {
                 popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
@@ -64,12 +63,12 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textWeek.text
                 sampleTextTitle.text = "WEEK of day"
-                sampleText.setTextColor(settingDataHolder.colorWeek)
+                sampleText.setTextColor(ClockSettingDataHolder.colorWeek)
             }
             R.id.frame_now_hour -> {
                 sampleText.text = textHour.text
                 sampleTextTitle.text = "HOUR"
-                sampleText.setTextColor(settingDataHolder.colorHour)
+                sampleText.setTextColor(ClockSettingDataHolder.colorHour)
             }
             R.id.text_divide_hour_and_minute -> {
                 popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
@@ -77,23 +76,23 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText = popupView.findViewById(R.id.text_divide_hour_and_minute_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textDivideTime.text
-                sampleText.setTextColor(settingDataHolder.colorDivideTime)
+                sampleText.setTextColor(ClockSettingDataHolder.colorDivideTime)
             }
             R.id.frame_now_minute -> {
                 sampleText.text = textMinute.text
                 sampleTextTitle.text = "MINUTE"
-                sampleText.setTextColor(settingDataHolder.colorMinute)
+                sampleText.setTextColor(ClockSettingDataHolder.colorMinute)
             }
             R.id.frame_now_second -> {
                 sampleText.text = textSecond.text
                 sampleTextTitle.text = "SECOND"
-                sampleText.setTextColor(settingDataHolder.colorSecond)
+                sampleText.setTextColor(ClockSettingDataHolder.colorSecond)
             }
             R.id.frame_top_alarm_time -> {
                 sampleBackground.text = "88:88"
                 sampleText.text = textTopAlarmTime.text
                 sampleTextTitle.text = "ALARM TIME"
-                sampleText.setTextColor(settingDataHolder.colorTopAlarmTime)
+                sampleText.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
             }
             else -> {
                 throw IllegalArgumentException()
@@ -169,15 +168,15 @@ class PopupColor(private val activity: MainActivity) {
 
         //色統一チェックボックスチェック時において、OKボタン押下時の出現アラートダイアログのOKボタンのコールバック
         val dialogOkCallback = {
-            settingDataHolder.colorDay = sampleText.currentTextColor
-            settingDataHolder.colorMonth = sampleText.currentTextColor
-            settingDataHolder.colorYear = sampleText.currentTextColor
-            settingDataHolder.colorWeek = sampleText.currentTextColor
-            settingDataHolder.colorHour = sampleText.currentTextColor
-            settingDataHolder.colorDivideTime = sampleText.currentTextColor
-            settingDataHolder.colorMinute = sampleText.currentTextColor
-            settingDataHolder.colorSecond = sampleText.currentTextColor
-            settingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
+            ClockSettingDataHolder.colorDay = sampleText.currentTextColor
+            ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
+            ClockSettingDataHolder.colorYear = sampleText.currentTextColor
+            ClockSettingDataHolder.colorWeek = sampleText.currentTextColor
+            ClockSettingDataHolder.colorHour = sampleText.currentTextColor
+            ClockSettingDataHolder.colorDivideTime = sampleText.currentTextColor
+            ClockSettingDataHolder.colorMinute = sampleText.currentTextColor
+            ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
+            ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
             activity.updateClockColor()
             fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
             fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
@@ -199,48 +198,48 @@ class PopupColor(private val activity: MainActivity) {
             } else {
                 when (v.id) {
                     R.id.frame_now_day -> {
-                        settingDataHolder.colorDay = sampleText.currentTextColor
-                        textDay.setTextColor(settingDataHolder.colorDay)
+                        ClockSettingDataHolder.colorDay = sampleText.currentTextColor
+                        textDay.setTextColor(ClockSettingDataHolder.colorDay)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_month -> {
-                        settingDataHolder.colorMonth = sampleText.currentTextColor
-                        textMonth.setTextColor(settingDataHolder.colorMonth)
+                        ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
+                        textMonth.setTextColor(ClockSettingDataHolder.colorMonth)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_year -> {
-                        settingDataHolder.colorYear = sampleText.currentTextColor
-                        textYear.setTextColor(settingDataHolder.colorYear)
+                        ClockSettingDataHolder.colorYear = sampleText.currentTextColor
+                        textYear.setTextColor(ClockSettingDataHolder.colorYear)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
                     }
                     R.id.text_now_week -> {
-                        settingDataHolder.colorWeek = sampleText.currentTextColor
-                        textWeek.setTextColor(settingDataHolder.colorWeek)
+                        ClockSettingDataHolder.colorWeek = sampleText.currentTextColor
+                        textWeek.setTextColor(ClockSettingDataHolder.colorWeek)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_hour -> {
-                        settingDataHolder.colorHour = sampleText.currentTextColor
-                        textHour.setTextColor(settingDataHolder.colorHour)
+                        ClockSettingDataHolder.colorHour = sampleText.currentTextColor
+                        textHour.setTextColor(ClockSettingDataHolder.colorHour)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
                     }
                     R.id.text_divide_hour_and_minute -> {
-                        settingDataHolder.colorDivideTime = sampleText.currentTextColor
-                        textDivideTime.setTextColor(settingDataHolder.colorDivideTime)
+                        ClockSettingDataHolder.colorDivideTime = sampleText.currentTextColor
+                        textDivideTime.setTextColor(ClockSettingDataHolder.colorDivideTime)
                         fileIOWrapper.saveTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_minute -> {
-                        settingDataHolder.colorMinute = sampleText.currentTextColor
-                        textMinute.setTextColor(settingDataHolder.colorMinute)
+                        ClockSettingDataHolder.colorMinute = sampleText.currentTextColor
+                        textMinute.setTextColor(ClockSettingDataHolder.colorMinute)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_second -> {
-                        settingDataHolder.colorSecond = sampleText.currentTextColor
-                        textSecond.setTextColor(settingDataHolder.colorSecond)
+                        ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
+                        textSecond.setTextColor(ClockSettingDataHolder.colorSecond)
                         fileIOWrapper.saveTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
                     }
                     R.id.frame_top_alarm_time -> {
-                        settingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
-                        textTopAlarmTime.setTextColor(settingDataHolder.colorTopAlarmTime)
+                        ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
+                        textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
                         fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
                     }
                     else -> {
