@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.IBinder
@@ -35,6 +36,7 @@ class DigitalClockService : Service(), CoroutineScope {
         get() = Dispatchers.Main
 
     private var clockView: View? = null
+    private lateinit var mClockViewParam: WindowManager.LayoutParams
     private var textHour: TextView? = null
     private var textDivideTime: TextView? = null
     private var textMinute: TextView? = null
@@ -75,7 +77,7 @@ class DigitalClockService : Service(), CoroutineScope {
 
         val inflater = LayoutInflater.from(this)
         windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val params = WindowManager.LayoutParams(
+        mClockViewParam = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 overlayType,  // Overlay レイヤに表示
@@ -87,9 +89,11 @@ class DigitalClockService : Service(), CoroutineScope {
                 PixelFormat.TRANSLUCENT
         )
 
-        params.gravity = Gravity.TOP or Gravity.START
+        mClockViewParam.x = 0
+        mClockViewParam.y = 0
+        mClockViewParam.gravity = Gravity.TOP or Gravity.START
         // 左上から、およそステータスバーの高さ分だけ下にずらして表示する
-        params.y += CalculateUtil.convertDp2Px(50, this).toInt()
+        mClockViewParam.y += CalculateUtil.convertDp2Px(50, this).toInt()
 
         // 万が一以前のViewが画面上に残っていた場合は、windowから削除する
         if (clockView != null) {
@@ -120,9 +124,9 @@ class DigitalClockService : Service(), CoroutineScope {
                 MotionEvent.ACTION_MOVE -> {
                     val centerX = newDx - (v.width / 2)
                     val centerY = newDy - (v.height / 2)
-                    params.x = centerX
-                    params.y = centerY
-                    windowManager?.updateViewLayout(v, params)
+                    mClockViewParam.x = centerX
+                    mClockViewParam.y = centerY
+                    windowManager?.updateViewLayout(v, mClockViewParam)
                 }
                 MotionEvent.ACTION_UP -> {
                     v.alpha = TRANSPARENT_NORMAL
@@ -130,7 +134,7 @@ class DigitalClockService : Service(), CoroutineScope {
             }
             true
         }
-        windowManager?.addView(clockView, params)
+        windowManager?.addView(clockView, mClockViewParam)
 
         launch {
             while (true) {
@@ -150,6 +154,16 @@ class DigitalClockService : Service(), CoroutineScope {
 
     override fun onBind(intent: Intent?): IBinder? {
         TODO("Not yet implemented")
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        mClockViewParam.x = 0
+        mClockViewParam.y = 0
+        mClockViewParam.gravity = Gravity.TOP or Gravity.START
+        // 左上から、およそステータスバーの高さ分だけ下にずらして表示する
+        mClockViewParam.y += CalculateUtil.convertDp2Px(50, this).toInt()
+        windowManager?.updateViewLayout(clockView, mClockViewParam)
     }
 
     /**
