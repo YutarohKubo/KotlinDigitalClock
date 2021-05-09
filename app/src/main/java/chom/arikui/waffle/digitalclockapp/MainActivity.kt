@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private var mPopupAlarm: PopupAlarm? = null
     private var mPopupSetting: PopupSetting? = null
 
-    private lateinit var mInterAdCloseApp: InterstitialAd
+    private var mInterAdCloseApp: InterstitialAd? = null
 
     private var mLaunchOverlaySetting = false
 
@@ -84,20 +84,21 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         mInterAdCloseApp = InterstitialAd(this)
 
-        mInterAdCloseApp.adListener = object : AdListener() {
+        mInterAdCloseApp!!.adListener = object : AdListener() {
             override fun onAdClosed() {
                 super.onAdClosed()
-                mInterAdCloseApp.loadAd(adRequest)
+                // 広告は1回だけ表示させるため、リロードしない
+                // mInterAdCloseApp?.loadAd(adRequest)
             }
         }
 
         if (isTest) {
-            mInterAdCloseApp.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+            mInterAdCloseApp!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
         } else {
-            mInterAdCloseApp.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+            mInterAdCloseApp!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
         }
 
-        mInterAdCloseApp.loadAd(adRequest)
+        mInterAdCloseApp!!.loadAd(adRequest)
 
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -117,6 +118,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             imageAlarm = image_alarm
             switchAlarmResource()
             button_alarm.setOnClickListener { _ ->
+                showInterstitial()
                 if (listAlarmData.size == 0) {
                     Toast.makeText(this, getString(R.string.alert_no_alarm_data), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
@@ -159,6 +161,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 image_setting.visibility = View.VISIBLE
                 image_setting.setOnClickListener { _ ->
+                    showInterstitial()
                     mPopupSetting = PopupSetting(this)
                     mPopupSetting?.showPopup()
                 }
@@ -220,7 +223,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onBackPressed() {
-        showInterstitial()
         val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message))
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
@@ -269,8 +271,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun showInterstitial() {
-        if (mInterAdCloseApp.isLoaded) {
-            mInterAdCloseApp.show()
+        if (mInterAdCloseApp != null && mInterAdCloseApp!!.isLoaded) {
+            mInterAdCloseApp!!.show()
         }
     }
 
@@ -279,6 +281,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             if (v == null) {
                 return false
             }
+            showInterstitial()
             val mPopupColor = PopupColor(this@MainActivity)
             mPopupColor.showPopup(v)
             return true
