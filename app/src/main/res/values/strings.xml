@@ -13,8 +13,8 @@
     <string name="unify_time_colors">unify\ntime colors</string>
     <string name="unify_time_colors_dialog_message">All time colors will be unified.\nIs it OK?</string>
     <string name="confirming_app_finish_dialog_message">This app will be closed.\nIs it OK?</string>
-    <string name="need_to_allow_display_over_other_apps_to_enable_alarm">You need to allow display over other apps to enable alarm function.\nWill you go to setting?</string>
-    <string name="need_to_allow_display_over_other_apps_to_enable_overlay_clock">You need to allow display over other apps to enable this function.\nWill you go to setting?</string>
+    <string name="need_to_allow_display_over_other_apps_to_enable_alarm">You need to allow display over other apps to enable alarm function.\nWill you go setting?</string>
+    <string name="need_to_allow_display_over_other_apps_to_enable_overlay_clock">You need to allow display over other apps to enable this function.\nWill you go setting?</string>
     <string name="description_notification">Display operation of clock.</string>
     <string name="clock_visible">Display clock</string>
     <string name="clock_hide">Hide clock</string>
