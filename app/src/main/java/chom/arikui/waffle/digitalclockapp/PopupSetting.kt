@@ -5,6 +5,7 @@ import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
 import android.widget.CheckBox
+import android.widget.FrameLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 
@@ -41,7 +42,8 @@ class PopupSetting(private val activity: MainActivity) {
 
         buttonBackgroundSetting = popupView.findViewById(R.id.button_background_setting)
         buttonBackgroundSetting.setOnClickListener {
-            
+            val mPopupColor = PopupColor(activity)
+            mPopupColor.showPopup(activity.findViewById<FrameLayout>(R.id.activity_root))
         }
 
         popupWindow?.contentView = popupView

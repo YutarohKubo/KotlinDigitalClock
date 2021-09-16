@@ -2,6 +2,8 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -23,8 +25,11 @@ class PopupColor(private val activity: MainActivity) {
         val seekBarRed = popupView.findViewById<SeekBar>(R.id.seekbar_r)
         val seekBarGreen = popupView.findViewById<SeekBar>(R.id.seekbar_g)
         val seekBarBlue = popupView.findViewById<SeekBar>(R.id.seekbar_b)
-        val sampleBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
+        val frameSample = popupView.findViewById<FrameLayout>(R.id.frame_sample)
+        val sampleTextBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
         var sampleText = popupView.findViewById<TextView>(R.id.text_sample)
+        val sampleBackgroundFrame =
+            popupView.findViewById<FrameLayout>(R.id.frame_background_setting)
         val sampleTextTitle = popupView.findViewById<TextView>(R.id.text_sample_title)
         val buttonDefaultColor = popupView.findViewById<ImageButton>(R.id.button_default_color)
         val buttonColorOk = popupView.findViewById<ImageButton>(R.id.button_color_ok)
@@ -39,6 +44,9 @@ class PopupColor(private val activity: MainActivity) {
         val textMinute = activity.findViewById<TextView>(R.id.text_now_minute)
         val textSecond = activity.findViewById<TextView>(R.id.text_now_second)
         val textTopAlarmTime = activity.findViewById<TextView>(R.id.text_top_alarm_time)
+        val backgroundFrame = activity.findViewById<FrameLayout>(R.id.activity_root)
+
+        val displaySize = activity.displaySize()
 
         when (v.id) {
             R.id.frame_now_day -> {
@@ -52,13 +60,13 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorMonth)
             }
             R.id.frame_now_year -> {
-                sampleBackground.text = "8888"
+                sampleTextBackground.text = "8888"
                 sampleText.text = textYear.text
                 sampleTextTitle.text = "YEAR"
                 sampleText.setTextColor(ClockSettingDataHolder.colorYear)
             }
             R.id.text_now_week -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
+                frameSample.visibility = View.GONE
                 sampleText = popupView.findViewById(R.id.text_now_week_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textWeek.text
@@ -71,7 +79,7 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorHour)
             }
             R.id.text_divide_hour_and_minute -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
+                frameSample.visibility = View.GONE
                 sampleTextTitle.visibility = View.GONE
                 sampleText = popupView.findViewById(R.id.text_divide_hour_and_minute_sample)
                 sampleText.visibility = View.VISIBLE
@@ -89,19 +97,38 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorSecond)
             }
             R.id.frame_top_alarm_time -> {
-                sampleBackground.text = "88:88"
+                sampleTextBackground.text = "88:88"
                 sampleText.text = textTopAlarmTime.text
                 sampleTextTitle.text = "ALARM TIME"
                 sampleText.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
+            }
+            R.id.activity_root -> {
+                frameSample.visibility = View.GONE
+                val frameHeight = CalculateUtil.convertDp2Px(96, activity)
+                val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
+                val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
+                lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(10, activity).toInt())
+                sampleBackgroundFrame.layoutParams = lParam
+                sampleBackgroundFrame.visibility = View.VISIBLE
+                sampleTextTitle.text = "BACKGROUND"
+                sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
             }
             else -> {
                 throw IllegalArgumentException()
             }
         }
 
-        val redValue = Color.red(sampleText.currentTextColor)
-        val greenValue = Color.green(sampleText.currentTextColor)
-        val blueValue = Color.blue(sampleText.currentTextColor)
+        var redValue = Color.red(sampleText.currentTextColor)
+        var greenValue = Color.green(sampleText.currentTextColor)
+        var blueValue = Color.blue(sampleText.currentTextColor)
+        // カラーシークバーに関する設定
+        if (v.id == R.id.activity_root) {
+            // 背景の設定である場合
+            val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
+            redValue = Color.red(frameBackgroundDrawable.color)
+            greenValue = Color.green(frameBackgroundDrawable.color)
+            blueValue = Color.blue(frameBackgroundDrawable.color)
+        }
         textRValue.text = redValue.toString()
         textGValue.text = greenValue.toString()
         textBValue.text = blueValue.toString()
@@ -112,7 +139,24 @@ class PopupColor(private val activity: MainActivity) {
         seekBarRed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textRValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(progress, seekBarGreen.progress, seekBarBlue.progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            progress,
+                            seekBarGreen.progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            progress,
+                            seekBarGreen.progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -127,7 +171,24 @@ class PopupColor(private val activity: MainActivity) {
         seekBarGreen.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textGValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, progress, seekBarBlue.progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -143,7 +204,24 @@ class PopupColor(private val activity: MainActivity) {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textBValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, seekBarGreen.progress, progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            seekBarGreen.progress,
+                            progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            seekBarGreen.progress,
+                            progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -157,13 +235,41 @@ class PopupColor(private val activity: MainActivity) {
         })
 
         buttonDefaultColor.setOnClickListener { _ ->
-            textRValue.text = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE.toString()
-            textGValue.text = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE.toString()
-            textBValue.text = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE.toString()
-            seekBarRed.progress = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE
-            seekBarGreen.progress = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE
-            seekBarBlue.progress = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE
-            sampleText.setTextColor(Color.rgb(ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE))
+            val defaultRedValue: Int
+            val defaultGreenValue: Int
+            val defaultBlueValue: Int
+            // サンプル色をデフォルトに変更
+            if (v.id == R.id.activity_root) {
+                defaultRedValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_RED_VALUE
+                defaultGreenValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_GREEN_VALUE
+                defaultBlueValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_BLUE_VALUE
+                sampleBackgroundFrame.setBackgroundColor(
+                    Color.rgb(
+                        defaultRedValue,
+                        defaultGreenValue,
+                        defaultBlueValue
+                    )
+                )
+            } else {
+                defaultRedValue = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE
+                defaultGreenValue = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE
+                defaultBlueValue = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE
+                sampleText.setTextColor(
+                    Color.rgb(
+                        defaultRedValue,
+                        defaultGreenValue,
+                        defaultBlueValue
+                    )
+                )
+            }
+
+            // シークバーのアップデート
+            textRValue.text = defaultRedValue.toString()
+            textGValue.text = defaultGreenValue.toString()
+            textBValue.text = defaultBlueValue.toString()
+            seekBarRed.progress = defaultRedValue
+            seekBarGreen.progress = defaultGreenValue
+            seekBarBlue.progress = defaultBlueValue
         }
 
         //色統一チェックボックスチェック時において、OKボタン押下時の出現アラートダイアログのOKボタンのコールバック
@@ -192,7 +298,8 @@ class PopupColor(private val activity: MainActivity) {
 
         buttonColorOk.setOnClickListener { _ ->
             if (checkBoxUnifyColor.isChecked) {
-                val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message))
+                val dialog =
+                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message))
                 dialog.okListener = dialogOkCallback
                 dialog.show(activity.supportFragmentManager, TAG)
             } else {
@@ -242,6 +349,12 @@ class PopupColor(private val activity: MainActivity) {
                         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
                         fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
                     }
+                    R.id.activity_root -> {
+                        val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
+                        ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
+                        backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                        // Todo IO周りの対応
+                    }
                     else -> {
                         throw IllegalArgumentException()
                     }
@@ -254,13 +367,8 @@ class PopupColor(private val activity: MainActivity) {
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
 
-        val d = activity.windowManager.defaultDisplay
-        val p2 = Point()
-        // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p2)
-
-        popupWindow.width = p2.x - 200
-        popupWindow.height = p2.y - 120
+        popupWindow.width = displaySize.x - 200
+        popupWindow.height = displaySize.y - 120
 
         // 画面中央に表示
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)

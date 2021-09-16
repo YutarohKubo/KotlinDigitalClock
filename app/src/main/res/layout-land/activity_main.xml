@@ -1,395 +1,409 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/date_area"
+    <ImageView
+        android:id="@+id/image_pic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center">
+        android:layout_height="match_parent" />
 
-        <RelativeLayout
-            android:id="@+id/layout_now_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <FrameLayout
-                android:id="@+id/frame_now_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/text_now_day_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:text="88"
-                    android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_date" />
-
-                <TextView
-                    android:id="@+id/text_now_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:textColor="@color/vert_prairie"
-                    android:textSize="@dimen/text_size_date" />
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/text_title_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_day"
-                android:layout_centerInParent="true"
-                android:text="DAY"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_now_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/layout_now_day">
-
-            <FrameLayout
-                android:id="@+id/frame_now_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/text_now_month_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:text="88"
-                    android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_date" />
-
-                <TextView
-                    android:id="@+id/text_now_month"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:textColor="@color/vert_prairie"
-                    android:textSize="@dimen/text_size_date" />
-
-            </FrameLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_month"
-                android:layout_centerInParent="true"
-                android:text="MONTH"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_now_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/layout_now_month">
-
-            <FrameLayout
-                android:id="@+id/frame_now_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/text_now_year_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:text="8888"
-                    android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_date" />
-
-                <TextView
-                    android:id="@+id/text_now_year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:textColor="@color/vert_prairie"
-                    android:textSize="@dimen/text_size_date" />
-
-            </FrameLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_year"
-                android:layout_centerInParent="true"
-                android:text="YEAR"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_now_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/layout_now_year"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/layout_now_year">
-
-            <TextView
-                android:id="@+id/text_now_week"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/ksblockblock"
-                android:textColor="@color/vert_prairie"
-                android:textSize="@dimen/text_size_week" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_now_week"
-                android:layout_centerInParent="true"
-                android:text="a"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_title"
-                android:visibility="invisible" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/time_area"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/layout_now_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/date_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
 
-            <FrameLayout
-                android:id="@+id/frame_now_hour"
+            <RelativeLayout
+                android:id="@+id/layout_now_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/text_now_hour_background"
+                <FrameLayout
+                    android:id="@+id/frame_now_day"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:text="88"
-                    android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_hour_and_minute" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_day_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="88"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_date" />
+
+                    <TextView
+                        android:id="@+id/text_now_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_date" />
+
+                </FrameLayout>
 
                 <TextView
-                    android:id="@+id/text_now_hour"
+                    android:id="@+id/text_title_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
+                    android:layout_below="@+id/frame_now_day"
+                    android:layout_centerInParent="true"
+                    android:text="DAY"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_now_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/layout_now_day">
+
+                <FrameLayout
+                    android:id="@+id/frame_now_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_month_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="88"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_date" />
+
+                    <TextView
+                        android:id="@+id/text_now_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_date" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_now_month"
+                    android:layout_centerInParent="true"
+                    android:text="MONTH"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_now_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/layout_now_month">
+
+                <FrameLayout
+                    android:id="@+id/frame_now_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_year_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="8888"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_date" />
+
+                    <TextView
+                        android:id="@+id/text_now_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_date" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_now_year"
+                    android:layout_centerInParent="true"
+                    android:text="YEAR"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_now_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/layout_now_year"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/layout_now_year">
+
+                <TextView
+                    android:id="@+id/text_now_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ksblockblock"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="@dimen/text_size_hour_and_minute" />
+                    android:textSize="@dimen/text_size_week" />
 
-            </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_now_week"
+                    android:layout_centerInParent="true"
+                    android:text="a"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_title"
+                    android:visibility="invisible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_hour"
-                android:layout_centerInParent="true"
-                android:text="HOUR"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_divide_hour_and_minute"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/layout_now_hour">
-
-            <TextView
-                android:id="@+id/text_divide_hour_and_minute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:fontFamily="@font/barspbd"
-                android:text=":"
-                android:textColor="@color/vert_prairie"
-                android:textSize="@dimen/text_size_hour_and_minute" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_divide_hour_and_minute"
-                android:layout_centerInParent="true"
-                android:text="a"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_title"
-                android:visibility="invisible" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/layout_now_minute"
-            android:layout_width="wrap_content"
+            android:id="@+id/time_area"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/layout_divide_hour_and_minute">
+            android:layout_marginTop="20dp"
+            android:gravity="center">
 
-            <FrameLayout
-                android:id="@+id/frame_now_minute"
+            <RelativeLayout
+                android:id="@+id/layout_now_hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/text_now_minute_background"
+                <FrameLayout
+                    android:id="@+id/frame_now_hour"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barspbd"
-                    android:text="88"
-                    android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_hour_and_minute" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_hour_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="88"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_hour_and_minute" />
+
+                    <TextView
+                        android:id="@+id/text_now_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_hour_and_minute" />
+
+                </FrameLayout>
 
                 <TextView
-                    android:id="@+id/text_now_minute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_now_hour"
+                    android:layout_centerInParent="true"
+                    android:text="HOUR"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_divide_hour_and_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/layout_now_hour">
+
+                <TextView
+                    android:id="@+id/text_divide_hour_and_minute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:fontFamily="@font/barspbd"
+                    android:text=":"
                     android:textColor="@color/vert_prairie"
                     android:textSize="@dimen/text_size_hour_and_minute" />
 
-            </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_divide_hour_and_minute"
+                    android:layout_centerInParent="true"
+                    android:text="a"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_title"
+                    android:visibility="invisible" />
 
-            <TextView
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_now_minute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_minute"
-                android:layout_centerInParent="true"
-                android:text="MINUTE"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
+                android:layout_toRightOf="@+id/layout_divide_hour_and_minute">
+
+                <FrameLayout
+                    android:id="@+id/frame_now_minute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_minute_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="88"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_hour_and_minute" />
+
+                    <TextView
+                        android:id="@+id/text_now_minute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_hour_and_minute" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_now_minute"
+                    android:layout_centerInParent="true"
+                    android:text="MINUTE"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_now_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/layout_now_hour"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/layout_now_minute">
+
+                <FrameLayout
+                    android:id="@+id/frame_now_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_now_second_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:text="88"
+                        android:textColor="@color/sumi"
+                        android:textSize="@dimen/text_size_second" />
+
+                    <TextView
+                        android:id="@+id/text_now_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barspbd"
+                        android:textColor="@color/vert_prairie"
+                        android:textSize="@dimen/text_size_second" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_now_second"
+                    android:layout_centerInParent="true"
+                    android:text="SECOND"
+                    android:textColor="@color/snow_white"
+                    android:textSize="@dimen/text_size_title" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/layout_now_second"
-            android:layout_width="wrap_content"
+            android:id="@+id/bottom_area"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/layout_now_hour"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/layout_now_minute">
+            android:layout_marginRight="20dp">
+
+            <RelativeLayout
+                android:id="@+id/button_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/grad_silver_background_shape">
+
+                <ImageView
+                    android:id="@+id/image_alarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/icon_alarm_off" />
+
+            </RelativeLayout>
 
             <FrameLayout
-                android:id="@+id/frame_now_second"
+                android:id="@+id/frame_top_alarm_time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/button_alarm"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/button_alarm"
+                android:paddingTop="6dp">
 
                 <TextView
-                    android:id="@+id/text_now_second_background"
+                    android:id="@+id/text_top_alarm_time_background"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/barspbd"
-                    android:text="88"
+                    android:text="88:88"
                     android:textColor="@color/sumi"
-                    android:textSize="@dimen/text_size_second" />
+                    android:textSize="@dimen/text_size_alarm_time" />
 
                 <TextView
-                    android:id="@+id/text_now_second"
+                    android:id="@+id/text_top_alarm_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/barspbd"
                     android:textColor="@color/vert_prairie"
-                    android:textSize="@dimen/text_size_second" />
+                    android:textSize="@dimen/text_size_alarm_time" />
 
             </FrameLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_now_second"
-                android:layout_centerInParent="true"
-                android:text="SECOND"
-                android:textColor="@color/snow_white"
-                android:textSize="@dimen/text_size_title" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/bottom_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-
-        <RelativeLayout
-            android:id="@+id/button_alarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/grad_silver_background_shape">
 
             <ImageView
-                android:id="@+id/image_alarm"
+                android:id="@+id/image_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_margin="4dp"
-                android:src="@drawable/icon_alarm_off" />
+                android:layout_alignBottom="@id/button_alarm"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/button_setting_style" />
 
         </RelativeLayout>
 
-        <FrameLayout
-            android:id="@+id/frame_top_alarm_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            android:layout_marginLeft="5dp"
-            android:layout_alignBottom="@id/button_alarm"
-            android:layout_toRightOf="@id/button_alarm">
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/text_top_alarm_time_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/barspbd"
-                android:text="88:88"
-                android:textColor="@color/sumi"
-                android:textSize="@dimen/text_size_alarm_time" />
-
-            <TextView
-                android:id="@+id/text_top_alarm_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/barspbd"
-                android:textColor="@color/vert_prairie"
-                android:textSize="@dimen/text_size_alarm_time" />
-
-        </FrameLayout>
-
-        <ImageView
-            android:id="@+id/image_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/button_setting_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/button_alarm"/>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</FrameLayout>

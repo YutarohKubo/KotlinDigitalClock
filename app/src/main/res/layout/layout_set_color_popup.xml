@@ -170,17 +170,30 @@
                 android:fontFamily="@font/barspbd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_sample"
+                android:layout_below="@+id/text_now_week_sample"
                 android:textColor="@color/vert_prairie"
                 android:visibility="gone"
                 android:textSize="96dp" />
 
+            <FrameLayout
+                android:id="@+id/frame_background_setting"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:layout_below="@id/text_divide_hour_and_minute_sample">
+
+                <ImageView
+                    android:id="@+id/image_pic_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/text_sample_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_now_week_sample"
+                android:layout_below="@+id/frame_background_setting"
                 android:layout_centerInParent="true"
                 android:textColor="@color/snow_white" />
 
@@ -199,7 +212,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/button_default_color_style"/>
-
 
             <ImageButton
                 android:id="@+id/button_color_ok"
