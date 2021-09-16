@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     lateinit var textDivideHourAndMinute: TextView
     lateinit var textNowMinute: TextView
     lateinit var textNowSecond: TextView
+    lateinit var backgroundFrame: FrameLayout
     lateinit var textTopAlarmTime: TextView
 
     val listAlarmData = arrayListOf<RingtoneData>()
@@ -130,32 +132,35 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             frame_now_day.setOnLongClickListener(mLongClickListener)
             textNowDay = text_now_day
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
             frame_now_month.setOnLongClickListener(mLongClickListener)
             textNowMonth = text_now_month
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
             frame_now_year.setOnLongClickListener(mLongClickListener)
             textNowYear = text_now_year
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
             text_now_week.setOnLongClickListener(mLongClickListener)
             textNowWeek = text_now_week
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
             frame_now_hour.setOnLongClickListener(mLongClickListener)
             textNowHour = text_now_hour
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
             text_divide_hour_and_minute.setOnLongClickListener(mLongClickListener)
             textDivideHourAndMinute = text_divide_hour_and_minute
-            fileIOWrapper.loadTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
             frame_now_minute.setOnLongClickListener(mLongClickListener)
             textNowMinute = text_now_minute
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
             frame_now_second.setOnLongClickListener(mLongClickListener)
             textNowSecond = text_now_second
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            activity_root.setOnLongClickListener(mLongClickListener)
+            backgroundFrame = activity_root
+            fileIOWrapper.loadColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
             frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
-            fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
 
             // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
             // ギアメニューキーを非表示にする
@@ -441,6 +446,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         textNowMinute.setTextColor(ClockSettingDataHolder.colorMinute)
         textNowSecond.setTextColor(ClockSettingDataHolder.colorSecond)
         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
+        backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
     }
 
     private fun hideSystemUI() {

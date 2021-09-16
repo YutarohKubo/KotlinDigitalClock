@@ -1,9 +1,7 @@
 package chom.arikui.waffle.digitalclockapp
 
 import android.graphics.Color
-import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -284,15 +282,15 @@ class PopupColor(private val activity: MainActivity) {
             ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
             ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
             activity.updateClockColor()
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
             popupWindow.dismiss()
         }
 
@@ -307,53 +305,53 @@ class PopupColor(private val activity: MainActivity) {
                     R.id.frame_now_day -> {
                         ClockSettingDataHolder.colorDay = sampleText.currentTextColor
                         textDay.setTextColor(ClockSettingDataHolder.colorDay)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_month -> {
                         ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
                         textMonth.setTextColor(ClockSettingDataHolder.colorMonth)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_year -> {
                         ClockSettingDataHolder.colorYear = sampleText.currentTextColor
                         textYear.setTextColor(ClockSettingDataHolder.colorYear)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
                     }
                     R.id.text_now_week -> {
                         ClockSettingDataHolder.colorWeek = sampleText.currentTextColor
                         textWeek.setTextColor(ClockSettingDataHolder.colorWeek)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_hour -> {
                         ClockSettingDataHolder.colorHour = sampleText.currentTextColor
                         textHour.setTextColor(ClockSettingDataHolder.colorHour)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
                     }
                     R.id.text_divide_hour_and_minute -> {
                         ClockSettingDataHolder.colorDivideTime = sampleText.currentTextColor
                         textDivideTime.setTextColor(ClockSettingDataHolder.colorDivideTime)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_minute -> {
                         ClockSettingDataHolder.colorMinute = sampleText.currentTextColor
                         textMinute.setTextColor(ClockSettingDataHolder.colorMinute)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_second -> {
                         ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
                         textSecond.setTextColor(ClockSettingDataHolder.colorSecond)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
                     }
                     R.id.frame_top_alarm_time -> {
                         ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
                         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
                     }
                     R.id.activity_root -> {
                         val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
                         ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
                         backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
-                        // Todo IO周りの対応
+                        fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
                     }
                     else -> {
                         throw IllegalArgumentException()

@@ -20,6 +20,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         const val NOW_MINUTE_COLOR_FILE_NAME = "now_minute_color.dc"
         const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
+        const val CLOCK_BACKGROUND_COLOR = "clock_background_color.dc"
         const val VALID_OVERLAY_CLOCK_FILE_NAME = "valid_overlay_clock.dc"
     }
 
@@ -140,7 +141,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         }
     }
 
-    fun loadTextColor(fileName: String) {
+    fun loadColor(fileName: String) {
         try {
             BufferedReader(InputStreamReader(mActivity.openFileInput(fileName))).use {
                 var redValue: Int
@@ -162,6 +163,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                     NOW_MINUTE_COLOR_FILE_NAME -> ClockSettingDataHolder.colorMinute = Color.rgb(redValue, greenValue, blueValue)
                     NOW_SECOND_COLOR_FILE_NAME -> ClockSettingDataHolder.colorSecond = Color.rgb(redValue, greenValue, blueValue)
                     TOP_ALARM_TIME_COLOR_FILE_NAME -> ClockSettingDataHolder.colorTopAlarmTime = Color.rgb(redValue, greenValue, blueValue)
+                    CLOCK_BACKGROUND_COLOR -> ClockSettingDataHolder.colorBackground = Color.rgb(redValue, greenValue, blueValue)
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -170,7 +172,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         }
     }
 
-    fun saveTextColor(fileName: String) {
+    fun saveColor(fileName: String) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(fileName, Context.MODE_PRIVATE))).use {
                 val redValue: Int
@@ -221,6 +223,11 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                         redValue = Color.red(ClockSettingDataHolder.colorTopAlarmTime)
                         greenValue = Color.green(ClockSettingDataHolder.colorTopAlarmTime)
                         blueValue = Color.blue(ClockSettingDataHolder.colorTopAlarmTime)
+                    }
+                    CLOCK_BACKGROUND_COLOR -> {
+                        redValue = Color.red(ClockSettingDataHolder.colorBackground)
+                        greenValue = Color.green(ClockSettingDataHolder.colorBackground)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorBackground)
                     }
                     else -> throw IllegalArgumentException()
                 }
