@@ -46,7 +46,7 @@ class PopupSetting(private val activity: MainActivity) {
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 
-        popupWindow?.width = p2.x - 200
+        popupWindow?.width = p2.x - CalculateUtil.convertDp2Px(120, activity).toInt()
 
         // 画面中央に表示
         popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
