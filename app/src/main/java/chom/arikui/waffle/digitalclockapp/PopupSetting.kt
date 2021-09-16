@@ -6,11 +6,13 @@ import android.provider.Settings
 import android.view.Gravity
 import android.widget.CheckBox
 import android.widget.PopupWindow
+import android.widget.TextView
 
 class PopupSetting(private val activity: MainActivity) {
 
     var popupWindow: PopupWindow? = null
     lateinit var checkOverlayClock: CheckBox
+    private lateinit var buttonBackgroundSetting: TextView
     private val fileIOWrapper = activity.fileIOWrapper
 
     companion object {
@@ -35,6 +37,11 @@ class PopupSetting(private val activity: MainActivity) {
             } else {
                 processCheckOverlayChanging(false)
             }
+        }
+
+        buttonBackgroundSetting = popupView.findViewById(R.id.button_background_setting)
+        buttonBackgroundSetting.setOnClickListener {
+            
         }
 
         popupWindow?.contentView = popupView
