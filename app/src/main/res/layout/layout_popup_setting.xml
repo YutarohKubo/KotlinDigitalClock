@@ -1,51 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tetukon"
-    android:orientation="vertical"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp">
+    android:padding="20dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/text_title_setting_overlay"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:text="@string/setting_always_show_clock"
+        android:textColor="@color/pamplemousse"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/check_permit_overlay_clock"
+        app:layout_constraintBottom_toTopOf="@id/text_title_setting_background" />
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.80"
-            android:layout_marginRight="10dp">
+    <CheckBox
+        android:id="@+id/check_permit_overlay_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.CheckBox"
+        app:layout_constraintTop_toTopOf="@id/text_title_setting_overlay"
+        app:layout_constraintBottom_toBottomOf="@id/text_title_setting_overlay"
+        app:layout_constraintStart_toEndOf="@id/text_title_setting_overlay"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/setting_always_show_clock"
-                android:textColor="@color/pamplemousse"
-                android:textSize="18sp" />
+    <TextView
+        android:id="@+id/text_title_setting_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/background_settings"
+        android:textColor="@color/pamplemousse"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/text_title_setting_overlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/text_title_setting_overlay"
+        app:layout_constraintEnd_toEndOf="@id/text_title_setting_overlay" />
 
-        </RelativeLayout>
+    <TextView
+        android:id="@+id/button_background_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="2dp"
+        android:background="@drawable/grad_silver_background_shape"
+        android:text="@string/go_setting"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="@id/text_title_setting_background"
+        app:layout_constraintBottom_toBottomOf="@id/text_title_setting_background"
+        app:layout_constraintStart_toEndOf="@id/text_title_setting_background"
+        app:layout_constraintEnd_toEndOf="@id/check_permit_overlay_clock"
+        app:layout_constraintStart_toStartOf="@id/check_permit_overlay_clock" />
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.20"
-            android:layout_marginLeft="10dp">
-
-            <CheckBox
-                android:id="@+id/check_permit_overlay_clock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:theme="@style/AppTheme.CheckBox" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

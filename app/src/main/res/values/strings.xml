@@ -21,5 +21,7 @@
     <string name="home">Home</string>
     <string name="finish_app">Exit</string>
     <string name="setting_always_show_clock">Clock can be displayed on the home screen, etc.</string>
+    <string name="background_settings">Background settings</string>
+    <string name="go_setting">Go setting</string>
     <string name="alert_no_alarm_data">Not exist alarm data.</string>
 </resources>
