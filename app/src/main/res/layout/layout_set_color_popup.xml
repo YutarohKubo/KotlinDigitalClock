@@ -83,7 +83,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <TextView
@@ -117,10 +117,39 @@
 
     </LinearLayout>
 
+    <RadioGroup
+        android:id="@+id/radio_background_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:theme="@style/AppTheme.CheckBox"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_mode_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:checked="true"
+            android:text="@string/apply_color"
+            android:textColor="@color/snow_white" />
+
+        <RadioButton
+            android:id="@+id/radio_mode_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="@string/apply_picture"
+            android:textColor="@color/snow_white" />
+
+    </RadioGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="10dp"
         android:gravity="center">
 
         <RelativeLayout
@@ -185,7 +214,10 @@
                 <ImageView
                     android:id="@+id/image_pic_setting"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/noimage"
+                    android:visibility="gone"/>
 
             </FrameLayout>
 
@@ -222,6 +254,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/checkbox_unify_area"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="bottom"
@@ -242,6 +275,19 @@
                 android:theme="@style/AppTheme.CheckBox"/>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/button_set_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="2dp"
+            android:visibility="gone"
+            android:background="@drawable/grad_silver_background_shape"
+            android:text="@string/set_picture"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

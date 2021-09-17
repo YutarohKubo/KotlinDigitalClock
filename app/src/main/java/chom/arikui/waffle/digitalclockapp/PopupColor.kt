@@ -1,5 +1,7 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -12,8 +14,11 @@ class PopupColor(private val activity: MainActivity) {
         private const val TAG = "POPUP_COLOR"
     }
 
+    private var mPopupWindow: PopupWindow? = null
+    private lateinit var imagePicSetting: ImageView
+
     fun showPopup(v: View) {
-        val popupWindow = PopupWindow(activity)
+        mPopupWindow = PopupWindow(activity)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
         val fileIOWrapper = activity.fileIOWrapper
 
@@ -26,12 +31,15 @@ class PopupColor(private val activity: MainActivity) {
         val frameSample = popupView.findViewById<FrameLayout>(R.id.frame_sample)
         val sampleTextBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
         var sampleText = popupView.findViewById<TextView>(R.id.text_sample)
-        val sampleBackgroundFrame =
-            popupView.findViewById<FrameLayout>(R.id.frame_background_setting)
+        val sampleBackgroundFrame = popupView.findViewById<FrameLayout>(R.id.frame_background_setting)
+        imagePicSetting = popupView.findViewById(R.id.image_pic_setting)
         val sampleTextTitle = popupView.findViewById<TextView>(R.id.text_sample_title)
         val buttonDefaultColor = popupView.findViewById<ImageButton>(R.id.button_default_color)
         val buttonColorOk = popupView.findViewById<ImageButton>(R.id.button_color_ok)
+        val checkBoxUnifyArea = popupView.findViewById<LinearLayout>(R.id.checkbox_unify_area)
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
+        val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
+        val buttonSetPicture = popupView.findViewById<TextView>(R.id.button_set_picture)
 
         val textDay = activity.findViewById<TextView>(R.id.text_now_day)
         val textMonth = activity.findViewById<TextView>(R.id.text_now_month)
@@ -102,6 +110,25 @@ class PopupColor(private val activity: MainActivity) {
             }
             R.id.activity_root -> {
                 frameSample.visibility = View.GONE
+                radioBackgroundMode.visibility = View.VISIBLE
+                radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
+                    when(checkedId) {
+                        R.id.radio_mode_color -> {
+                            imagePicSetting.visibility = View.GONE
+                            checkBoxUnifyArea.visibility = View.VISIBLE
+                            buttonSetPicture.visibility = View.GONE
+                        }
+                        R.id.radio_mode_pic -> {
+                            imagePicSetting.visibility = View.VISIBLE
+                            checkBoxUnifyArea.visibility = View.GONE
+                            buttonSetPicture.visibility = View.VISIBLE
+                        }
+                    }
+                }
+                buttonSetPicture.setOnClickListener {
+                    // ユーザー指定のファイル管理アプリに飛ばして、画像を選択させる
+                    openImageSelecting()
+                }
                 val frameHeight = CalculateUtil.convertDp2Px(96, activity)
                 val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
                 val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
@@ -291,7 +318,9 @@ class PopupColor(private val activity: MainActivity) {
             fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
             fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
             fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
-            popupWindow.dismiss()
+            if (mPopupWindow != null) {
+                mPopupWindow!!.dismiss()
+            }
         }
 
         buttonColorOk.setOnClickListener { _ ->
@@ -357,19 +386,40 @@ class PopupColor(private val activity: MainActivity) {
                         throw IllegalArgumentException()
                     }
                 }
-                popupWindow.dismiss()
+                mPopupWindow?.dismiss()
             }
         }
 
-        popupWindow.contentView = popupView
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isFocusable = true
+        mPopupWindow?.contentView = popupView
+        mPopupWindow?.isOutsideTouchable = true
+        mPopupWindow?.isFocusable = true
 
-        popupWindow.width = displaySize.x - 200
-        popupWindow.height = displaySize.y - 120
+        mPopupWindow?.width = displaySize.x - 200
+        mPopupWindow?.height = displaySize.y - 120
 
         // 画面中央に表示
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+        mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+    }
+
+    /**
+     * Bitmapを背景画像サンプル領域に、当てはめる
+     */
+    fun setImageSampleFromBitmap(bitmap: Bitmap) {
+        if (mPopupWindow != null) {
+            imagePicSetting.setImageBitmap(bitmap)
+        }
+    }
+
+    fun isShowing() = (mPopupWindow !=null && mPopupWindow!!.isShowing)
+
+    /**
+     * 画像選択アプリへ移行する (Todo VERSION_CODES.KITKAT以降)
+     */
+    private fun openImageSelecting() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "image/*"
+        activity.startActivityForResult(intent, MainActivity.READ_PIC_REQ_CODE)
     }
 
 }

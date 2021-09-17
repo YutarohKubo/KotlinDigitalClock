@@ -23,5 +23,8 @@
     <string name="setting_always_show_clock">Clock can be displayed on the home screen, etc.</string>
     <string name="background_settings">Background settings</string>
     <string name="go_setting">Go setting</string>
+    <string name="apply_picture">Picture</string>
+    <string name="apply_color">Color</string>
+    <string name="set_picture">Set picture</string>
     <string name="alert_no_alarm_data">Not exist alarm data.</string>
 </resources>

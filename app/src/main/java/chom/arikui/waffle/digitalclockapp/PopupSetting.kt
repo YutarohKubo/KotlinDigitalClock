@@ -42,8 +42,7 @@ class PopupSetting(private val activity: MainActivity) {
 
         buttonBackgroundSetting = popupView.findViewById(R.id.button_background_setting)
         buttonBackgroundSetting.setOnClickListener {
-            val mPopupColor = PopupColor(activity)
-            mPopupColor.showPopup(activity.findViewById<FrameLayout>(R.id.activity_root))
+            activity.showPopupColor(activity.findViewById<FrameLayout>(R.id.activity_root))
         }
 
         popupWindow?.contentView = popupView

@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -29,6 +31,7 @@ import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         private val minuteFormat = SimpleDateFormat("mm")
         private val secondFormat = SimpleDateFormat("ss")
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
-
+        const val READ_PIC_REQ_CODE = 2001
         private const val isTest = true
     }
 
@@ -73,6 +76,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private var mPopupAlarm: PopupAlarm? = null
     private var mPopupSetting: PopupSetting? = null
+    private var mPopupColor: PopupColor? = null
 
     private var mInterAdCloseApp: InterstitialAd? = null
 
@@ -234,6 +238,35 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         dialog.show(supportFragmentManager, TAG)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == READ_PIC_REQ_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                val uri = data.data ?: return
+                try {
+                    val bmp = getBitmapFromUri(uri)
+                    ClockSettingDataHolder.backgroundBmp = bmp
+                    if (mPopupColor != null && mPopupColor!!.isShowing()) {
+                        mPopupColor!!.setImageSampleFromBitmap(getBitmapFromUri(uri))
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    /**
+     * 画像ファイルに関して、uriからBitmapに変換する
+     */
+    private fun getBitmapFromUri(uri: Uri): Bitmap {
+        val parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r")
+        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+        val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+        parcelFileDescriptor?.close()
+        return bitmap
+    }
+
     /**
      * 時計の表示更新
      */
@@ -288,10 +321,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 return false
             }
             showInterstitial()
-            val mPopupColor = PopupColor(this@MainActivity)
-            mPopupColor.showPopup(v)
+            showPopupColor(v)
             return true
         }
+    }
+
+    fun showPopupColor(v: View) {
+        mPopupColor = PopupColor(this@MainActivity)
+        mPopupColor!!.showPopup(v)
     }
 
     fun loadAlarmData() {

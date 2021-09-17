@@ -23,5 +23,8 @@
     <string name="setting_always_show_clock">ホーム画面などで時計を表示可能にする</string>
     <string name="background_settings">背景の設定</string>
     <string name="go_setting">設定へ</string>
+    <string name="apply_picture">写真を適用</string>
+    <string name="apply_color">色を適用</string>
+    <string name="set_picture">写真を設定</string>
     <string name="alert_no_alarm_data">アラームデータがありません</string>
 </resources>

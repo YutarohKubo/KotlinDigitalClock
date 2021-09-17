@@ -1,5 +1,6 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.graphics.Bitmap
 import android.graphics.Color
 
 object ClockSettingDataHolder {
@@ -31,4 +32,6 @@ object ClockSettingDataHolder {
     var colorSecond = DEFAULT_COLOR
     var colorTopAlarmTime = DEFAULT_COLOR
     var colorBackground = DEFAULT_BACKGROUND_COLOR
+
+    var backgroundBmp: Bitmap? = null
 }
