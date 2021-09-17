@@ -111,29 +111,43 @@ class PopupColor(private val activity: MainActivity) {
             R.id.activity_root -> {
                 frameSample.visibility = View.GONE
                 radioBackgroundMode.visibility = View.VISIBLE
+                val imageSettingArea = popupView.findViewById<LinearLayout>(R.id.image_setting_area)
+                val buttonImageRotate = popupView.findViewById<ImageButton>(R.id.button_image_rotate)
+                buttonImageRotate.setOnClickListener {
+
+                }
+                val spaceOkBelow = popupView.findViewById<Space>(R.id.space_button_ok_below)
                 radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
                     when(checkedId) {
                         R.id.radio_mode_color -> {
                             imagePicSetting.visibility = View.GONE
-                            checkBoxUnifyArea.visibility = View.VISIBLE
-                            buttonSetPicture.visibility = View.GONE
+                            imageSettingArea.visibility = View.GONE
+                            buttonDefaultColor.visibility = View.VISIBLE
+                            spaceOkBelow.visibility = View.GONE
+                            sampleTextTitle.visibility = View.VISIBLE
                         }
                         R.id.radio_mode_pic -> {
                             imagePicSetting.visibility = View.VISIBLE
-                            checkBoxUnifyArea.visibility = View.GONE
-                            buttonSetPicture.visibility = View.VISIBLE
+                            imageSettingArea.visibility = View.VISIBLE
+                            buttonDefaultColor.visibility = View.GONE
+                            spaceOkBelow.visibility = View.VISIBLE
+                            sampleTextTitle.visibility = View.GONE
                         }
                     }
                 }
+                // タイトルは"BACKGROUND"
+                sampleTextTitle.text = "BACKGROUND"
+                // 写真の設定ボタン
                 buttonSetPicture.setOnClickListener {
                     // ユーザー指定のファイル管理アプリに飛ばして、画像を選択させる
                     openImageSelecting()
                 }
-                sampleTextTitle.visibility = View.GONE
+                // 表示色の統一チェックボックスは非表示とする
+                checkBoxUnifyArea.visibility = View.GONE
                 val frameHeight = CalculateUtil.convertDp2Px(96, activity)
                 val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
                 val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
-                lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(10, activity).toInt())
+                lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(5, activity).toInt())
                 sampleBackgroundFrame.layoutParams = lParam
                 sampleBackgroundFrame.visibility = View.VISIBLE
                 sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)

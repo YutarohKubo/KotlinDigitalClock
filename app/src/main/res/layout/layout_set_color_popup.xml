@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/tetukon"
     android:orientation="vertical">
 
@@ -229,20 +230,37 @@
                 android:layout_centerInParent="true"
                 android:textColor="@color/snow_white" />
 
-            <TextView
-                android:id="@+id/button_set_picture"
+            <LinearLayout
+                android:id="@+id/image_setting_area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/frame_background_setting"
-                android:layout_centerInParent="true"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="2dp"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:visibility="gone"
-                android:background="@drawable/grad_silver_background_shape"
-                android:text="@string/setting"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/frame_background_setting">
+
+                <TextView
+                    android:id="@+id/button_set_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/grad_silver_background_shape"
+                    android:text="@string/setting"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/button_image_rotate"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/ic_baseline_rotate_right_48" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -250,7 +268,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="20dp"
-            android:gravity="bottom"
+            android:gravity="bottom|center_horizontal"
             android:orientation="vertical">
 
             <ImageButton
@@ -265,6 +283,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_ok_style"/>
+
+            <Space
+                android:id="@+id/space_button_ok_below"
+                android:layout_width="0dp"
+                android:layout_height="15dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
