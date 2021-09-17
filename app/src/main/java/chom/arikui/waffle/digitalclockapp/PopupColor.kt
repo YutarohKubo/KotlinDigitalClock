@@ -129,13 +129,13 @@ class PopupColor(private val activity: MainActivity) {
                     // ユーザー指定のファイル管理アプリに飛ばして、画像を選択させる
                     openImageSelecting()
                 }
+                sampleTextTitle.visibility = View.GONE
                 val frameHeight = CalculateUtil.convertDp2Px(96, activity)
                 val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
                 val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
                 lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(10, activity).toInt())
                 sampleBackgroundFrame.layoutParams = lParam
                 sampleBackgroundFrame.visibility = View.VISIBLE
-                sampleTextTitle.text = "BACKGROUND"
                 sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
             }
             else -> {
