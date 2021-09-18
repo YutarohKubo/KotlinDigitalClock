@@ -159,8 +159,8 @@ class PopupColor(private val activity: MainActivity) {
                 sampleBackgroundFrame.layoutParams = lParam
                 sampleBackgroundFrame.visibility = View.VISIBLE
                 sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
-                // 画像回転ボタンの有効無効状態を更新する
-                updateStateImageRotate()
+                // 背景画像をサンプル領域に表示する
+                setImageSampleFromBitmap(ClockSettingDataHolder.backgroundBmp)
             }
             else -> {
                 throw IllegalArgumentException()
@@ -435,22 +435,19 @@ class PopupColor(private val activity: MainActivity) {
 
     /**
      * Bitmapを背景画像サンプル領域に、当てはめる
+     * 引数にnullで、noImageへリセットされる
      */
-    fun setImageSampleFromBitmap(bitmap: Bitmap) {
+    fun setImageSampleFromBitmap(bitmap: Bitmap?) {
         if (mPopupWindow != null) {
             imageBmp = bitmap
-            imagePicSetting.setImageBitmap(bitmap)
+            if (bitmap == null) {
+                imagePicSetting.setImageResource(R.drawable.noimage)
+            } else {
+                imagePicSetting.setImageBitmap(bitmap)
+            }
+            // 画像回転ボタンの有効無効状態を更新する
             updateStateImageRotate()
         }
-    }
-
-    /**
-     * サンプル画像をnoImageへリセットする
-     */
-    private fun resetImageSample() {
-        imageBmp = null
-        imagePicSetting.setImageResource(R.drawable.noimage)
-        updateStateImageRotate()
     }
 
     /**
