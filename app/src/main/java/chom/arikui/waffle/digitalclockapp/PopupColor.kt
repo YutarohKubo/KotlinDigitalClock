@@ -44,6 +44,7 @@ class PopupColor(private val activity: MainActivity) {
         val checkBoxUnifyArea = popupView.findViewById<LinearLayout>(R.id.checkbox_unify_area)
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
         val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
+        val radioColor = popupView.findViewById<RadioButton>(R.id.radio_mode_color)
         val buttonSetPicture = popupView.findViewById<TextView>(R.id.button_set_picture)
         buttonImageRotate = popupView.findViewById(R.id.button_image_rotate)
 
@@ -57,6 +58,7 @@ class PopupColor(private val activity: MainActivity) {
         val textSecond = activity.findViewById<TextView>(R.id.text_now_second)
         val textTopAlarmTime = activity.findViewById<TextView>(R.id.text_top_alarm_time)
         val backgroundFrame = activity.findViewById<FrameLayout>(R.id.activity_root)
+        val backgroundImage = activity.findViewById<ImageView>(R.id.image_pic)
 
         val displaySize = activity.displaySize()
 
@@ -403,6 +405,14 @@ class PopupColor(private val activity: MainActivity) {
                         ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
                         backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
                         fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
+                        ClockSettingDataHolder.backgroundBmp = imageBmp
+                        backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+                        // Todo 外部ストレージにBitmapを保存する処理を書く
+                        if (radioColor.isChecked) {
+                            backgroundImage.visibility = View.GONE
+                        } else {
+                            backgroundImage.visibility = View.VISIBLE
+                        }
                     }
                     else -> {
                         throw IllegalArgumentException()
@@ -453,6 +463,7 @@ class PopupColor(private val activity: MainActivity) {
         val height = bitmap.height
         matrix.setRotate(90F, width.toFloat() / 2, height.toFloat() / 2)
         val rotatedBitMap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        imageBmp = rotatedBitMap
         imagePicSetting.setImageBitmap(rotatedBitMap)
     }
 
