@@ -1,6 +1,8 @@
 package chom.arikui.waffle.digitalclockapp
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import java.io.*
 
@@ -22,6 +24,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
         const val CLOCK_BACKGROUND_COLOR = "clock_background_color.dc"
         const val VALID_OVERLAY_CLOCK_FILE_NAME = "valid_overlay_clock.dc"
+        private const val BACKGROUND_PIC_FILE_NAME = "background_pic.dc"
     }
 
     fun loadAlarmTime() {
@@ -244,4 +247,35 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             e.printStackTrace()
         }
     }
+
+    /**
+     * 背景画像をロードする
+     */
+    fun loadBackgroundPic() {
+        try {
+            val file = File(mActivity.filesDir, BACKGROUND_PIC_FILE_NAME)
+            if (file.exists()) {
+                ClockSettingDataHolder.backgroundBmp = BitmapFactory.decodeFile(file.path)
+            } else {
+                ClockSettingDataHolder.backgroundBmp = null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ClockSettingDataHolder.backgroundBmp = null
+        }
+    }
+
+    /**
+     * 背景画像を保存する
+     */
+    fun saveBackgroundPic() {
+        try {
+            mActivity.openFileOutput(BACKGROUND_PIC_FILE_NAME, Context.MODE_PRIVATE).use {
+                ClockSettingDataHolder.backgroundBmp?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 }

@@ -407,7 +407,7 @@ class PopupColor(private val activity: MainActivity) {
                         fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
                         ClockSettingDataHolder.backgroundBmp = imageBmp
                         backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
-                        // Todo 外部ストレージにBitmapを保存する処理を書く
+                        fileIOWrapper.saveBackgroundPic()
                         if (radioColor.isChecked) {
                             backgroundImage.visibility = View.GONE
                         } else {

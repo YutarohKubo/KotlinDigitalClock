@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     lateinit var textNowMinute: TextView
     lateinit var textNowSecond: TextView
     lateinit var backgroundFrame: FrameLayout
+    lateinit var imagePic: ImageView
     lateinit var textTopAlarmTime: TextView
 
     val listAlarmData = arrayListOf<RingtoneData>()
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         fileIOWrapper.loadAlarmTime()
         fileIOWrapper.loadAlarmCheckState()
         fileIOWrapper.loadValidOverlayClock()
+        fileIOWrapper.loadBackgroundPic()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
@@ -164,6 +166,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
+            imagePic = findViewById(R.id.image_pic)
             fileIOWrapper.loadColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
 
             // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
@@ -179,6 +182,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 image_setting.visibility = View.GONE
             }
             updateClockColor()
+            updateClockBackgroundPic()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val bottomArea = bottom_area
@@ -484,6 +488,19 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         textNowSecond.setTextColor(ClockSettingDataHolder.colorSecond)
         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
         backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+    }
+
+    /**
+     * 背景画像を更新する
+     */
+    fun updateClockBackgroundPic() {
+        val bmp = ClockSettingDataHolder.backgroundBmp
+        if (bmp == null) {
+            imagePic.visibility = View.GONE
+        } else {
+            imagePic.visibility = View.VISIBLE
+            imagePic.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+        }
     }
 
     private fun hideSystemUI() {
