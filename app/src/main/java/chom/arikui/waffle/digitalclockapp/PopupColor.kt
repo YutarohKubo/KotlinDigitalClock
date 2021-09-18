@@ -2,6 +2,7 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
@@ -18,6 +19,8 @@ class PopupColor(private val activity: MainActivity) {
 
     private var mPopupWindow: PopupWindow? = null
     private lateinit var imagePicSetting: ImageView
+    private var imageBmp: Bitmap? = null
+    private lateinit var buttonImageRotate: ImageButton
 
     fun showPopup(v: View) {
         mPopupWindow = PopupWindow(activity)
@@ -42,6 +45,7 @@ class PopupColor(private val activity: MainActivity) {
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
         val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
         val buttonSetPicture = popupView.findViewById<TextView>(R.id.button_set_picture)
+        buttonImageRotate = popupView.findViewById(R.id.button_image_rotate)
 
         val textDay = activity.findViewById<TextView>(R.id.text_now_day)
         val textMonth = activity.findViewById<TextView>(R.id.text_now_month)
@@ -114,7 +118,6 @@ class PopupColor(private val activity: MainActivity) {
                 frameSample.visibility = View.GONE
                 radioBackgroundMode.visibility = View.VISIBLE
                 val imageSettingArea = popupView.findViewById<LinearLayout>(R.id.image_setting_area)
-                val buttonImageRotate = popupView.findViewById<ImageButton>(R.id.button_image_rotate)
                 buttonImageRotate.setOnClickListener {
                     // 画像回転ボタン押下で、時計回りに90度回転
                     imageSampleRotate90()
@@ -154,6 +157,8 @@ class PopupColor(private val activity: MainActivity) {
                 sampleBackgroundFrame.layoutParams = lParam
                 sampleBackgroundFrame.visibility = View.VISIBLE
                 sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                // 画像回転ボタンの有効無効状態を更新する
+                updateStateImageRotate()
             }
             else -> {
                 throw IllegalArgumentException()
@@ -423,8 +428,19 @@ class PopupColor(private val activity: MainActivity) {
      */
     fun setImageSampleFromBitmap(bitmap: Bitmap) {
         if (mPopupWindow != null) {
+            imageBmp = bitmap
             imagePicSetting.setImageBitmap(bitmap)
+            updateStateImageRotate()
         }
+    }
+
+    /**
+     * サンプル画像をnoImageへリセットする
+     */
+    private fun resetImageSample() {
+        imageBmp = null
+        imagePicSetting.setImageResource(R.drawable.noimage)
+        updateStateImageRotate()
     }
 
     /**
@@ -438,6 +454,13 @@ class PopupColor(private val activity: MainActivity) {
         matrix.setRotate(90F, width.toFloat() / 2, height.toFloat() / 2)
         val rotatedBitMap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
         imagePicSetting.setImageBitmap(rotatedBitMap)
+    }
+
+    /**
+     * 画像回転ボタンの有効無効状態を更新する
+     */
+    private fun updateStateImageRotate() {
+        buttonImageRotate.isEnabled = imageBmp != null
     }
 
     fun isShowing() = (mPopupWindow !=null && mPopupWindow!!.isShowing)
