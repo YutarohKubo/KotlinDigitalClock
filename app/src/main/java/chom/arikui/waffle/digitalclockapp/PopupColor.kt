@@ -3,6 +3,8 @@ package chom.arikui.waffle.digitalclockapp
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
@@ -114,7 +116,8 @@ class PopupColor(private val activity: MainActivity) {
                 val imageSettingArea = popupView.findViewById<LinearLayout>(R.id.image_setting_area)
                 val buttonImageRotate = popupView.findViewById<ImageButton>(R.id.button_image_rotate)
                 buttonImageRotate.setOnClickListener {
-
+                    // 画像回転ボタン押下で、時計回りに90度回転
+                    imageSampleRotate90()
                 }
                 val spaceOkBelow = popupView.findViewById<Space>(R.id.space_button_ok_below)
                 radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
@@ -422,6 +425,19 @@ class PopupColor(private val activity: MainActivity) {
         if (mPopupWindow != null) {
             imagePicSetting.setImageBitmap(bitmap)
         }
+    }
+
+    /**
+     * サンプル画像を90度時計回りに回転する
+     */
+    private fun imageSampleRotate90() {
+        val bitmap = (imagePicSetting.drawable as BitmapDrawable).bitmap
+        val matrix = Matrix()
+        val width = bitmap.width
+        val height = bitmap.height
+        matrix.setRotate(90F, width.toFloat() / 2, height.toFloat() / 2)
+        val rotatedBitMap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        imagePicSetting.setImageBitmap(rotatedBitMap)
     }
 
     fun isShowing() = (mPopupWindow !=null && mPopupWindow!!.isShowing)
