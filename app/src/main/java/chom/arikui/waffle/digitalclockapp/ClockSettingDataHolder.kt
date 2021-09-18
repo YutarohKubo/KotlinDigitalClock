@@ -16,6 +16,7 @@ object ClockSettingDataHolder {
     private const val DEFAULT_VALID_OVERLAY_CLOCK = false
     private val DEFAULT_COLOR = Color.rgb(DEFAULT_COLOR_RED_VALUE, DEFAULT_COLOR_GREEN_VALUE, DEFAULT_COLOR_BLUE_VALUE)
     private val DEFAULT_BACKGROUND_COLOR = Color.rgb(DEFAULT_BACKGROUND_RED_VALUE, DEFAULT_BACKGROUND_GREEN_VALUE, DEFAULT_BACKGROUND_BLUE_VALUE)
+    private val DEFAULT_BACKGROUND_MODE = BackgroundMode.COLOR
 
     var alarmTime = DEFAULT_ALARM_TIME
     var nowAlarmSound: RingtoneData? = null
@@ -33,5 +34,6 @@ object ClockSettingDataHolder {
     var colorTopAlarmTime = DEFAULT_COLOR
     var colorBackground = DEFAULT_BACKGROUND_COLOR
 
+    var backgroundMode = DEFAULT_BACKGROUND_MODE
     var backgroundBmp: Bitmap? = null
 }

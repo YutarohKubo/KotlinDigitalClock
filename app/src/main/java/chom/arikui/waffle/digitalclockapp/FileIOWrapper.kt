@@ -24,6 +24,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
         const val CLOCK_BACKGROUND_COLOR = "clock_background_color.dc"
         const val VALID_OVERLAY_CLOCK_FILE_NAME = "valid_overlay_clock.dc"
+        const val BACKGROUND_MODE_FILE_NAME = "background_mode.dc"
         private const val BACKGROUND_PIC_FILE_NAME = "background_pic.dc"
     }
 

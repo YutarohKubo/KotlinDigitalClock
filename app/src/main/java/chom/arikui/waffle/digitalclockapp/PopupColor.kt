@@ -45,6 +45,7 @@ class PopupColor(private val activity: MainActivity) {
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
         val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
         val radioColor = popupView.findViewById<RadioButton>(R.id.radio_mode_color)
+        val radioPic = popupView.findViewById<RadioButton>(R.id.radio_mode_pic)
         val buttonSetPicture = popupView.findViewById<TextView>(R.id.button_set_picture)
         buttonImageRotate = popupView.findViewById(R.id.button_image_rotate)
 
@@ -159,6 +160,9 @@ class PopupColor(private val activity: MainActivity) {
                 sampleBackgroundFrame.layoutParams = lParam
                 sampleBackgroundFrame.visibility = View.VISIBLE
                 sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                // 背景モードのラジオボタンを、設定中のものに初期化する
+                radioColor.isChecked = (ClockSettingDataHolder.backgroundMode == BackgroundMode.COLOR)
+                radioPic.isChecked = (ClockSettingDataHolder.backgroundMode == BackgroundMode.PICTURE)
                 // 背景画像をサンプル領域に表示する
                 setImageSampleFromBitmap(ClockSettingDataHolder.backgroundBmp)
             }
@@ -409,8 +413,10 @@ class PopupColor(private val activity: MainActivity) {
                         backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
                         fileIOWrapper.saveBackgroundPic()
                         if (radioColor.isChecked) {
+                            ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
                             backgroundImage.visibility = View.GONE
                         } else {
+                            ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
                             backgroundImage.visibility = View.VISIBLE
                         }
                     }
