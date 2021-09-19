@@ -10,6 +10,7 @@
     <string name="color_g">G</string>
     <string name="color_b">B</string>
     <string name="ok">OK</string>
+    <string name="default_color">Default\nColor</string>
     <string name="unify_time_colors">unify\ntime colors</string>
     <string name="unify_time_colors_dialog_message">All time colors will be unified.\nIs it OK?</string>
     <string name="confirming_app_finish_dialog_message">This app will be closed.\nIs it OK?</string>
@@ -26,5 +27,6 @@
     <string name="apply_picture">Picture</string>
     <string name="apply_color">Color</string>
     <string name="setting">Setting</string>
+    <string name="reset">Reset</string>
     <string name="alert_no_alarm_data">Not exist alarm data.</string>
 </resources>

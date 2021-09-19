@@ -579,4 +579,22 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         return p
     }
+
+    /**
+     * viewの輝度/半輝度設定
+     *
+     * @param view     view
+     * @param isEnable 輝度(true)/半輝度(false)
+     */
+    fun setViewEnabled(view: View?, isEnable: Boolean) {
+        if (view == null) {
+            return
+        }
+        view.isEnabled = isEnable
+        if (isEnable) {
+            view.alpha = 1.0f
+        } else {
+            view.alpha = 0.3f
+        }
+    }
 }

@@ -288,6 +288,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         try {
             val file = File(mActivity.filesDir, BACKGROUND_PIC_FILE_NAME)
             if (file.exists()) {
+                // セーブ時に、0byteのbackground_pic.dcが出力されていた場合は、decodeできないため、nullが返ってくる
                 ClockSettingDataHolder.backgroundBmp = BitmapFactory.decodeFile(file.path)
             } else {
                 ClockSettingDataHolder.backgroundBmp = null
@@ -300,6 +301,8 @@ class FileIOWrapper(private val mActivity: MainActivity) {
 
     /**
      * 背景画像を保存する
+     * 追加書き込みモード(Context.MODE_PRIVATE|Context.MODE_APPEND)ではないため、ClockSettingDataHolder.backgroundBmp == nullの場合には、
+     * 0byteのbackground_pic.dcが出力される
      */
     fun saveBackgroundPic() {
         try {

@@ -9,6 +9,7 @@
     <string name="color_r">R</string>
     <string name="color_g">G</string>
     <string name="color_b">B</string>
+    <string name="default_color">Default\nColor</string>
     <string name="ok">OK</string>
     <string name="unify_time_colors">表示色の\n統一</string>
     <string name="unify_time_colors_dialog_message">全ての表示時間の色を\nこの色に統一します.\nよろしいですか?</string>
@@ -26,5 +27,6 @@
     <string name="apply_picture">写真を適用</string>
     <string name="apply_color">色を適用</string>
     <string name="setting">設定</string>
+    <string name="reset">Reset</string>
     <string name="alert_no_alarm_data">アラームデータがありません</string>
 </resources>

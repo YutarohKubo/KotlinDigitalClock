@@ -2,7 +2,6 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
@@ -20,7 +19,8 @@ class PopupColor(private val activity: MainActivity) {
     private var mPopupWindow: PopupWindow? = null
     private lateinit var imagePicSetting: ImageView
     private var imageBmp: Bitmap? = null
-    private lateinit var buttonImageRotate: ImageButton
+    private lateinit var buttonImageRotate: View
+    private var buttonReset: TextView? = null
 
     fun showPopup(v: View) {
         mPopupWindow = PopupWindow(activity)
@@ -39,8 +39,8 @@ class PopupColor(private val activity: MainActivity) {
         val sampleBackgroundFrame = popupView.findViewById<FrameLayout>(R.id.frame_background_setting)
         imagePicSetting = popupView.findViewById(R.id.image_pic_setting)
         val sampleTextTitle = popupView.findViewById<TextView>(R.id.text_sample_title)
-        val buttonDefaultColor = popupView.findViewById<ImageButton>(R.id.button_default_color)
-        val buttonColorOk = popupView.findViewById<ImageButton>(R.id.button_color_ok)
+        val buttonDefaultColor = popupView.findViewById<TextView>(R.id.button_default_color)
+        val buttonColorOk = popupView.findViewById<TextView>(R.id.button_color_ok)
         val checkBoxUnifyArea = popupView.findViewById<LinearLayout>(R.id.checkbox_unify_area)
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
         val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
@@ -125,6 +125,7 @@ class PopupColor(private val activity: MainActivity) {
                     // 画像回転ボタン押下で、時計回りに90度回転
                     imageSampleRotate90()
                 }
+                buttonReset = popupView.findViewById(R.id.button_reset)
                 val spaceOkBelow = popupView.findViewById<Space>(R.id.space_button_ok_below)
                 radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
                     when(checkedId) {
@@ -132,6 +133,7 @@ class PopupColor(private val activity: MainActivity) {
                             imagePicSetting.visibility = View.GONE
                             imageSettingArea.visibility = View.GONE
                             buttonDefaultColor.visibility = View.VISIBLE
+                            buttonReset?.visibility = View.GONE
                             spaceOkBelow.visibility = View.GONE
                             sampleTextTitle.visibility = View.VISIBLE
                         }
@@ -139,6 +141,7 @@ class PopupColor(private val activity: MainActivity) {
                             imagePicSetting.visibility = View.VISIBLE
                             imageSettingArea.visibility = View.VISIBLE
                             buttonDefaultColor.visibility = View.GONE
+                            buttonReset?.visibility = View.VISIBLE
                             spaceOkBelow.visibility = View.VISIBLE
                             sampleTextTitle.visibility = View.GONE
                         }
@@ -150,6 +153,11 @@ class PopupColor(private val activity: MainActivity) {
                 buttonSetPicture.setOnClickListener {
                     // ユーザー指定のファイル管理アプリに飛ばして、画像を選択させる
                     openImageSelecting()
+                }
+                // リセットボタン
+                buttonReset?.setOnClickListener {
+                    // 背景画像のリセット
+                    setImageSampleFromBitmap(null)
                 }
                 // 表示色の統一チェックボックスは非表示とする
                 checkBoxUnifyArea.visibility = View.GONE
@@ -287,6 +295,7 @@ class PopupColor(private val activity: MainActivity) {
 
         })
 
+        // Default Colorボタンのリスナー登録
         buttonDefaultColor.setOnClickListener { _ ->
             val defaultRedValue: Int
             val defaultGreenValue: Int
@@ -462,7 +471,7 @@ class PopupColor(private val activity: MainActivity) {
                 imagePicSetting.setImageBitmap(bitmap)
             }
             // 画像回転ボタンの有効無効状態を更新する
-            updateStateImageRotate()
+            updateStateImageRotateAndReset()
         }
     }
 
@@ -483,11 +492,12 @@ class PopupColor(private val activity: MainActivity) {
     /**
      * 画像回転ボタンの有効無効状態を更新する
      */
-    private fun updateStateImageRotate() {
-        buttonImageRotate.isEnabled = imageBmp != null
+    private fun updateStateImageRotateAndReset() {
+        activity.setViewEnabled(buttonImageRotate, imageBmp != null)
+        activity.setViewEnabled(buttonReset, imageBmp != null)
     }
 
-    fun isShowing() = (mPopupWindow !=null && mPopupWindow!!.isShowing)
+    fun isShowing() = (mPopupWindow != null && mPopupWindow!!.isShowing)
 
     /**
      * 画像選択アプリへ移行する (Todo VERSION_CODES.KITKAT以降)

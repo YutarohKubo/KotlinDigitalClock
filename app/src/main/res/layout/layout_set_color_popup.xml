@@ -253,12 +253,21 @@
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
-                <ImageButton
+                <RelativeLayout
                     android:id="@+id/button_image_rotate"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_baseline_rotate_right_48" />
+                    android:background="@drawable/grad_silver_background_shape">
+
+                    <ImageView
+                        android:id="@+id/image_rotate"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_baseline_rotate_right_48" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -271,18 +280,43 @@
             android:gravity="bottom|center_horizontal"
             android:orientation="vertical">
 
-            <ImageButton
+            <TextView
                 android:id="@+id/button_default_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/button_default_color_style"/>
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/grad_silver_background_shape"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/default_color" />
 
-            <ImageButton
+            <TextView
+                android:id="@+id/button_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="2dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/grad_silver_background_shape"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/reset" />
+
+            <TextView
                 android:id="@+id/button_color_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_ok_style"/>
+                android:paddingHorizontal="20dp"
+                android:background="@drawable/grad_green_background_shape"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/ok" />
 
             <Space
                 android:id="@+id/space_button_ok_below"
