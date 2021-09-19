@@ -7,6 +7,8 @@ import java.nio.ByteBuffer
 
 object CalculateUtil {
 
+    const val SHOW_BACKGROUND_RGB_LIMIT = 50
+
     /**
      * dpからpixelへの変換
      * @param dp

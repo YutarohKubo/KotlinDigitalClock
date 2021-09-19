@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Point
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -25,6 +26,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -184,6 +186,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             }
             updateClockColor()
             updateClockBackgroundPic()
+            // 時計の文字の背景の88を表示状態を更新する
+            updateNumBackgroundState()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val bottomArea = bottom_area
@@ -489,6 +493,56 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         textNowSecond.setTextColor(ClockSettingDataHolder.colorSecond)
         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
         backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+    }
+
+    /**
+     * 時計の文字の背景の表示非表示を切り替える
+     */
+    fun updateNumBackgroundState() {
+        val textNowDayBackground = findViewById<TextView>(R.id.text_now_day_background)
+        val textNowMonthBackground = findViewById<TextView>(R.id.text_now_month_background)
+        val textNowYearBackground = findViewById<TextView>(R.id.text_now_year_background)
+        val textNowHourBackground = findViewById<TextView>(R.id.text_now_hour_background)
+        val textNowMinuteBackground = findViewById<TextView>(R.id.text_now_minute_background)
+        val textNowSecondBackground = findViewById<TextView>(R.id.text_now_second_background)
+        val textTopAlarmTimeBackground = findViewById<TextView>(R.id.text_top_alarm_time_background)
+        if (ClockSettingDataHolder.backgroundMode == BackgroundMode.COLOR) {
+            if (isBackgroundAllRGB50OrLess()) {
+                textNowDayBackground.visibility = View.VISIBLE
+                textNowMonthBackground.visibility = View.VISIBLE
+                textNowYearBackground.visibility = View.VISIBLE
+                textNowHourBackground.visibility = View.VISIBLE
+                textNowMinuteBackground.visibility = View.VISIBLE
+                textNowSecondBackground.visibility = View.VISIBLE
+                textTopAlarmTimeBackground.visibility = View.VISIBLE
+            } else {
+                textNowDayBackground.visibility = View.GONE
+                textNowMonthBackground.visibility = View.GONE
+                textNowYearBackground.visibility = View.GONE
+                textNowHourBackground.visibility = View.GONE
+                textNowMinuteBackground.visibility = View.GONE
+                textNowSecondBackground.visibility = View.GONE
+                textTopAlarmTimeBackground.visibility = View.GONE
+            }
+        } else {
+            textNowDayBackground.visibility = View.GONE
+            textNowMonthBackground.visibility = View.GONE
+            textNowYearBackground.visibility = View.GONE
+            textNowHourBackground.visibility = View.GONE
+            textNowMinuteBackground.visibility = View.GONE
+            textNowSecondBackground.visibility = View.GONE
+            textTopAlarmTimeBackground.visibility = View.GONE
+        }
+    }
+
+    /**
+     * 背景色のRGB全てが、50以下であるかどうかを返却する
+     */
+    private fun isBackgroundAllRGB50OrLess(): Boolean {
+        val color = ClockSettingDataHolder.colorBackground
+        return Color.red(color) <= SHOW_BACKGROUND_RGB_LIMIT
+                && Color.green(color) <= SHOW_BACKGROUND_RGB_LIMIT
+                && Color.blue(color) <= SHOW_BACKGROUND_RGB_LIMIT
     }
 
     /**

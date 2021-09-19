@@ -427,6 +427,8 @@ class PopupColor(private val activity: MainActivity) {
                         }
                         // 背景モードをセーブする
                         fileIOWrapper.saveBackgroundMode()
+                        // 時計の文字の背景の88を表示状態を更新する
+                        activity.updateNumBackgroundState()
                     }
                     else -> {
                         throw IllegalArgumentException()
