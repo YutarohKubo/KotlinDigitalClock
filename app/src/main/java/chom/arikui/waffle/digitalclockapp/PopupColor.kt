@@ -411,14 +411,22 @@ class PopupColor(private val activity: MainActivity) {
                         fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
                         ClockSettingDataHolder.backgroundBmp = imageBmp
                         backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+                        // 背景画像をセーブする
                         fileIOWrapper.saveBackgroundPic()
                         if (radioColor.isChecked) {
                             ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
                             backgroundImage.visibility = View.GONE
                         } else {
-                            ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
-                            backgroundImage.visibility = View.VISIBLE
+                            if (imageBmp == null) {
+                                ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
+                                backgroundImage.visibility = View.GONE
+                            } else {
+                                ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
+                                backgroundImage.visibility = View.VISIBLE
+                            }
                         }
+                        // 背景モードをセーブする
+                        fileIOWrapper.saveBackgroundMode()
                     }
                     else -> {
                         throw IllegalArgumentException()

@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         fileIOWrapper.loadAlarmTime()
         fileIOWrapper.loadAlarmCheckState()
         fileIOWrapper.loadValidOverlayClock()
+        fileIOWrapper.loadBackgroundMode()
         fileIOWrapper.loadBackgroundPic()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -493,13 +494,19 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     /**
      * 背景画像を更新する
      */
-    fun updateClockBackgroundPic() {
+    private fun updateClockBackgroundPic() {
+        val mode = ClockSettingDataHolder.backgroundMode
         val bmp = ClockSettingDataHolder.backgroundBmp
-        if (bmp == null) {
+        if (mode == BackgroundMode.COLOR) {
+            // モードがカラーである時は、背景画像を非表示にして背景色を表示する
             imagePic.visibility = View.GONE
         } else {
-            imagePic.visibility = View.VISIBLE
-            imagePic.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+            if (bmp == null) {
+                imagePic.visibility = View.GONE
+            } else {
+                imagePic.visibility = View.VISIBLE
+                imagePic.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+            }
         }
     }
 

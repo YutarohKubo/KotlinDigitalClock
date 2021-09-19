@@ -250,6 +250,38 @@ class FileIOWrapper(private val mActivity: MainActivity) {
     }
 
     /**
+     * 背景モードをロードする
+     */
+    fun loadBackgroundMode() {
+        try {
+            BufferedReader(InputStreamReader(mActivity.openFileInput(BACKGROUND_MODE_FILE_NAME))).use {
+                val line = it.readLine()
+                if (line != null) {
+                    ClockSettingDataHolder.backgroundMode = BackgroundMode.modeOf(line)
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 背景モードをセーブする
+     */
+    fun saveBackgroundMode() {
+        try {
+            BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(BACKGROUND_MODE_FILE_NAME, Context.MODE_PRIVATE))).use {
+                val builder = StringBuilder()
+                builder.append(ClockSettingDataHolder.backgroundMode.mode)
+                builder.append(System.getProperty("line.separator"))
+                it.write(builder.toString())
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
      * 背景画像をロードする
      */
     fun loadBackgroundPic() {
