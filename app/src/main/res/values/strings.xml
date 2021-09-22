@@ -29,4 +29,10 @@
     <string name="setting">Setting</string>
     <string name="reset">Reset</string>
     <string name="alert_no_alarm_data">Not exist alarm data.</string>
+    <string name="premium">Premium</string>
+    <string name="catch_copy_premium">Experience an even more\nelegant digital clock!</string>
+    <string name="no_ads">No ads.</string>
+    <string name="no_ads_desc">All ads aren\'t displayed.</string>
+    <string name="activate_picture_background">Activate background picture.</string>
+    <string name="activate_picture_background_desc">You can set a photo on the clock background.</string>
 </resources>
