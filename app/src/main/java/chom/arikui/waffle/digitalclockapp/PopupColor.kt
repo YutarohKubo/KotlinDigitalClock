@@ -363,7 +363,7 @@ class PopupColor(private val activity: MainActivity) {
         buttonColorOk.setOnClickListener { _ ->
             if (checkBoxUnifyColor.isChecked) {
                 val dialog =
-                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message))
+                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message), activity.getString(R.string.yes))
                 dialog.okListener = dialogOkCallback
                 dialog.show(activity.supportFragmentManager, TAG)
             } else {
@@ -432,6 +432,10 @@ class PopupColor(private val activity: MainActivity) {
                             } else {
                                 ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
                                 backgroundImage.visibility = View.VISIBLE
+
+                                //ショップのアクティビティへのインテント発行
+                                val intent = Intent(activity, ShopActivity::class.java)
+                                activity.startActivity(intent)
                             }
                         }
                         // 背景モードをセーブする

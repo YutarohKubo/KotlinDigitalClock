@@ -28,7 +28,7 @@ class PopupSetting(private val activity: MainActivity) {
         checkOverlayClock.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(activity)) {
-                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps_to_enable_overlay_clock))
+                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps_to_enable_overlay_clock), activity.getString(R.string.yes))
                     dialog.okListener = activity::gotoSettingOverlay
                     dialog.negListener = { view.isChecked = false }
                     dialog.show(activity.supportFragmentManager, TAG)

@@ -36,4 +36,8 @@
     <string name="activate_picture_background">Activate picture.</string>
     <string name="activate_picture_background_desc">You can set a picture on the clock background.</string>
     <string name="upgrade">Upgrade (2.98$)</string>
+    <string name="attention">Attention</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="failed_to_access_google_play">Failed to connect to Google Play.\nPlease retry.</string>
 </resources>
