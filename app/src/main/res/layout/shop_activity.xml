@@ -5,7 +5,6 @@
     tools:context=".ShopActivity">
 
     <data>
-
         <variable
             name="viewModel"
             type="chom.arikui.waffle.digitalclockapp.ShopVM" />
@@ -51,7 +50,7 @@
                 android:gravity="center"
                 android:text="@string/catch_copy_premium"
                 android:textColor="@color/black"
-                android:textSize="40dp"
+                android:textSize="40sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="0.7"
@@ -159,6 +158,7 @@
                 android:text="@string/upgrade"
                 android:textSize="40sp"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:background="@drawable/grad_yellow_background_shape"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="2dp"
