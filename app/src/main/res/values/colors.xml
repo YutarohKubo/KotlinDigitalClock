@@ -20,4 +20,7 @@
     <color name="forestgreen">#228B22</color>
     <color name="green_yellow">#ADFF2F</color>
     <color name="green_almost_white">#EEFFEE</color>
+    <color name="darkorange">#FF8C00</color>
+    <color name="most_light_orange">#FFFFCC</color>
+    <color name="light_orange">#FFCC33</color>
 </resources>

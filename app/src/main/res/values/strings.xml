@@ -35,4 +35,5 @@
     <string name="no_ads_desc">All ads aren\'t displayed.</string>
     <string name="activate_picture_background">Activate background picture.</string>
     <string name="activate_picture_background_desc">You can set a photo on the clock background.</string>
+    <string name="upgrade">Upgrade (2.98$)</string>
 </resources>

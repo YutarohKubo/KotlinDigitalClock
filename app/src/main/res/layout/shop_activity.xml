@@ -5,132 +5,169 @@
     tools:context=".ShopActivity">
 
     <data>
+
         <variable
             name="viewModel"
             type="chom.arikui.waffle.digitalclockapp.ShopVM" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/image_premium"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
-            android:paddingHorizontal="20dp"
-            android:src="@drawable/image_premium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/text_premium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/premium"
-            android:textSize="36sp"
-            android:textStyle="bold|italic"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toTopOf="@id/image_premium"
-            app:layout_constraintBottom_toBottomOf="@id/image_premium"
-            app:layout_constraintStart_toStartOf="@id/image_premium"
-            app:layout_constraintEnd_toEndOf="@id/image_premium" />
+            <ImageView
+                android:id="@+id/image_premium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:src="@drawable/image_premium"
+                app:layout_constraintBottom_toBottomOf="@id/button_upgrade"
+                app:layout_constraintEnd_toStartOf="@id/image_no_ads"
+                app:layout_constraintHorizontal_weight="0.3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/text_catch_copy_premium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/catch_copy_premium"
-            android:textSize="40sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/image_premium"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/premium"
+                android:textColor="@color/black"
+                android:textSize="36sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintBottom_toBottomOf="@id/image_premium"
+                app:layout_constraintEnd_toEndOf="@id/image_premium"
+                app:layout_constraintStart_toStartOf="@id/image_premium"
+                app:layout_constraintTop_toTopOf="@id/image_premium" />
 
-        <ImageView
-            android:id="@+id/image_no_ads"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/no_ads"
-            app:layout_constraintEnd_toStartOf="@id/text_no_ads"
-            app:layout_constraintStart_toEndOf="@+id/image_premium"
-            app:layout_constraintTop_toBottomOf="@id/text_catch_copy_premium" />
+            <TextView
+                android:id="@+id/text_catch_copy_premium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/catch_copy_premium"
+                android:textColor="@color/black"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="0.7"
+                app:layout_constraintStart_toEndOf="@id/image_premium"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/text_no_ads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_ads"
-            android:textSize="32sp"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@id/image_no_ads"
-            app:layout_constraintTop_toTopOf="@id/image_no_ads"
-            app:layout_constraintBottom_toTopOf="@id/text_no_ads_desc" />
+            <ImageView
+                android:id="@+id/image_no_ads"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/no_ads"
+                app:layout_constraintEnd_toStartOf="@id/text_no_ads_desc"
+                app:layout_constraintHorizontal_weight="0.1"
+                app:layout_constraintStart_toEndOf="@+id/image_premium"
+                app:layout_constraintTop_toBottomOf="@id/text_catch_copy_premium" />
 
-        <TextView
-            android:id="@+id/text_no_ads_desc"
-            android:layout_width="420dp"
-            android:layout_height="wrap_content"
-            android:text="@string/no_ads_desc"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/text_no_ads"
-            app:layout_constraintStart_toEndOf="@id/image_no_ads"
-            app:layout_constraintBottom_toBottomOf="@id/image_no_ads" />
+            <TextView
+                android:id="@+id/text_no_ads"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/no_ads"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toTopOf="@id/text_no_ads_desc"
+                app:layout_constraintEnd_toEndOf="@id/text_no_ads_desc"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toStartOf="@id/text_no_ads_desc"
+                app:layout_constraintTop_toTopOf="@id/image_no_ads" />
 
-        <ImageView
-            android:id="@+id/image_check_premium_no_ads"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/ic_baseline_check_circle_outline_72"
-            app:layout_constraintTop_toTopOf="@id/image_no_ads"
-            app:layout_constraintBottom_toBottomOf="@id/image_no_ads"
-            app:layout_constraintStart_toEndOf="@id/text_no_ads_desc"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_no_ads_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/no_ads_desc"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/image_no_ads"
+                app:layout_constraintEnd_toStartOf="@id/image_check_premium_no_ads"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toEndOf="@id/image_no_ads"
+                app:layout_constraintTop_toBottomOf="@id/text_no_ads" />
 
-        <ImageView
-            android:id="@+id/image_picture"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/image_picture"
-            app:layout_constraintStart_toStartOf="@id/image_no_ads"
-            app:layout_constraintTop_toBottomOf="@id/image_no_ads" />
+            <ImageView
+                android:id="@+id/image_check_premium_no_ads"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_check_circle_outline_72"
+                app:layout_constraintBottom_toBottomOf="@id/image_no_ads"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="0.1"
+                app:layout_constraintStart_toEndOf="@id/text_no_ads_desc"
+                app:layout_constraintTop_toTopOf="@id/image_no_ads" />
 
-        <TextView
-            android:id="@+id/text_activate_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/activate_picture_background"
-            android:textSize="32sp"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toTopOf="@id/image_picture"
-            app:layout_constraintStart_toEndOf="@id/image_picture"
-            app:layout_constraintBottom_toTopOf="@id/text_activate_picture_desc" />
+            <ImageView
+                android:id="@+id/image_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/image_picture"
+                app:layout_constraintEnd_toEndOf="@id/image_no_ads"
+                app:layout_constraintHorizontal_weight="0.1"
+                app:layout_constraintStart_toStartOf="@id/image_no_ads"
+                app:layout_constraintTop_toBottomOf="@id/image_no_ads" />
 
-        <TextView
-            android:id="@+id/text_activate_picture_desc"
-            android:layout_width="420dp"
-            android:layout_height="wrap_content"
-            android:text="@string/activate_picture_background_desc"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/text_activate_picture"
-            app:layout_constraintStart_toEndOf="@id/image_picture"
-            app:layout_constraintBottom_toBottomOf="@id/image_picture"/>
+            <TextView
+                android:id="@+id/text_activate_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/activate_picture_background"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toTopOf="@id/text_activate_picture_desc"
+                app:layout_constraintEnd_toEndOf="@id/text_activate_picture_desc"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toStartOf="@id/text_activate_picture_desc"
+                app:layout_constraintTop_toTopOf="@id/image_picture" />
 
-        <ImageView
-            android:id="@+id/image_check_premium_background_picture"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/ic_baseline_check_circle_outline_72"
-            app:layout_constraintTop_toTopOf="@id/image_picture"
-            app:layout_constraintBottom_toBottomOf="@id/image_picture"
-            app:layout_constraintStart_toEndOf="@id/text_activate_picture_desc"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/text_activate_picture_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/activate_picture_background_desc"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/image_picture"
+                app:layout_constraintEnd_toStartOf="@id/image_check_premium_background_picture"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toEndOf="@id/image_picture"
+                app:layout_constraintTop_toBottomOf="@id/text_activate_picture" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/image_check_premium_background_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_check_circle_outline_72"
+                app:layout_constraintBottom_toBottomOf="@id/image_picture"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="0.1"
+                app:layout_constraintStart_toEndOf="@id/text_activate_picture_desc"
+                app:layout_constraintTop_toTopOf="@id/image_picture" />
+
+            <TextView
+                android:id="@+id/button_upgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/upgrade"
+                android:textSize="40sp"
+                android:textColor="@color/black"
+                android:background="@drawable/grad_yellow_background_shape"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="2dp"
+                app:layout_constraintStart_toEndOf="@id/image_premium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image_picture" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>
