@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onBackPressed() {
-        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message), getString(R.string.yes))
+        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message), getString(R.string.yes), getString(R.string.no))
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
     }

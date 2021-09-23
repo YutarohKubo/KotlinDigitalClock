@@ -35,6 +35,8 @@ class AttentionDialog : DialogFragment() {
         val textPOSButton = bundle?.getString(KEY_TEXT_POS_BUTTON) ?: ""
         val textNEGButton = bundle?.getString(KEY_TEXT_NEG_BUTTON) ?: ""
 
+        // 画面外タッチで、ダイアログを非表示にできないようにする
+        isCancelable = false
         val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
 
         builder.setIcon(R.mipmap.ico_attention1).setTitle(getString(R.string.attention))

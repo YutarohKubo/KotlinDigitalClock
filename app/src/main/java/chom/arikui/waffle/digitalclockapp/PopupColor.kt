@@ -363,7 +363,7 @@ class PopupColor(private val activity: MainActivity) {
         buttonColorOk.setOnClickListener { _ ->
             if (checkBoxUnifyColor.isChecked) {
                 val dialog =
-                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message), activity.getString(R.string.yes))
+                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message), activity.getString(R.string.yes), activity.getString(R.string.no))
                 dialog.okListener = dialogOkCallback
                 dialog.show(activity.supportFragmentManager, TAG)
             } else {

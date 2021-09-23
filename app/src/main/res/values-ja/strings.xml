@@ -35,7 +35,7 @@
     <string name="no_ads_desc">アプリ内の全ての広告が表示されなくなります</string>
     <string name="activate_picture_background">背景画像の有効化</string>
     <string name="activate_picture_background_desc">時計の背景に写真を設定できます</string>
-    <string name="upgrade">アップグレード (2.98$)</string>
+    <string name="upgrade">アップグレード%1$s</string>
     <string name="attention">Attention</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>

@@ -5,6 +5,8 @@
     tools:context=".ShopActivity">
 
     <data>
+        <import type="android.view.View" />
+        <import type="android.view.ViewGroup" />
         <variable
             name="viewModel"
             type="chom.arikui.waffle.digitalclockapp.ShopVM" />
@@ -167,10 +169,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
-                android:text="@string/upgrade"
+                android:text="@{viewModel.premiumPriceLV}"
                 android:textSize="32sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:enabled="@{viewModel.upgradeEnable}"
+                android:alpha="@{viewModel.upgradeEnable ? 1.0f : 0.3f}"
                 android:background="@drawable/grad_yellow_background_shape"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="2dp"
