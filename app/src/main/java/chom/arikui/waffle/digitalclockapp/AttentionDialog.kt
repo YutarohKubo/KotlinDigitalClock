@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.DialogFragment
 
-class AttentionDialog : DialogFragment() {
+class AttentionDialog : AppDialogCommonFragment() {
 
     companion object {
 

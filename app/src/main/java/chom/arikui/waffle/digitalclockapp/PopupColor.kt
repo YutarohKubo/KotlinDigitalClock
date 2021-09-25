@@ -372,6 +372,7 @@ class PopupColor(private val activity: MainActivity) {
                         ClockSettingDataHolder.colorDay = sampleText.currentTextColor
                         textDay.setTextColor(ClockSettingDataHolder.colorDay)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_month -> {
                         ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
@@ -382,60 +383,76 @@ class PopupColor(private val activity: MainActivity) {
                         ClockSettingDataHolder.colorYear = sampleText.currentTextColor
                         textYear.setTextColor(ClockSettingDataHolder.colorYear)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.text_now_week -> {
                         ClockSettingDataHolder.colorWeek = sampleText.currentTextColor
                         textWeek.setTextColor(ClockSettingDataHolder.colorWeek)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_hour -> {
                         ClockSettingDataHolder.colorHour = sampleText.currentTextColor
                         textHour.setTextColor(ClockSettingDataHolder.colorHour)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.text_divide_hour_and_minute -> {
                         ClockSettingDataHolder.colorDivideTime = sampleText.currentTextColor
                         textDivideTime.setTextColor(ClockSettingDataHolder.colorDivideTime)
                         fileIOWrapper.saveColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_minute -> {
                         ClockSettingDataHolder.colorMinute = sampleText.currentTextColor
                         textMinute.setTextColor(ClockSettingDataHolder.colorMinute)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_second -> {
                         ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
                         textSecond.setTextColor(ClockSettingDataHolder.colorSecond)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_top_alarm_time -> {
                         ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
                         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
                         fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.activity_root -> {
-                        val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
-                        ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
-                        backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
-                        fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
-                        ClockSettingDataHolder.backgroundBmp = imageBmp
-                        backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
-                        // 背景画像をセーブする
-                        fileIOWrapper.saveBackgroundPic()
                         if (radioColor.isChecked) {
                             ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
                             backgroundImage.visibility = View.GONE
+                            val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
+                            ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
+                            backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                            fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
+                            mPopupWindow?.dismiss()
                         } else {
                             if (imageBmp == null) {
                                 ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
                                 backgroundImage.visibility = View.GONE
+                                mPopupWindow?.dismiss()
                             } else {
-                                ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
-                                backgroundImage.visibility = View.VISIBLE
-
-                                //ショップのアクティビティへのインテント発行
-                                val intent = Intent(activity, ShopActivity::class.java)
-                                activity.startActivity(intent)
+                                if (AppCommonActivity.isUpgradedPremium()) {
+                                    ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
+                                    ClockSettingDataHolder.backgroundBmp = imageBmp
+                                    // 背景画像をセーブする
+                                    fileIOWrapper.saveBackgroundPic()
+                                    backgroundImage.visibility = View.VISIBLE
+                                    backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+                                    mPopupWindow?.dismiss()
+                                } else {
+                                    val dialog = AttentionDialog.newInstance(activity.getString(R.string.msg_must_upgrade_premium), activity.getString(R.string.yes), activity.getString(R.string.no))
+                                    dialog.okListener = {
+                                        //ショップのアクティビティへのインテント発行
+                                        val intent = Intent(activity, ShopActivity::class.java)
+                                        activity.startActivity(intent)
+                                    }
+                                    dialog.show(activity.supportFragmentManager, TAG)
+                                }
                             }
                         }
                         // 背景モードをセーブする
@@ -447,7 +464,6 @@ class PopupColor(private val activity: MainActivity) {
                         throw IllegalArgumentException()
                     }
                 }
-                mPopupWindow?.dismiss()
             }
         }
 

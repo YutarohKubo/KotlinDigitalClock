@@ -1,5 +1,6 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.content.Intent
 import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
@@ -14,6 +15,7 @@ class PopupSetting(private val activity: MainActivity) {
     var popupWindow: PopupWindow? = null
     lateinit var checkOverlayClock: CheckBox
     private lateinit var buttonBackgroundSetting: TextView
+    private lateinit var buttonUpgradeSetting: TextView
     private val fileIOWrapper = activity.fileIOWrapper
 
     companion object {
@@ -43,6 +45,12 @@ class PopupSetting(private val activity: MainActivity) {
         buttonBackgroundSetting = popupView.findViewById(R.id.button_background_setting)
         buttonBackgroundSetting.setOnClickListener {
             activity.showPopupColor(activity.findViewById<FrameLayout>(R.id.activity_root))
+        }
+        buttonUpgradeSetting = popupView.findViewById(R.id.button_upgrade_setting)
+        buttonUpgradeSetting.setOnClickListener {
+            //ショップのアクティビティへのインテント発行
+            val intent = Intent(activity, ShopActivity::class.java)
+            activity.startActivity(intent)
         }
 
         popupWindow?.contentView = popupView

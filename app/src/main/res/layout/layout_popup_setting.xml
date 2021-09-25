@@ -34,11 +34,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/background_settings"
         android:textColor="@color/pamplemousse"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/text_title_setting_overlay"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_title_upgrade"
         app:layout_constraintStart_toStartOf="@id/text_title_setting_overlay"
         app:layout_constraintEnd_toEndOf="@id/text_title_setting_overlay" />
 
@@ -58,5 +59,34 @@
         app:layout_constraintStart_toEndOf="@id/text_title_setting_background"
         app:layout_constraintEnd_toEndOf="@id/check_permit_overlay_clock"
         app:layout_constraintStart_toStartOf="@id/check_permit_overlay_clock" />
+
+    <TextView
+        android:id="@+id/text_title_upgrade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/setting_menu_upgrade"
+        android:textColor="@color/pamplemousse"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/text_title_setting_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/text_title_setting_background"
+        app:layout_constraintEnd_toEndOf="@id/text_title_setting_background" />
+
+    <TextView
+        android:id="@+id/button_upgrade_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="2dp"
+        android:background="@drawable/grad_silver_background_shape"
+        android:text="@string/go_setting"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="@id/text_title_upgrade"
+        app:layout_constraintBottom_toBottomOf="@id/text_title_upgrade"
+        app:layout_constraintEnd_toEndOf="@id/button_background_setting"
+        app:layout_constraintStart_toStartOf="@id/button_background_setting" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

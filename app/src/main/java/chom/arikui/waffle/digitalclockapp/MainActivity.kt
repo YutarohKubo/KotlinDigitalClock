@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
+class MainActivity : AppCommonActivity(), CoroutineScope {
 
     companion object {
         private const val TAG = "MainAct"
@@ -81,35 +81,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private var mPopupSetting: PopupSetting? = null
     private var mPopupColor: PopupColor? = null
 
-    private var mInterAdCloseApp: InterstitialAd? = null
-
     private var mLaunchOverlaySetting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MobileAds.initialize(this) {}
-        val adRequest = AdRequest.Builder().build()
-
-        mInterAdCloseApp = InterstitialAd(this)
-
-        mInterAdCloseApp!!.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                // 広告は1回だけ表示させるため、リロードしない
-                // mInterAdCloseApp?.loadAd(adRequest)
-            }
-        }
-
-        if (isTest) {
-            mInterAdCloseApp!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
-        } else {
-            mInterAdCloseApp!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
-        }
-
-        mInterAdCloseApp!!.loadAd(adRequest)
-
+        // 端末データ読み込み
+        loadTerminalData()
+        // 広告ロード
+        loadAds()
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
@@ -254,7 +235,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 val uri = data.data ?: return
                 try {
                     val bmp = getBitmapFromUri(uri)
-                    ClockSettingDataHolder.backgroundBmp = bmp
                     if (mPopupColor != null && mPopupColor!!.isShowing()) {
                         mPopupColor!!.setImageSampleFromBitmap(getBitmapFromUri(uri))
                     }
@@ -316,12 +296,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         mLaunchOverlaySetting = true
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
-    }
-
-    private fun showInterstitial() {
-        if (mInterAdCloseApp != null && mInterAdCloseApp!!.isLoaded) {
-            mInterAdCloseApp!!.show()
-        }
     }
 
     private val mLongClickListener = object : View.OnLongClickListener {
@@ -564,10 +538,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private fun hideSystemUI() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    }
-
     /**
      * ナビゲージョンバーを除く画面サイズを取得する
      */
@@ -596,5 +566,53 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         } else {
             view.alpha = 0.3f
         }
+    }
+
+    /**
+     * インタースティシャル広告のロード
+     */
+    private fun loadAds() {
+        if (isUpgradedPremium()) {
+            Log.d(TAG, "premium member so do not load ad.")
+            return
+        }
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+
+        mInterAd0 = InterstitialAd(this)
+
+        mInterAd0!!.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                super.onAdClosed()
+                // 広告リロード
+                mInterAd0?.loadAd(adRequest)
+            }
+        }
+
+        if (isTest) {
+            mInterAd0!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            mInterAd0!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+        }
+
+        mInterAd0!!.loadAd(adRequest)
+    }
+
+    /**
+     * インタースティシャル広告表示
+     */
+    private fun showInterstitial() {
+        if (isUpgradedPremium()) {
+            Log.d(TAG, "premium member so do not show ad.")
+            return
+        }
+        if (mInterAd0 == null || !mInterAd0!!.isLoaded) {
+            Log.d(TAG, "Ad is finished loading so is not show.")
+            return
+        }
+        if (countClickAdKey++ % 5 != 0) {
+            return
+        }
+        mInterAd0!!.show()
     }
 }
