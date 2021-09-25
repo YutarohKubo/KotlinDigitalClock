@@ -5,6 +5,7 @@ import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
+import android.view.View
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.PopupWindow
@@ -51,6 +52,13 @@ class PopupSetting(private val activity: MainActivity) {
             //ショップのアクティビティへのインテント発行
             val intent = Intent(activity, ShopActivity::class.java)
             activity.startActivity(intent)
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            // KITKAT以前の端末は、背景画像の設定をサポートしないため、アップグレードもサポートしない
+            buttonUpgradeSetting.visibility = View.GONE
+            val textUpgradeSetting = popupView.findViewById<TextView>(R.id.text_title_upgrade)
+            textUpgradeSetting.visibility = View.GONE
         }
 
         popupWindow?.contentView = popupView

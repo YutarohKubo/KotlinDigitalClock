@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -130,6 +132,10 @@ class PopupColor(private val activity: MainActivity) {
                 }
                 buttonReset = popupView.findViewById(R.id.button_reset)
                 val spaceOkBelow = popupView.findViewById<Space>(R.id.space_button_ok_below)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    // KITKAT以前の端末は、背景画像の設定をサポートしないため、ラジオボタンを非表示とする
+                    radioBackgroundMode.visibility = View.GONE
+                }
                 radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
                     when(checkedId) {
                         R.id.radio_mode_color -> {
@@ -529,9 +535,13 @@ class PopupColor(private val activity: MainActivity) {
     fun isShowing() = (mPopupWindow != null && mPopupWindow!!.isShowing)
 
     /**
-     * 画像選択アプリへ移行する (Todo VERSION_CODES.KITKAT以降)
+     * 画像選択アプリへ移行する (VERSION_CODES.KITKAT以降)
      */
     private fun openImageSelecting() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            Log.e(TAG, "android version is not support to storage access frame work.")
+            return
+        }
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
