@@ -27,6 +27,9 @@ class PopupColor(private val activity: MainActivity) {
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
         val fileIOWrapper = activity.fileIOWrapper
 
+        val seekBarRedArea = popupView.findViewById<View>(R.id.seek_bar_red_area)
+        val seekBarGreenArea = popupView.findViewById<View>(R.id.seek_bar_green_area)
+        val seekBarBlueArea = popupView.findViewById<View>(R.id.seek_bar_blue_area)
         val textRValue = popupView.findViewById<TextView>(R.id.text_r_value)
         val textGValue = popupView.findViewById<TextView>(R.id.text_g_value)
         val textBValue = popupView.findViewById<TextView>(R.id.text_b_value)
@@ -136,6 +139,9 @@ class PopupColor(private val activity: MainActivity) {
                             buttonReset?.visibility = View.GONE
                             spaceOkBelow.visibility = View.GONE
                             sampleTextTitle.visibility = View.VISIBLE
+                            activity.setViewEnabled(seekBarRedArea, true)
+                            activity.setViewEnabled(seekBarGreenArea, true)
+                            activity.setViewEnabled(seekBarBlueArea, true)
                         }
                         R.id.radio_mode_pic -> {
                             imagePicSetting.visibility = View.VISIBLE
@@ -144,6 +150,9 @@ class PopupColor(private val activity: MainActivity) {
                             buttonReset?.visibility = View.VISIBLE
                             spaceOkBelow.visibility = View.VISIBLE
                             sampleTextTitle.visibility = View.GONE
+                            activity.setViewEnabled(seekBarRedArea, false)
+                            activity.setViewEnabled(seekBarGreenArea, false)
+                            activity.setViewEnabled(seekBarBlueArea, false)
                         }
                     }
                 }
