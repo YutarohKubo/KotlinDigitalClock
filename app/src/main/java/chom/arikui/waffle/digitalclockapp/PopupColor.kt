@@ -486,8 +486,8 @@ class PopupColor(private val activity: MainActivity) {
         mPopupWindow?.isOutsideTouchable = true
         mPopupWindow?.isFocusable = true
 
-        mPopupWindow?.width = displaySize.x - 200
-        mPopupWindow?.height = displaySize.y - 120
+        mPopupWindow?.width = displaySize.x - CalculateUtil.convertDp2Px(40, activity).toInt()
+        mPopupWindow?.height = displaySize.y - CalculateUtil.convertDp2Px(10, activity).toInt()
 
         // 画面中央に表示
         mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

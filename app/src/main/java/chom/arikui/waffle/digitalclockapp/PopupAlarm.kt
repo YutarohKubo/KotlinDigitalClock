@@ -103,12 +103,12 @@ class PopupAlarm(private val activity: MainActivity) {
         }
 
         val d = activity.windowManager.defaultDisplay
-        var p2 = Point()
+        val p2 = Point()
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 
-        popupWindow?.width = p2.x - 200
-        popupWindow?.height = p2.y - 180
+        popupWindow?.width = p2.x - CalculateUtil.convertDp2Px(40, activity).toInt()
+        popupWindow?.height = p2.y - CalculateUtil.convertDp2Px(10, activity).toInt()
 
         // 画面中央に表示
         popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
