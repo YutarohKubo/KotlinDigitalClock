@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.DialogFragment
 
 class AttentionDialog : AppDialogCommonFragment() {
 
