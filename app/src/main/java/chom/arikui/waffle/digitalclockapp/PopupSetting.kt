@@ -6,10 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
 import android.view.View
-import android.widget.CheckBox
-import android.widget.FrameLayout
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 
 class PopupSetting(private val activity: MainActivity) {
 
@@ -25,6 +22,7 @@ class PopupSetting(private val activity: MainActivity) {
 
     fun showPopup() {
         popupWindow = PopupWindow(activity)
+        popupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_popup_setting, null)
         checkOverlayClock = popupView.findViewById(R.id.check_permit_overlay_clock)
         checkOverlayClock.isChecked = ClockSettingDataHolder.validOverlayClock
@@ -52,6 +50,12 @@ class PopupSetting(private val activity: MainActivity) {
             //ショップのアクティビティへのインテント発行
             val intent = Intent(activity, ShopActivity::class.java)
             activity.startActivity(intent)
+        }
+
+        // バツボタン
+        val buttonClose = popupView.findViewById<ImageView>(R.id.button_popup_setting_close)
+        buttonClose.setOnClickListener {
+            popupWindow?.dismiss()
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {

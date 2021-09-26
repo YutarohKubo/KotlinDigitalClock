@@ -26,6 +26,7 @@ class PopupColor(private val activity: MainActivity) {
 
     fun showPopup(v: View) {
         mPopupWindow = PopupWindow(activity)
+        mPopupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
         val fileIOWrapper = activity.fileIOWrapper
 
@@ -482,12 +483,18 @@ class PopupColor(private val activity: MainActivity) {
             }
         }
 
+        // バツボタン
+        val buttonClose = popupView.findViewById<ImageView>(R.id.button_popup_color_close)
+        buttonClose.setOnClickListener {
+            mPopupWindow?.dismiss()
+        }
+
         mPopupWindow?.contentView = popupView
         mPopupWindow?.isOutsideTouchable = true
         mPopupWindow?.isFocusable = true
 
-        mPopupWindow?.width = displaySize.x - CalculateUtil.convertDp2Px(40, activity).toInt()
-        mPopupWindow?.height = displaySize.y - CalculateUtil.convertDp2Px(10, activity).toInt()
+        mPopupWindow?.width = (displaySize.x * 0.95).toInt()
+        mPopupWindow?.height = (displaySize.y * 0.95).toInt()
 
         // 画面中央に表示
         mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
