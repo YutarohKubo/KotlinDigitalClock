@@ -211,9 +211,8 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop()")
-        val app = application as ClockApplication
-        if (ClockSettingDataHolder.validOverlayClock && app.currentActivityName != ShopActivity::class.java.name) {
-            // 常駐時計表示ONかつ、ShopActivityが起動していない場合に限り、常駐時計をスタートさせる
+        if (ClockSettingDataHolder.validOverlayClock) {
+            // 常駐時計表示ONの場合に限り、常駐時計をスタートさせる
             startService(Intent(this, DigitalClockService::class.java))
         }
     }
