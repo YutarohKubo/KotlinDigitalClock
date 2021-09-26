@@ -1,6 +1,7 @@
 package chom.arikui.waffle.digitalclockapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -16,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 class ShopActivity : AppCommonActivity(), CoroutineScope {
 
     companion object {
-        private const val TAG = "SHOP_ACT"
+        private const val TAG = "ShopAct"
         private const val ID_PREMIUM_MEMBERSHIP = "premium_membership"
     }
 
@@ -36,6 +37,8 @@ class ShopActivity : AppCommonActivity(), CoroutineScope {
         val binding = DataBindingUtil.setContentView<ShopActivityBinding>(
             this, R.layout.shop_activity
         )
+        // 常駐時計は表示しないため、SpotServiceをかける
+        stopService(Intent(this, DigitalClockService::class.java))
         mViewModel = ViewModelProvider(this).get(ShopVM::class.java)
         binding.lifecycleOwner = this
         binding.viewModel = mViewModel

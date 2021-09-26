@@ -16,6 +16,10 @@ import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 
 class AlarmRingingActivity : AppCommonActivity() {
 
+    companion object {
+        private const val TAG = "AlarmAct"
+    }
+
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var intentAlarm: Intent
 
