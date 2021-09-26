@@ -25,7 +25,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -211,7 +210,9 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
 
     override fun onStop() {
         super.onStop()
+        Log.d(TAG, "onStop()")
         if (ClockSettingDataHolder.validOverlayClock) {
+            // 常駐時計表示ONの場合に限り、常駐時計をスタートさせる
             startService(Intent(this, DigitalClockService::class.java))
         }
     }
