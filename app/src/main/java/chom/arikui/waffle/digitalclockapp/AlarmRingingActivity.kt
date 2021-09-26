@@ -10,12 +10,11 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 
-class AlarmRingingActivity : AppCompatActivity() {
+class AlarmRingingActivity : AppCommonActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var intentAlarm: Intent
@@ -71,9 +70,5 @@ class AlarmRingingActivity : AppCompatActivity() {
         if (mediaPlayer?.isPlaying!!) {
             mediaPlayer?.stop()
         }
-    }
-
-    private fun hideSystemUI() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 }

@@ -1,6 +1,8 @@
 package chom.arikui.waffle.digitalclockapp
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import java.io.*
 
@@ -20,7 +22,10 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         const val NOW_MINUTE_COLOR_FILE_NAME = "now_minute_color.dc"
         const val NOW_SECOND_COLOR_FILE_NAME = "now_second_color.dc"
         const val TOP_ALARM_TIME_COLOR_FILE_NAME = "top_alarm_time_color.dc"
+        const val CLOCK_BACKGROUND_COLOR = "clock_background_color.dc"
         const val VALID_OVERLAY_CLOCK_FILE_NAME = "valid_overlay_clock.dc"
+        const val BACKGROUND_MODE_FILE_NAME = "background_mode.dc"
+        private const val BACKGROUND_PIC_FILE_NAME = "background_pic.dc"
     }
 
     fun loadAlarmTime() {
@@ -140,7 +145,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         }
     }
 
-    fun loadTextColor(fileName: String) {
+    fun loadColor(fileName: String) {
         try {
             BufferedReader(InputStreamReader(mActivity.openFileInput(fileName))).use {
                 var redValue: Int
@@ -162,6 +167,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                     NOW_MINUTE_COLOR_FILE_NAME -> ClockSettingDataHolder.colorMinute = Color.rgb(redValue, greenValue, blueValue)
                     NOW_SECOND_COLOR_FILE_NAME -> ClockSettingDataHolder.colorSecond = Color.rgb(redValue, greenValue, blueValue)
                     TOP_ALARM_TIME_COLOR_FILE_NAME -> ClockSettingDataHolder.colorTopAlarmTime = Color.rgb(redValue, greenValue, blueValue)
+                    CLOCK_BACKGROUND_COLOR -> ClockSettingDataHolder.colorBackground = Color.rgb(redValue, greenValue, blueValue)
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -170,7 +176,7 @@ class FileIOWrapper(private val mActivity: MainActivity) {
         }
     }
 
-    fun saveTextColor(fileName: String) {
+    fun saveColor(fileName: String) {
         try {
             BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(fileName, Context.MODE_PRIVATE))).use {
                 val redValue: Int
@@ -222,6 +228,11 @@ class FileIOWrapper(private val mActivity: MainActivity) {
                         greenValue = Color.green(ClockSettingDataHolder.colorTopAlarmTime)
                         blueValue = Color.blue(ClockSettingDataHolder.colorTopAlarmTime)
                     }
+                    CLOCK_BACKGROUND_COLOR -> {
+                        redValue = Color.red(ClockSettingDataHolder.colorBackground)
+                        greenValue = Color.green(ClockSettingDataHolder.colorBackground)
+                        blueValue = Color.blue(ClockSettingDataHolder.colorBackground)
+                    }
                     else -> throw IllegalArgumentException()
                 }
                 val builder = StringBuilder()
@@ -237,4 +248,70 @@ class FileIOWrapper(private val mActivity: MainActivity) {
             e.printStackTrace()
         }
     }
+
+    /**
+     * 背景モードをロードする
+     */
+    fun loadBackgroundMode() {
+        try {
+            BufferedReader(InputStreamReader(mActivity.openFileInput(BACKGROUND_MODE_FILE_NAME))).use {
+                val line = it.readLine()
+                if (line != null) {
+                    ClockSettingDataHolder.backgroundMode = BackgroundMode.modeOf(line)
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 背景モードをセーブする
+     */
+    fun saveBackgroundMode() {
+        try {
+            BufferedWriter(OutputStreamWriter(mActivity.openFileOutput(BACKGROUND_MODE_FILE_NAME, Context.MODE_PRIVATE))).use {
+                val builder = StringBuilder()
+                builder.append(ClockSettingDataHolder.backgroundMode.mode)
+                builder.append(System.getProperty("line.separator"))
+                it.write(builder.toString())
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 背景画像をロードする
+     */
+    fun loadBackgroundPic() {
+        try {
+            val file = File(mActivity.filesDir, BACKGROUND_PIC_FILE_NAME)
+            if (file.exists()) {
+                // セーブ時に、0byteのbackground_pic.dcが出力されていた場合は、decodeできないため、nullが返ってくる
+                ClockSettingDataHolder.backgroundBmp = BitmapFactory.decodeFile(file.path)
+            } else {
+                ClockSettingDataHolder.backgroundBmp = null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ClockSettingDataHolder.backgroundBmp = null
+        }
+    }
+
+    /**
+     * 背景画像を保存する
+     * 追加書き込みモード(Context.MODE_PRIVATE|Context.MODE_APPEND)ではないため、ClockSettingDataHolder.backgroundBmp == nullの場合には、
+     * 0byteのbackground_pic.dcが出力される
+     */
+    fun saveBackgroundPic() {
+        try {
+            mActivity.openFileOutput(BACKGROUND_PIC_FILE_NAME, Context.MODE_PRIVATE).use {
+                ClockSettingDataHolder.backgroundBmp?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 }

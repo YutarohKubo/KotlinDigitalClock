@@ -5,6 +5,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Point
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -17,21 +21,24 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
+class MainActivity : AppCommonActivity(), CoroutineScope {
 
     companion object {
         private const val TAG = "MainAct"
@@ -45,6 +52,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         private val secondFormat = SimpleDateFormat("ss")
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
 
+        const val READ_PIC_REQ_CODE = 2001
         private const val isTest = false
     }
 
@@ -61,6 +69,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     lateinit var textDivideHourAndMinute: TextView
     lateinit var textNowMinute: TextView
     lateinit var textNowSecond: TextView
+    lateinit var backgroundFrame: FrameLayout
+    lateinit var imagePic: ImageView
     lateinit var textTopAlarmTime: TextView
 
     val listAlarmData = arrayListOf<RingtoneData>()
@@ -70,8 +80,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private var mPopupAlarm: PopupAlarm? = null
     private var mPopupSetting: PopupSetting? = null
-
-    private var mInterAdCloseApp: InterstitialAd? = null
+    private var mPopupColor: PopupColor? = null
 
     private var mLaunchOverlaySetting = false
 
@@ -79,27 +88,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MobileAds.initialize(this) {}
-        val adRequest = AdRequest.Builder().build()
-
-        mInterAdCloseApp = InterstitialAd(this)
-
-        mInterAdCloseApp!!.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                // 広告は1回だけ表示させるため、リロードしない
-                // mInterAdCloseApp?.loadAd(adRequest)
-            }
-        }
-
-        if (isTest) {
-            mInterAdCloseApp!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
-        } else {
-            mInterAdCloseApp!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
-        }
-
-        mInterAdCloseApp!!.loadAd(adRequest)
-
+        // 端末データ読み込み
+        loadTerminalData()
+        // 広告ロード
+        loadAds()
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
@@ -113,6 +105,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         fileIOWrapper.loadAlarmTime()
         fileIOWrapper.loadAlarmCheckState()
         fileIOWrapper.loadValidOverlayClock()
+        fileIOWrapper.loadBackgroundMode()
+        fileIOWrapper.loadBackgroundPic()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageAlarm = image_alarm
@@ -129,32 +123,36 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             frame_now_day.setOnLongClickListener(mLongClickListener)
             textNowDay = text_now_day
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
             frame_now_month.setOnLongClickListener(mLongClickListener)
             textNowMonth = text_now_month
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
             frame_now_year.setOnLongClickListener(mLongClickListener)
             textNowYear = text_now_year
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
             text_now_week.setOnLongClickListener(mLongClickListener)
             textNowWeek = text_now_week
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
             frame_now_hour.setOnLongClickListener(mLongClickListener)
             textNowHour = text_now_hour
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
             text_divide_hour_and_minute.setOnLongClickListener(mLongClickListener)
             textDivideHourAndMinute = text_divide_hour_and_minute
-            fileIOWrapper.loadTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
             frame_now_minute.setOnLongClickListener(mLongClickListener)
             textNowMinute = text_now_minute
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
             frame_now_second.setOnLongClickListener(mLongClickListener)
             textNowSecond = text_now_second
-            fileIOWrapper.loadTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            fileIOWrapper.loadColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            activity_root.setOnLongClickListener(mLongClickListener)
+            backgroundFrame = activity_root
+            fileIOWrapper.loadColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
             frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
             textTopAlarmTime = text_top_alarm_time
             textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
-            fileIOWrapper.loadTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            imagePic = findViewById(R.id.image_pic)
+            fileIOWrapper.loadColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
 
             // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
             // ギアメニューキーを非表示にする
@@ -169,6 +167,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 image_setting.visibility = View.GONE
             }
             updateClockColor()
+            updateClockBackgroundPic()
+            // 時計の文字の背景の88を表示状態を更新する
+            updateNumBackgroundState()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
                 val bottomArea = bottom_area
@@ -223,9 +224,37 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onBackPressed() {
-        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message))
+        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message), getString(R.string.yes), getString(R.string.no))
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == READ_PIC_REQ_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                val uri = data.data ?: return
+                try {
+                    val bmp = getBitmapFromUri(uri)
+                    if (mPopupColor != null && mPopupColor!!.isShowing()) {
+                        mPopupColor!!.setImageSampleFromBitmap(getBitmapFromUri(uri))
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    /**
+     * 画像ファイルに関して、uriからBitmapに変換する
+     */
+    private fun getBitmapFromUri(uri: Uri): Bitmap {
+        val parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r")
+        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+        val bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+        parcelFileDescriptor?.close()
+        return bitmap
     }
 
     /**
@@ -270,22 +299,20 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
     }
 
-    private fun showInterstitial() {
-        if (mInterAdCloseApp != null && mInterAdCloseApp!!.isLoaded) {
-            mInterAdCloseApp!!.show()
-        }
-    }
-
     private val mLongClickListener = object : View.OnLongClickListener {
         override fun onLongClick(v: View?): Boolean {
             if (v == null) {
                 return false
             }
             showInterstitial()
-            val mPopupColor = PopupColor(this@MainActivity)
-            mPopupColor.showPopup(v)
+            showPopupColor(v)
             return true
         }
+    }
+
+    fun showPopupColor(v: View) {
+        mPopupColor = PopupColor(this@MainActivity)
+        mPopupColor!!.showPopup(v)
     }
 
     fun loadAlarmData() {
@@ -440,9 +467,153 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         textNowMinute.setTextColor(ClockSettingDataHolder.colorMinute)
         textNowSecond.setTextColor(ClockSettingDataHolder.colorSecond)
         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
+        backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
     }
 
-    private fun hideSystemUI() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    /**
+     * 時計の文字の背景の表示非表示を切り替える
+     */
+    fun updateNumBackgroundState() {
+        val textNowDayBackground = findViewById<TextView>(R.id.text_now_day_background)
+        val textNowMonthBackground = findViewById<TextView>(R.id.text_now_month_background)
+        val textNowYearBackground = findViewById<TextView>(R.id.text_now_year_background)
+        val textNowHourBackground = findViewById<TextView>(R.id.text_now_hour_background)
+        val textNowMinuteBackground = findViewById<TextView>(R.id.text_now_minute_background)
+        val textNowSecondBackground = findViewById<TextView>(R.id.text_now_second_background)
+        val textTopAlarmTimeBackground = findViewById<TextView>(R.id.text_top_alarm_time_background)
+        if (ClockSettingDataHolder.backgroundMode == BackgroundMode.COLOR) {
+            if (isBackgroundAllRGB50OrLess()) {
+                textNowDayBackground.visibility = View.VISIBLE
+                textNowMonthBackground.visibility = View.VISIBLE
+                textNowYearBackground.visibility = View.VISIBLE
+                textNowHourBackground.visibility = View.VISIBLE
+                textNowMinuteBackground.visibility = View.VISIBLE
+                textNowSecondBackground.visibility = View.VISIBLE
+                textTopAlarmTimeBackground.visibility = View.VISIBLE
+            } else {
+                textNowDayBackground.visibility = View.GONE
+                textNowMonthBackground.visibility = View.GONE
+                textNowYearBackground.visibility = View.GONE
+                textNowHourBackground.visibility = View.GONE
+                textNowMinuteBackground.visibility = View.GONE
+                textNowSecondBackground.visibility = View.GONE
+                textTopAlarmTimeBackground.visibility = View.GONE
+            }
+        } else {
+            textNowDayBackground.visibility = View.GONE
+            textNowMonthBackground.visibility = View.GONE
+            textNowYearBackground.visibility = View.GONE
+            textNowHourBackground.visibility = View.GONE
+            textNowMinuteBackground.visibility = View.GONE
+            textNowSecondBackground.visibility = View.GONE
+            textTopAlarmTimeBackground.visibility = View.GONE
+        }
+    }
+
+    /**
+     * 背景色のRGB全てが、50以下であるかどうかを返却する
+     */
+    private fun isBackgroundAllRGB50OrLess(): Boolean {
+        val color = ClockSettingDataHolder.colorBackground
+        return Color.red(color) <= SHOW_BACKGROUND_RGB_LIMIT
+                && Color.green(color) <= SHOW_BACKGROUND_RGB_LIMIT
+                && Color.blue(color) <= SHOW_BACKGROUND_RGB_LIMIT
+    }
+
+    /**
+     * 背景画像を更新する
+     */
+    private fun updateClockBackgroundPic() {
+        val mode = ClockSettingDataHolder.backgroundMode
+        val bmp = ClockSettingDataHolder.backgroundBmp
+        if (mode == BackgroundMode.COLOR) {
+            // モードがカラーである時は、背景画像を非表示にして背景色を表示する
+            imagePic.visibility = View.GONE
+        } else {
+            if (bmp == null) {
+                imagePic.visibility = View.GONE
+            } else {
+                imagePic.visibility = View.VISIBLE
+                imagePic.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+            }
+        }
+    }
+
+    /**
+     * ナビゲージョンバーを除く画面サイズを取得する
+     */
+    fun displaySize(): Point {
+        val d = windowManager.defaultDisplay
+        val p = Point()
+        // ナビゲーションバーを除く画面サイズを取得
+        d.getSize(p)
+
+        return p
+    }
+
+    /**
+     * viewの輝度/半輝度設定
+     *
+     * @param view     view
+     * @param isEnable 輝度(true)/半輝度(false)
+     */
+    fun setViewEnabled(view: View?, isEnable: Boolean) {
+        if (view == null) {
+            return
+        }
+        view.isEnabled = isEnable
+        if (isEnable) {
+            view.alpha = 1.0f
+        } else {
+            view.alpha = 0.3f
+        }
+    }
+
+    /**
+     * インタースティシャル広告のロード
+     */
+    private fun loadAds() {
+        if (isUpgradedPremium()) {
+            Log.d(TAG, "premium member so do not load ad.")
+            return
+        }
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+
+        mInterAd0 = InterstitialAd(this)
+
+        mInterAd0!!.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                super.onAdClosed()
+                // 広告リロード
+                mInterAd0?.loadAd(adRequest)
+            }
+        }
+
+        if (isTest) {
+            mInterAd0!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            mInterAd0!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+        }
+
+        mInterAd0!!.loadAd(adRequest)
+    }
+
+    /**
+     * インタースティシャル広告表示
+     */
+    private fun showInterstitial() {
+        if (isUpgradedPremium()) {
+            Log.d(TAG, "premium member so do not show ad.")
+            return
+        }
+        if (mInterAd0 == null || !mInterAd0!!.isLoaded) {
+            Log.d(TAG, "Ad is finished loading so is not show.")
+            return
+        }
+        if (countClickAdKey++ % 5 != 0) {
+            return
+        }
+        mInterAd0!!.show()
     }
 }

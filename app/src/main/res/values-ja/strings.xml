@@ -9,6 +9,7 @@
     <string name="color_r">R</string>
     <string name="color_g">G</string>
     <string name="color_b">B</string>
+    <string name="default_color">Default\nColor</string>
     <string name="ok">OK</string>
     <string name="unify_time_colors">表示色の\n統一</string>
     <string name="unify_time_colors_dialog_message">全ての表示時間の色を\nこの色に統一します.\nよろしいですか?</string>
@@ -21,5 +22,27 @@
     <string name="home">ホーム</string>
     <string name="finish_app">終了</string>
     <string name="setting_always_show_clock">ホーム画面などで時計を表示可能にする</string>
+    <string name="background_settings">背景の設定</string>
+    <string name="setting_menu_upgrade">アプリをアップグレードする</string>
+    <string name="go_setting">設定へ</string>
+    <string name="apply_picture">写真を適用</string>
+    <string name="apply_color">色を適用</string>
+    <string name="setting">設定</string>
+    <string name="reset">Reset</string>
     <string name="alert_no_alarm_data">アラームデータがありません</string>
+    <string name="catch_copy_premium">より一層エレガントな\nデジタル時計を体験しよう！</string>
+    <string name="already_upgraded">アップグレード済です!\n以下機能を利用できます.</string>
+    <string name="premium">Premium</string>
+    <string name="no_ads">広告表示の無効化</string>
+    <string name="no_ads_desc">アプリ内の全ての広告が表示されなくなります</string>
+    <string name="activate_picture_background">背景画像の有効化</string>
+    <string name="activate_picture_background_desc">時計の背景に写真を設定できます</string>
+    <string name="upgrade">アップグレード%1$s</string>
+    <string name="attention">Attention</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="failed_to_access_google_play">Google Playとの接続に失敗しました.\nリトライしてください\n前画面へ戻ります.</string>
+    <string name="failed_to_purchase_item">購入に失敗しました.\n支払い方法に誤りがないかご確認ください.</string>
+    <string name="msg_update_premium_state_pending">購入処理完了後に、プレミアム会員の有効期限を更新します.\n\n(※)数分後にもう一度ショップ画面を開いてください.</string>
+    <string name="msg_must_upgrade_premium">背景画像を設定するには、アプリをアップグレードする必要があります。\n操作画面を表示しますか?</string>
 </resources>

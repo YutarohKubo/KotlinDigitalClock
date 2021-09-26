@@ -1,9 +1,16 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Point
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 
 class PopupColor(private val activity: MainActivity) {
@@ -12,23 +19,45 @@ class PopupColor(private val activity: MainActivity) {
         private const val TAG = "POPUP_COLOR"
     }
 
+    private var mPopupWindow: PopupWindow? = null
+    private lateinit var imagePicSetting: ImageView
+    private var imageBmp: Bitmap? = null
+    private lateinit var buttonImageRotate: View
+    private var buttonReset: TextView? = null
+
     fun showPopup(v: View) {
-        val popupWindow = PopupWindow(activity)
+        mPopupWindow = PopupWindow(activity)
+        mPopupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
+        // 表示時のアニメーション設定
+        val animShowPopup = AnimationUtils.loadAnimation(activity, R.anim.popup_window_show_effect)
+        popupView.animation = animShowPopup
         val fileIOWrapper = activity.fileIOWrapper
 
+        val seekBarRedArea = popupView.findViewById<View>(R.id.seek_bar_red_area)
+        val seekBarGreenArea = popupView.findViewById<View>(R.id.seek_bar_green_area)
+        val seekBarBlueArea = popupView.findViewById<View>(R.id.seek_bar_blue_area)
         val textRValue = popupView.findViewById<TextView>(R.id.text_r_value)
         val textGValue = popupView.findViewById<TextView>(R.id.text_g_value)
         val textBValue = popupView.findViewById<TextView>(R.id.text_b_value)
         val seekBarRed = popupView.findViewById<SeekBar>(R.id.seekbar_r)
         val seekBarGreen = popupView.findViewById<SeekBar>(R.id.seekbar_g)
         val seekBarBlue = popupView.findViewById<SeekBar>(R.id.seekbar_b)
-        val sampleBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
+        val frameSample = popupView.findViewById<FrameLayout>(R.id.frame_sample)
+        val sampleTextBackground = popupView.findViewById<TextView>(R.id.text_sample_background)
         var sampleText = popupView.findViewById<TextView>(R.id.text_sample)
+        val sampleBackgroundFrame = popupView.findViewById<FrameLayout>(R.id.frame_background_setting)
+        imagePicSetting = popupView.findViewById(R.id.image_pic_setting)
         val sampleTextTitle = popupView.findViewById<TextView>(R.id.text_sample_title)
-        val buttonDefaultColor = popupView.findViewById<ImageButton>(R.id.button_default_color)
-        val buttonColorOk = popupView.findViewById<ImageButton>(R.id.button_color_ok)
+        val buttonDefaultColor = popupView.findViewById<TextView>(R.id.button_default_color)
+        val buttonColorOk = popupView.findViewById<TextView>(R.id.button_color_ok)
+        val checkBoxUnifyArea = popupView.findViewById<LinearLayout>(R.id.checkbox_unify_area)
         val checkBoxUnifyColor = popupView.findViewById<CheckBox>(R.id.checkbox_unify_colors)
+        val radioBackgroundMode = popupView.findViewById<RadioGroup>(R.id.radio_background_mode)
+        val radioColor = popupView.findViewById<RadioButton>(R.id.radio_mode_color)
+        val radioPic = popupView.findViewById<RadioButton>(R.id.radio_mode_pic)
+        val buttonSetPicture = popupView.findViewById<TextView>(R.id.button_set_picture)
+        buttonImageRotate = popupView.findViewById(R.id.button_image_rotate)
 
         val textDay = activity.findViewById<TextView>(R.id.text_now_day)
         val textMonth = activity.findViewById<TextView>(R.id.text_now_month)
@@ -39,6 +68,10 @@ class PopupColor(private val activity: MainActivity) {
         val textMinute = activity.findViewById<TextView>(R.id.text_now_minute)
         val textSecond = activity.findViewById<TextView>(R.id.text_now_second)
         val textTopAlarmTime = activity.findViewById<TextView>(R.id.text_top_alarm_time)
+        val backgroundFrame = activity.findViewById<FrameLayout>(R.id.activity_root)
+        val backgroundImage = activity.findViewById<ImageView>(R.id.image_pic)
+
+        val displaySize = activity.displaySize()
 
         when (v.id) {
             R.id.frame_now_day -> {
@@ -52,13 +85,13 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorMonth)
             }
             R.id.frame_now_year -> {
-                sampleBackground.text = "8888"
+                sampleTextBackground.text = "8888"
                 sampleText.text = textYear.text
                 sampleTextTitle.text = "YEAR"
                 sampleText.setTextColor(ClockSettingDataHolder.colorYear)
             }
             R.id.text_now_week -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
+                frameSample.visibility = View.GONE
                 sampleText = popupView.findViewById(R.id.text_now_week_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textWeek.text
@@ -71,8 +104,8 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorHour)
             }
             R.id.text_divide_hour_and_minute -> {
-                popupView.findViewById<FrameLayout>(R.id.frame_sample).visibility = View.GONE
-                popupView.findViewById<TextView>(R.id.text_sample_title).visibility = View.GONE
+                frameSample.visibility = View.GONE
+                sampleTextTitle.visibility = View.GONE
                 sampleText = popupView.findViewById(R.id.text_divide_hour_and_minute_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textDivideTime.text
@@ -89,19 +122,94 @@ class PopupColor(private val activity: MainActivity) {
                 sampleText.setTextColor(ClockSettingDataHolder.colorSecond)
             }
             R.id.frame_top_alarm_time -> {
-                sampleBackground.text = "88:88"
+                sampleTextBackground.text = "88:88"
                 sampleText.text = textTopAlarmTime.text
                 sampleTextTitle.text = "ALARM TIME"
                 sampleText.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
+            }
+            R.id.activity_root -> {
+                frameSample.visibility = View.GONE
+                radioBackgroundMode.visibility = View.VISIBLE
+                val imageSettingArea = popupView.findViewById<LinearLayout>(R.id.image_setting_area)
+                buttonImageRotate.setOnClickListener {
+                    // 画像回転ボタン押下で、時計回りに90度回転
+                    imageSampleRotate90()
+                }
+                buttonReset = popupView.findViewById(R.id.button_reset)
+                val spaceOkBelow = popupView.findViewById<Space>(R.id.space_button_ok_below)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    // KITKAT以前の端末は、背景画像の設定をサポートしないため、ラジオボタンを非表示とする
+                    radioBackgroundMode.visibility = View.GONE
+                }
+                radioBackgroundMode.setOnCheckedChangeListener { group, checkedId ->
+                    when(checkedId) {
+                        R.id.radio_mode_color -> {
+                            imagePicSetting.visibility = View.GONE
+                            imageSettingArea.visibility = View.GONE
+                            buttonDefaultColor.visibility = View.VISIBLE
+                            buttonReset?.visibility = View.GONE
+                            spaceOkBelow.visibility = View.GONE
+                            sampleTextTitle.visibility = View.VISIBLE
+                            activity.setViewEnabled(seekBarRedArea, true)
+                            activity.setViewEnabled(seekBarGreenArea, true)
+                            activity.setViewEnabled(seekBarBlueArea, true)
+                        }
+                        R.id.radio_mode_pic -> {
+                            imagePicSetting.visibility = View.VISIBLE
+                            imageSettingArea.visibility = View.VISIBLE
+                            buttonDefaultColor.visibility = View.GONE
+                            buttonReset?.visibility = View.VISIBLE
+                            spaceOkBelow.visibility = View.VISIBLE
+                            sampleTextTitle.visibility = View.GONE
+                            activity.setViewEnabled(seekBarRedArea, false)
+                            activity.setViewEnabled(seekBarGreenArea, false)
+                            activity.setViewEnabled(seekBarBlueArea, false)
+                        }
+                    }
+                }
+                // タイトルは"BACKGROUND"
+                sampleTextTitle.text = "BACKGROUND"
+                // 写真の設定ボタン
+                buttonSetPicture.setOnClickListener {
+                    // ユーザー指定のファイル管理アプリに飛ばして、画像を選択させる
+                    openImageSelecting()
+                }
+                // リセットボタン
+                buttonReset?.setOnClickListener {
+                    // 背景画像のリセット
+                    setImageSampleFromBitmap(null)
+                }
+                // 表示色の統一チェックボックスは非表示とする
+                checkBoxUnifyArea.visibility = View.GONE
+                val frameHeight = CalculateUtil.convertDp2Px(96, activity)
+                val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
+                val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
+                lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(5, activity).toInt())
+                sampleBackgroundFrame.layoutParams = lParam
+                sampleBackgroundFrame.visibility = View.VISIBLE
+                sampleBackgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                // 背景モードのラジオボタンを、設定中のものに初期化する
+                radioColor.isChecked = (ClockSettingDataHolder.backgroundMode == BackgroundMode.COLOR)
+                radioPic.isChecked = (ClockSettingDataHolder.backgroundMode == BackgroundMode.PICTURE)
+                // 背景画像をサンプル領域に表示する
+                setImageSampleFromBitmap(ClockSettingDataHolder.backgroundBmp)
             }
             else -> {
                 throw IllegalArgumentException()
             }
         }
 
-        val redValue = Color.red(sampleText.currentTextColor)
-        val greenValue = Color.green(sampleText.currentTextColor)
-        val blueValue = Color.blue(sampleText.currentTextColor)
+        var redValue = Color.red(sampleText.currentTextColor)
+        var greenValue = Color.green(sampleText.currentTextColor)
+        var blueValue = Color.blue(sampleText.currentTextColor)
+        // カラーシークバーに関する設定
+        if (v.id == R.id.activity_root) {
+            // 背景の設定である場合
+            val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
+            redValue = Color.red(frameBackgroundDrawable.color)
+            greenValue = Color.green(frameBackgroundDrawable.color)
+            blueValue = Color.blue(frameBackgroundDrawable.color)
+        }
         textRValue.text = redValue.toString()
         textGValue.text = greenValue.toString()
         textBValue.text = blueValue.toString()
@@ -112,7 +220,24 @@ class PopupColor(private val activity: MainActivity) {
         seekBarRed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textRValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(progress, seekBarGreen.progress, seekBarBlue.progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            progress,
+                            seekBarGreen.progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            progress,
+                            seekBarGreen.progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -127,7 +252,24 @@ class PopupColor(private val activity: MainActivity) {
         seekBarGreen.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textGValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, progress, seekBarBlue.progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            progress,
+                            seekBarBlue.progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -143,7 +285,24 @@ class PopupColor(private val activity: MainActivity) {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textBValue.text = progress.toString()
-                sampleText.setTextColor(Color.rgb(seekBarRed.progress, seekBarGreen.progress, progress))
+                if (v.id == R.id.activity_root) {
+                    // 背景の設定である場合
+                    sampleBackgroundFrame.setBackgroundColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            seekBarGreen.progress,
+                            progress
+                        )
+                    )
+                } else {
+                    sampleText.setTextColor(
+                        Color.rgb(
+                            seekBarRed.progress,
+                            seekBarGreen.progress,
+                            progress
+                        )
+                    )
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -156,14 +315,43 @@ class PopupColor(private val activity: MainActivity) {
 
         })
 
+        // Default Colorボタンのリスナー登録
         buttonDefaultColor.setOnClickListener { _ ->
-            textRValue.text = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE.toString()
-            textGValue.text = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE.toString()
-            textBValue.text = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE.toString()
-            seekBarRed.progress = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE
-            seekBarGreen.progress = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE
-            seekBarBlue.progress = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE
-            sampleText.setTextColor(Color.rgb(ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE, ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE))
+            val defaultRedValue: Int
+            val defaultGreenValue: Int
+            val defaultBlueValue: Int
+            // サンプル色をデフォルトに変更
+            if (v.id == R.id.activity_root) {
+                defaultRedValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_RED_VALUE
+                defaultGreenValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_GREEN_VALUE
+                defaultBlueValue = ClockSettingDataHolder.DEFAULT_BACKGROUND_BLUE_VALUE
+                sampleBackgroundFrame.setBackgroundColor(
+                    Color.rgb(
+                        defaultRedValue,
+                        defaultGreenValue,
+                        defaultBlueValue
+                    )
+                )
+            } else {
+                defaultRedValue = ClockSettingDataHolder.DEFAULT_COLOR_RED_VALUE
+                defaultGreenValue = ClockSettingDataHolder.DEFAULT_COLOR_GREEN_VALUE
+                defaultBlueValue = ClockSettingDataHolder.DEFAULT_COLOR_BLUE_VALUE
+                sampleText.setTextColor(
+                    Color.rgb(
+                        defaultRedValue,
+                        defaultGreenValue,
+                        defaultBlueValue
+                    )
+                )
+            }
+
+            // シークバーのアップデート
+            textRValue.text = defaultRedValue.toString()
+            textGValue.text = defaultGreenValue.toString()
+            textBValue.text = defaultBlueValue.toString()
+            seekBarRed.progress = defaultRedValue
+            seekBarGreen.progress = defaultGreenValue
+            seekBarBlue.progress = defaultBlueValue
         }
 
         //色統一チェックボックスチェック時において、OKボタン押下時の出現アラートダイアログのOKボタンのコールバック
@@ -178,21 +366,24 @@ class PopupColor(private val activity: MainActivity) {
             ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
             ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
             activity.updateClockColor()
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
-            fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
-            popupWindow.dismiss()
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+            fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+            if (mPopupWindow != null) {
+                mPopupWindow!!.dismiss()
+            }
         }
 
         buttonColorOk.setOnClickListener { _ ->
             if (checkBoxUnifyColor.isChecked) {
-                val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message))
+                val dialog =
+                    AttentionDialog.newInstance(activity.resources.getString(R.string.unify_time_colors_dialog_message), activity.getString(R.string.yes), activity.getString(R.string.no))
                 dialog.okListener = dialogOkCallback
                 dialog.show(activity.supportFragmentManager, TAG)
             } else {
@@ -200,70 +391,172 @@ class PopupColor(private val activity: MainActivity) {
                     R.id.frame_now_day -> {
                         ClockSettingDataHolder.colorDay = sampleText.currentTextColor
                         textDay.setTextColor(ClockSettingDataHolder.colorDay)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_month -> {
                         ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
                         textMonth.setTextColor(ClockSettingDataHolder.colorMonth)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
                     }
                     R.id.frame_now_year -> {
                         ClockSettingDataHolder.colorYear = sampleText.currentTextColor
                         textYear.setTextColor(ClockSettingDataHolder.colorYear)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.text_now_week -> {
                         ClockSettingDataHolder.colorWeek = sampleText.currentTextColor
                         textWeek.setTextColor(ClockSettingDataHolder.colorWeek)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_hour -> {
                         ClockSettingDataHolder.colorHour = sampleText.currentTextColor
                         textHour.setTextColor(ClockSettingDataHolder.colorHour)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.text_divide_hour_and_minute -> {
                         ClockSettingDataHolder.colorDivideTime = sampleText.currentTextColor
                         textDivideTime.setTextColor(ClockSettingDataHolder.colorDivideTime)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_minute -> {
                         ClockSettingDataHolder.colorMinute = sampleText.currentTextColor
                         textMinute.setTextColor(ClockSettingDataHolder.colorMinute)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_second -> {
                         ClockSettingDataHolder.colorSecond = sampleText.currentTextColor
                         textSecond.setTextColor(ClockSettingDataHolder.colorSecond)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_top_alarm_time -> {
                         ClockSettingDataHolder.colorTopAlarmTime = sampleText.currentTextColor
                         textTopAlarmTime.setTextColor(ClockSettingDataHolder.colorTopAlarmTime)
-                        fileIOWrapper.saveTextColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+                        fileIOWrapper.saveColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
+                    }
+                    R.id.activity_root -> {
+                        if (radioColor.isChecked) {
+                            ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
+                            backgroundImage.visibility = View.GONE
+                            val frameBackgroundDrawable = sampleBackgroundFrame.background as ColorDrawable
+                            ClockSettingDataHolder.colorBackground = frameBackgroundDrawable.color
+                            backgroundFrame.setBackgroundColor(ClockSettingDataHolder.colorBackground)
+                            fileIOWrapper.saveColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
+                            mPopupWindow?.dismiss()
+                        } else {
+                            if (imageBmp == null) {
+                                ClockSettingDataHolder.backgroundMode = BackgroundMode.COLOR
+                                backgroundImage.visibility = View.GONE
+                                mPopupWindow?.dismiss()
+                            } else {
+                                if (AppCommonActivity.isUpgradedPremium()) {
+                                    ClockSettingDataHolder.backgroundMode = BackgroundMode.PICTURE
+                                    ClockSettingDataHolder.backgroundBmp = imageBmp
+                                    // 背景画像をセーブする
+                                    fileIOWrapper.saveBackgroundPic()
+                                    backgroundImage.visibility = View.VISIBLE
+                                    backgroundImage.setImageBitmap(ClockSettingDataHolder.backgroundBmp)
+                                    mPopupWindow?.dismiss()
+                                } else {
+                                    val dialog = AttentionDialog.newInstance(activity.getString(R.string.msg_must_upgrade_premium), activity.getString(R.string.yes), activity.getString(R.string.no))
+                                    dialog.okListener = {
+                                        //ショップのアクティビティへのインテント発行
+                                        val intent = Intent(activity, ShopActivity::class.java)
+                                        activity.startActivity(intent)
+                                    }
+                                    dialog.show(activity.supportFragmentManager, TAG)
+                                }
+                            }
+                        }
+                        // 背景モードをセーブする
+                        fileIOWrapper.saveBackgroundMode()
+                        // 時計の文字の背景の88を表示状態を更新する
+                        activity.updateNumBackgroundState()
                     }
                     else -> {
                         throw IllegalArgumentException()
                     }
                 }
-                popupWindow.dismiss()
             }
         }
 
-        popupWindow.contentView = popupView
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isFocusable = true
+        // バツボタン
+        val buttonClose = popupView.findViewById<ImageView>(R.id.button_popup_color_close)
+        buttonClose.setOnClickListener {
+            mPopupWindow?.dismiss()
+        }
 
-        val d = activity.windowManager.defaultDisplay
-        val p2 = Point()
-        // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p2)
+        mPopupWindow?.contentView = popupView
+        mPopupWindow?.isOutsideTouchable = true
+        mPopupWindow?.isFocusable = true
 
-        popupWindow.width = p2.x - 200
-        popupWindow.height = p2.y - 120
+        mPopupWindow?.width = (displaySize.x * 1.0).toInt()
+        mPopupWindow?.height = (displaySize.y * 1.0).toInt()
 
         // 画面中央に表示
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+        mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+    }
+
+    /**
+     * Bitmapを背景画像サンプル領域に、当てはめる
+     * 引数にnullで、noImageへリセットされる
+     */
+    fun setImageSampleFromBitmap(bitmap: Bitmap?) {
+        if (mPopupWindow != null) {
+            imageBmp = bitmap
+            if (bitmap == null) {
+                imagePicSetting.setImageResource(R.drawable.noimage)
+            } else {
+                imagePicSetting.setImageBitmap(bitmap)
+            }
+            // 画像回転ボタンの有効無効状態を更新する
+            updateStateImageRotateAndReset()
+        }
+    }
+
+    /**
+     * サンプル画像を90度時計回りに回転する
+     */
+    private fun imageSampleRotate90() {
+        val bitmap = (imagePicSetting.drawable as BitmapDrawable).bitmap
+        val matrix = Matrix()
+        val width = bitmap.width
+        val height = bitmap.height
+        matrix.setRotate(90F, width.toFloat() / 2, height.toFloat() / 2)
+        val rotatedBitMap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        imageBmp = rotatedBitMap
+        imagePicSetting.setImageBitmap(rotatedBitMap)
+    }
+
+    /**
+     * 画像回転ボタンの有効無効状態を更新する
+     */
+    private fun updateStateImageRotateAndReset() {
+        activity.setViewEnabled(buttonImageRotate, imageBmp != null)
+        activity.setViewEnabled(buttonReset, imageBmp != null)
+    }
+
+    fun isShowing() = (mPopupWindow != null && mPopupWindow!!.isShowing)
+
+    /**
+     * 画像選択アプリへ移行する (VERSION_CODES.KITKAT以降)
+     */
+    private fun openImageSelecting() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            Log.e(TAG, "android version is not support to storage access frame work.")
+            return
+        }
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "image/*"
+        activity.startActivityForResult(intent, MainActivity.READ_PIC_REQ_CODE)
     }
 
 }
