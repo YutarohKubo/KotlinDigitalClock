@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 
 class PopupColor(private val activity: MainActivity) {
@@ -28,6 +29,9 @@ class PopupColor(private val activity: MainActivity) {
         mPopupWindow = PopupWindow(activity)
         mPopupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_set_color_popup, null)
+        // 表示時のアニメーション設定
+        val animShowPopup = AnimationUtils.loadAnimation(activity, R.anim.popup_window_show_effect)
+        popupView.animation = animShowPopup
         val fileIOWrapper = activity.fileIOWrapper
 
         val seekBarRedArea = popupView.findViewById<View>(R.id.seek_bar_red_area)
@@ -493,8 +497,8 @@ class PopupColor(private val activity: MainActivity) {
         mPopupWindow?.isOutsideTouchable = true
         mPopupWindow?.isFocusable = true
 
-        mPopupWindow?.width = (displaySize.x * 0.95).toInt()
-        mPopupWindow?.height = (displaySize.y * 0.95).toInt()
+        mPopupWindow?.width = (displaySize.x * 1.0).toInt()
+        mPopupWindow?.height = (displaySize.y * 1.0).toInt()
 
         // 画面中央に表示
         mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

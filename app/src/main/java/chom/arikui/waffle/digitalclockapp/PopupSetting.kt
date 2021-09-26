@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 
 class PopupSetting(private val activity: MainActivity) {
@@ -24,6 +25,9 @@ class PopupSetting(private val activity: MainActivity) {
         popupWindow = PopupWindow(activity)
         popupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_popup_setting, null)
+        // 表示時のアニメーション設定
+        val animShowPopup = AnimationUtils.loadAnimation(activity, R.anim.popup_window_show_effect)
+        popupView.animation = animShowPopup
         checkOverlayClock = popupView.findViewById(R.id.check_permit_overlay_clock)
         checkOverlayClock.isChecked = ClockSettingDataHolder.validOverlayClock
         checkOverlayClock.setOnCheckedChangeListener { view, isChecked ->
@@ -74,7 +78,7 @@ class PopupSetting(private val activity: MainActivity) {
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 
-        popupWindow?.width = p2.x - CalculateUtil.convertDp2Px(20, activity).toInt()
+        popupWindow?.width = (p2.x * 1.0).toInt()
 
         // 画面中央に表示
         popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

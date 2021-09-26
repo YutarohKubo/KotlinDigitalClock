@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -26,7 +27,9 @@ class PopupAlarm(private val activity: MainActivity) {
         popupWindow = PopupWindow(activity)
         popupWindow!!.setBackgroundDrawable(null)
         val popupView = activity.layoutInflater.inflate(R.layout.layout_alerm, null)
-
+        // 表示時のアニメーション設定
+        val animShowPopup = AnimationUtils.loadAnimation(activity, R.anim.popup_window_show_effect)
+        popupView.animation = animShowPopup
         val textAlarmTime = popupView.findViewById<TextView>(R.id.text_alarm_time)
         popupView.findViewById<View>(R.id.button_alarm_time_setting).setOnClickListener { _ ->
             val timeArray = ClockSettingDataHolder.alarmTime.split(":").map { it.trim() }
@@ -114,8 +117,8 @@ class PopupAlarm(private val activity: MainActivity) {
         // ナビゲーションバーを除く画面サイズを取得
         d.getSize(p2)
 
-        popupWindow?.width = (p2.x * 0.95).toInt()
-        popupWindow?.height = (p2.y * 0.95).toInt()
+        popupWindow?.width = (p2.x * 1.0).toInt()
+        popupWindow?.height = (p2.y * 1.0).toInt()
 
         // 画面中央に表示
         popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

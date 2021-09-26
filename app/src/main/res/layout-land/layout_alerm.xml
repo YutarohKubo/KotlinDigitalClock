@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@color/tetukon"
         android:orientation="vertical"
-        android:layout_margin="15dp">
+        android:layout_margin="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
