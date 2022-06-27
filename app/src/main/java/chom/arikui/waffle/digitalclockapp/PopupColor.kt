@@ -398,6 +398,7 @@ class PopupColor(private val activity: MainActivity) {
                         ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
                         textMonth.setTextColor(ClockSettingDataHolder.colorMonth)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_year -> {
                         ClockSettingDataHolder.colorYear = sampleText.currentTextColor
