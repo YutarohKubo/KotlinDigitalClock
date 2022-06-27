@@ -399,7 +399,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         intent.putExtra("check_alarm", ClockSettingDataHolder.alarmCheckState)
         intent.putExtra("alarm_uri", ClockSettingDataHolder.nowAlarmSound?.uri)
         intent.putExtra("alarm_time", ClockSettingDataHolder.alarmTime)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (ClockSettingDataHolder.alarmCheckState) {
             val timeArray = ClockSettingDataHolder.alarmTime.split(":").map { it.trim() }
