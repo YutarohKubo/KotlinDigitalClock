@@ -105,7 +105,7 @@ class PopupColor(private val activity: MainActivity) {
             }
             R.id.text_divide_hour_and_minute -> {
                 frameSample.visibility = View.GONE
-                sampleTextTitle.visibility = View.GONE
+                sampleTextTitle.visibility = View.INVISIBLE
                 sampleText = popupView.findViewById(R.id.text_divide_hour_and_minute_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textDivideTime.text
