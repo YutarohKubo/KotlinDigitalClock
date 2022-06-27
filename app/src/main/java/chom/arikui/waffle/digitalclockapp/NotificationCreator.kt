@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 
@@ -42,19 +43,32 @@ class NotificationCreator(private val mContext: Context) {
         mCustomView = RemoteViews(mContext.packageName, R.layout.layout_overlay_notification)
         // 表示切替ボタンの初期化
         val switchIntent = Intent(ACTION_SWITCH_DISPLAY)
-        val pendingSwitchIntent = PendingIntent.getBroadcast(mContext, PENDING_CODE_SWITCH_DISPLAY,
+        val pendingSwitchIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(mContext, PENDING_CODE_SWITCH_DISPLAY,
+                switchIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getBroadcast(mContext, PENDING_CODE_SWITCH_DISPLAY,
                 switchIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         mCustomView?.setOnClickPendingIntent(R.id.button_switch_clock_visibility, pendingSwitchIntent)
         updateSwitchVisibilityView()
         // ホームボタンの初期化
         val homeIntent = Intent(mContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         }
-        val pendingHomeIntent = PendingIntent.getActivity(mContext, PENDING_CODE_HOME, homeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingHomeIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getActivity(mContext, PENDING_CODE_HOME, homeIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getActivity(mContext, PENDING_CODE_HOME, homeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         mCustomView?.setOnClickPendingIntent(R.id.button_home, pendingHomeIntent)
         // 終了ボタンの初期化
         val exitIntent = Intent(ACTION_EXIT)
-        val pendingExitIntent = PendingIntent.getBroadcast(mContext, PENDING_CODE_EXIT, exitIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingExitIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(mContext, PENDING_CODE_EXIT, exitIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getBroadcast(mContext, PENDING_CODE_EXIT, exitIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         mCustomView?.setOnClickPendingIntent(R.id.button_exit, pendingExitIntent)
         mNotification = NotificationCompat.Builder(mContext, CHANNEL_ID).apply {
             setSmallIcon(R.drawable.icon_alarm_normal)

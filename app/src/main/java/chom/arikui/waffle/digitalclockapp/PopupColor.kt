@@ -105,7 +105,7 @@ class PopupColor(private val activity: MainActivity) {
             }
             R.id.text_divide_hour_and_minute -> {
                 frameSample.visibility = View.GONE
-                sampleTextTitle.visibility = View.GONE
+                sampleTextTitle.visibility = View.INVISIBLE
                 sampleText = popupView.findViewById(R.id.text_divide_hour_and_minute_sample)
                 sampleText.visibility = View.VISIBLE
                 sampleText.text = textDivideTime.text
@@ -398,6 +398,7 @@ class PopupColor(private val activity: MainActivity) {
                         ClockSettingDataHolder.colorMonth = sampleText.currentTextColor
                         textMonth.setTextColor(ClockSettingDataHolder.colorMonth)
                         fileIOWrapper.saveColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
+                        mPopupWindow?.dismiss()
                     }
                     R.id.frame_now_year -> {
                         ClockSettingDataHolder.colorYear = sampleText.currentTextColor
