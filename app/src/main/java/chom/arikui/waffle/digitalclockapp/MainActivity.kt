@@ -129,10 +129,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
-        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        )
 
         fileIOWrapper = FileIOWrapper(this)
         fileIOWrapper.loadNowAlarmSound()
@@ -148,7 +150,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             button_alarm.setOnClickListener { _ ->
                 showInterstitial()
                 if (listAlarmData.size == 0) {
-                    Toast.makeText(this, getString(R.string.alert_no_alarm_data), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.alert_no_alarm_data),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 mPopupAlarm = PopupAlarm(this)
@@ -261,7 +267,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
     }
 
     override fun onBackPressed() {
-        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message), getString(R.string.yes), getString(R.string.no))
+        val dialog = AttentionDialog.newInstance(
+            resources.getString(R.string.confirming_app_finish_dialog_message),
+            getString(R.string.yes),
+            getString(R.string.no)
+        )
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
     }
@@ -351,7 +361,8 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
      */
     fun gotoSettingOverlay() {
         mLaunchOverlaySetting = true
-        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+        val intent =
+            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
     }
 
@@ -376,18 +387,24 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         manager.setType(RingtoneManager.TYPE_ALL)
         val cursor = manager.cursor
         while (cursor.moveToNext()) {
-            listAlarmData.add(RingtoneData(cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
+            listAlarmData.add(
+                RingtoneData(
+                    cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
                     cursor.getString(RingtoneManager.ID_COLUMN_INDEX),
-                    cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(RingtoneManager.ID_COLUMN_INDEX)))
+                    cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(
+                        RingtoneManager.ID_COLUMN_INDEX
+                    )
+                )
+            )
         }
     }
 
     fun switchAlarmResource() =
-            if (ClockSettingDataHolder.alarmCheckState) {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
-            } else {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
-            }
+        if (ClockSettingDataHolder.alarmCheckState) {
+            imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
+        } else {
+            imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
+        }
 
     private fun resetAlarmState() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -459,7 +476,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         intent.putExtra("alarm_uri", ClockSettingDataHolder.nowAlarmSound?.uri)
         intent.putExtra("alarm_time", ClockSettingDataHolder.alarmTime)
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         } else {
             PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
@@ -479,12 +501,30 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
                 calForService.add(Calendar.DATE, 1)
             }
 
-            Log.i(TAG, "alarmTime = " + dateFormat.format(calForService.time) + " " + timeFormat.format(calForService.time))
+            Log.i(
+                TAG,
+                "alarmTime = " + dateFormat.format(calForService.time) + " " + timeFormat.format(
+                    calForService.time
+                )
+            )
 
             when {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(calForService.timeInMillis, null), pendingIntent)
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager.setExact(AlarmManager.RTC_WAKEUP, calForService.timeInMillis, pendingIntent)
-                else -> alarmManager.set(AlarmManager.RTC_WAKEUP, calForService.timeInMillis, pendingIntent)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> alarmManager.setAlarmClock(
+                    AlarmManager.AlarmClockInfo(calForService.timeInMillis, null),
+                    pendingIntent
+                )
+
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    calForService.timeInMillis,
+                    pendingIntent
+                )
+
+                else -> alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    calForService.timeInMillis,
+                    pendingIntent
+                )
             }
         } else {
             pendingIntent.cancel()
@@ -500,10 +540,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         mp = MediaPlayer.create(this, Uri.parse(ClockSettingDataHolder.nowAlarmSound?.uri))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mp.setAudioAttributes(
-                    AudioAttributes
-                            .Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build())
+                AudioAttributes
+                    .Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
         } else {
             mp.setAudioStreamType(AudioManager.STREAM_ALARM)
         }
