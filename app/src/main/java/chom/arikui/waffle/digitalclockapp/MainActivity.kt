@@ -1,9 +1,12 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.Manifest
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -25,20 +28,48 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.activity_main.activity_root
+import kotlinx.android.synthetic.main.activity_main.bottom_area
+import kotlinx.android.synthetic.main.activity_main.button_alarm
+import kotlinx.android.synthetic.main.activity_main.frame_now_day
+import kotlinx.android.synthetic.main.activity_main.frame_now_hour
+import kotlinx.android.synthetic.main.activity_main.frame_now_minute
+import kotlinx.android.synthetic.main.activity_main.frame_now_month
+import kotlinx.android.synthetic.main.activity_main.frame_now_second
+import kotlinx.android.synthetic.main.activity_main.frame_now_year
+import kotlinx.android.synthetic.main.activity_main.frame_top_alarm_time
+import kotlinx.android.synthetic.main.activity_main.image_alarm
+import kotlinx.android.synthetic.main.activity_main.image_setting
+import kotlinx.android.synthetic.main.activity_main.text_divide_hour_and_minute
+import kotlinx.android.synthetic.main.activity_main.text_now_date
+import kotlinx.android.synthetic.main.activity_main.text_now_day
+import kotlinx.android.synthetic.main.activity_main.text_now_hour
+import kotlinx.android.synthetic.main.activity_main.text_now_minute
+import kotlinx.android.synthetic.main.activity_main.text_now_month
+import kotlinx.android.synthetic.main.activity_main.text_now_second
+import kotlinx.android.synthetic.main.activity_main.text_now_time
+import kotlinx.android.synthetic.main.activity_main.text_now_week
+import kotlinx.android.synthetic.main.activity_main.text_now_year
+import kotlinx.android.synthetic.main.activity_main.text_top_alarm_time
+import kotlinx.android.synthetic.main.activity_main.time_area
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCommonActivity(), CoroutineScope {
@@ -55,6 +86,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         private val secondFormat = SimpleDateFormat("ss")
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
         const val READ_PIC_REQ_CODE = 2001
+        const val REQUEST_POST_NOTIFICATION_PERMISSION = 2002
         private const val isTest = true
     }
 
@@ -202,6 +234,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume()")
         resetAlarmState()
         resetOverlayClockState()
         mLaunchOverlaySetting = false
@@ -245,6 +278,25 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        Log.d(TAG, "onRequestPermissionsResult()")
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_POST_NOTIFICATION_PERMISSION -> {
+                // 使用が許可された
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mPopupSetting?.checkOverlayClockPermission()
+                } else {
+                    mPopupSetting?.checkOverlayClock?.isChecked = false
                 }
             }
         }
@@ -374,9 +426,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "Overlay clock is invalid for api " + Build.VERSION.SDK_INT)
             return
         }
+
+        val overlayClockCondition =
+            Settings.canDrawOverlays(this) && isPostNotificationPermissionGranted()
         // 他のアプリに重ねての表示が許可されていなければ、
         // ホーム画面などで時計を表示させないようにする
-        if (!Settings.canDrawOverlays(this)) {
+        if (!overlayClockCondition) {
             if (ClockSettingDataHolder.validOverlayClock) {
                 ClockSettingDataHolder.validOverlayClock = false
                 fileIOWrapper.saveValidOverlayClock()
@@ -391,7 +446,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         if (mPopupSetting == null || mPopupSetting!!.popupWindow == null || !(mPopupSetting!!.popupWindow!!.isShowing)) {
             return
         }
-        if (Settings.canDrawOverlays(this)) {
+        if (overlayClockCondition) {
             mPopupSetting?.processCheckOverlayChanging(true)
         } else {
             mPopupSetting?.checkOverlayClock?.isChecked = false
@@ -645,5 +700,46 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             return
         }
         mInterAd0!!.show(this)
+    }
+
+    /**
+     * 通知権限要求処理
+     */
+    fun requestPostNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionArray = arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionArray,
+                REQUEST_POST_NOTIFICATION_PERMISSION
+            )
+        }
+    }
+
+    /**
+     * 通知権限許可状態
+     *
+     * @return true:許可済み/false:許可されていない
+     */
+    fun isPostNotificationPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            isEnableNotificationSetting()
+        }
+    }
+
+    private fun isEnableNotificationSetting(): Boolean {
+        val manager = NotificationManagerCompat.from(this)
+        val channel = manager.getNotificationChannel(NotificationCreator.CHANNEL_ID)
+        val isNotice = manager.areNotificationsEnabled()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            (channel == null || channel.importance != NotificationManager.IMPORTANCE_DEFAULT) && isNotice
+        } else {
+            isNotice
+        }
     }
 }

@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 class NotificationCreator(private val mContext: Context) {
 
     companion object {
-        private const val CHANNEL_ID = "clock_service_notification"
+        const val CHANNEL_ID = "clock_service_notification"
         private const val PENDING_CODE_SWITCH_DISPLAY = 1000
         private const val PENDING_CODE_HOME = 1001
         private const val PENDING_CODE_EXIT = 1002
