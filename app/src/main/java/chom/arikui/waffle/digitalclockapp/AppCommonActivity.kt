@@ -2,7 +2,7 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAd
 
 open class AppCommonActivity : AppCompatActivity() {
 

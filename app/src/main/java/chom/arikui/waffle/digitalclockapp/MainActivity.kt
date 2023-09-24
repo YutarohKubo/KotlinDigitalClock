@@ -26,10 +26,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -581,26 +585,47 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "premium member so do not load ad.")
             return
         }
-        MobileAds.initialize(this) {}
-        val adRequest = AdRequest.Builder().build()
+        MobileAds.initialize(this)
 
-        mInterAd0 = InterstitialAd(this)
-
-        mInterAd0!!.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                // 広告リロード
-                mInterAd0?.loadAd(adRequest)
-            }
-        }
-
-        if (isTest) {
-            mInterAd0!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        val adUnitId = if (isTest) {
+            "ca-app-pub-3940256099942544/1033173712"
         } else {
-            mInterAd0!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+            "ca-app-pub-6669415411907480/8088997953"
         }
 
-        mInterAd0!!.loadAd(adRequest)
+        val adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(this, adUnitId, adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    Log.i(TAG, "onAdLoaded")
+                    mInterAd0 = interstitialAd
+                    interstitialAd.fullScreenContentCallback =
+                        object : FullScreenContentCallback() {
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                Log.d(TAG, "The ad0 failed to show.")
+                                mInterAd0 = null
+                                loadAds()
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                Log.d(TAG, "The ad0 was shown.")
+                                mInterAd0 = null
+                            }
+
+                            override fun onAdDismissedFullScreenContent() {
+                                Log.d(TAG, "The ad0 was dismissed.")
+                                loadAds()
+                            }
+                        }
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+                    Log.d(TAG, loadAdError.message)
+                    mInterAd0 = null
+                }
+            })
     }
 
     /**
@@ -611,13 +636,14 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "premium member so do not show ad.")
             return
         }
-        if (mInterAd0 == null || !mInterAd0!!.isLoaded) {
+        if (mInterAd0 == null) {
             Log.d(TAG, "Ad is finished loading so is not show.")
+            loadAds()
             return
         }
         if (countClickAdKey++ % 5 != 0) {
             return
         }
-        mInterAd0!!.show()
+        mInterAd0!!.show(this)
     }
 }
