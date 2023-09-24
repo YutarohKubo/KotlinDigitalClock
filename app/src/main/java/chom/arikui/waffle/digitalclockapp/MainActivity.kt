@@ -88,7 +88,6 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
 
         const val READ_PIC_REQ_CODE = 2001
         const val REQUEST_POST_NOTIFICATION_PERMISSION = 2002
-        private const val isTest = false
     }
 
     override val coroutineContext: CoroutineContext
@@ -684,14 +683,8 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         }
         MobileAds.initialize(this)
 
-        val adUnitId = if (isTest) {
-            "ca-app-pub-3940256099942544/1033173712"
-        } else {
-            "ca-app-pub-6669415411907480/8088997953"
-        }
-
         val adRequest = AdRequest.Builder().build()
-        InterstitialAd.load(this, adUnitId, adRequest,
+        InterstitialAd.load(this, "ca-app-pub-6669415411907480/8088997953", adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     super.onAdLoaded(interstitialAd)
