@@ -30,16 +30,9 @@ class PopupSetting(private val activity: MainActivity) {
         popupView.animation = animShowPopup
         checkOverlayClock = popupView.findViewById(R.id.check_permit_overlay_clock)
         checkOverlayClock.isChecked = ClockSettingDataHolder.validOverlayClock
-        checkOverlayClock.setOnCheckedChangeListener { view, isChecked ->
+        checkOverlayClock.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(activity)) {
-                    val dialog = AttentionDialog.newInstance(activity.resources.getString(R.string.need_to_allow_display_over_other_apps_to_enable_overlay_clock), activity.getString(R.string.yes), activity.getString(R.string.no))
-                    dialog.okListener = activity::gotoSettingOverlay
-                    dialog.negListener = { view.isChecked = false }
-                    dialog.show(activity.supportFragmentManager, TAG)
-                } else {
-                    processCheckOverlayChanging(true)
-                }
+                checkOverlayClockPermission()
             } else {
                 processCheckOverlayChanging(false)
             }
@@ -87,6 +80,46 @@ class PopupSetting(private val activity: MainActivity) {
     fun processCheckOverlayChanging(isChecked: Boolean) {
         ClockSettingDataHolder.validOverlayClock = isChecked
         fileIOWrapper.saveValidOverlayClock()
+    }
+
+    /**
+     * 常駐時計の権限チェック
+     */
+    fun checkOverlayClockPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // API33以上の場合は、通知権限チェック
+            if (!activity.isPostNotificationPermissionGranted()) {
+                showPostNotificationDialog()
+                return
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(activity)) {
+            val dialog = AttentionDialog.newInstance(
+                activity.resources.getString(R.string.need_to_allow_display_over_other_apps_to_enable_overlay_clock),
+                activity.getString(R.string.yes),
+                activity.getString(R.string.no)
+            )
+            dialog.okListener = activity::gotoSettingOverlay
+            dialog.negListener = { checkOverlayClock.isChecked = false }
+            dialog.show(activity.supportFragmentManager, TAG)
+        } else {
+            processCheckOverlayChanging(true)
+        }
+    }
+
+    private fun showPostNotificationDialog() {
+        val notificationDialog = AttentionDialog.newInstance(
+            activity.getString(R.string.msg_grant_post_notification_permission),
+            activity.getString(R.string.yes), activity.getString(R.string.no)
+        )
+        notificationDialog.okListener = {
+            activity.requestPostNotificationPermission()
+        }
+        notificationDialog.negListener = {
+            // 通知権限設定ダイアログで、いいえが押下された場合は、チェックをOFFに戻す
+            checkOverlayClock.isChecked = false
+        }
+        notificationDialog.show(activity.supportFragmentManager, TAG)
     }
 
 }

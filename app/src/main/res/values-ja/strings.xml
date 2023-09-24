@@ -45,4 +45,5 @@
     <string name="failed_to_purchase_item">購入に失敗しました.\n支払い方法に誤りがないかご確認ください.</string>
     <string name="msg_update_premium_state_pending">購入処理完了後に、プレミアム会員の有効期限を更新します.\n\n(※)数分後にもう一度ショップ画面を開いてください.</string>
     <string name="msg_must_upgrade_premium">背景画像を設定するには、アプリをアップグレードする必要があります。\n操作画面を表示しますか?</string>
+    <string name="msg_grant_post_notification_permission">機能を有効にするために、通知権限を許可してください.\n端末の設定アプリからでも設定ができます.</string>
 </resources>

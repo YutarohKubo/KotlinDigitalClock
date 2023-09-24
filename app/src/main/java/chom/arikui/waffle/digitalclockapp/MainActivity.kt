@@ -1,9 +1,12 @@
 package chom.arikui.waffle.digitalclockapp
 
+import android.Manifest
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -25,16 +28,48 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import chom.arikui.waffle.digitalclockapp.CalculateUtil.SHOW_BACKGROUND_RGB_LIMIT
-import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import kotlinx.android.synthetic.main.activity_main.activity_root
+import kotlinx.android.synthetic.main.activity_main.bottom_area
+import kotlinx.android.synthetic.main.activity_main.button_alarm
+import kotlinx.android.synthetic.main.activity_main.frame_now_day
+import kotlinx.android.synthetic.main.activity_main.frame_now_hour
+import kotlinx.android.synthetic.main.activity_main.frame_now_minute
+import kotlinx.android.synthetic.main.activity_main.frame_now_month
+import kotlinx.android.synthetic.main.activity_main.frame_now_second
+import kotlinx.android.synthetic.main.activity_main.frame_now_year
+import kotlinx.android.synthetic.main.activity_main.frame_top_alarm_time
+import kotlinx.android.synthetic.main.activity_main.image_alarm
+import kotlinx.android.synthetic.main.activity_main.image_setting
+import kotlinx.android.synthetic.main.activity_main.text_divide_hour_and_minute
+import kotlinx.android.synthetic.main.activity_main.text_now_date
+import kotlinx.android.synthetic.main.activity_main.text_now_day
+import kotlinx.android.synthetic.main.activity_main.text_now_hour
+import kotlinx.android.synthetic.main.activity_main.text_now_minute
+import kotlinx.android.synthetic.main.activity_main.text_now_month
+import kotlinx.android.synthetic.main.activity_main.text_now_second
+import kotlinx.android.synthetic.main.activity_main.text_now_time
+import kotlinx.android.synthetic.main.activity_main.text_now_week
+import kotlinx.android.synthetic.main.activity_main.text_now_year
+import kotlinx.android.synthetic.main.activity_main.text_top_alarm_time
+import kotlinx.android.synthetic.main.activity_main.time_area
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCommonActivity(), CoroutineScope {
@@ -52,6 +87,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         private const val OVERLAY_PERMISSION_REQ_CODE = 2000
 
         const val READ_PIC_REQ_CODE = 2001
+        const val REQUEST_POST_NOTIFICATION_PERMISSION = 2002
         private const val isTest = false
     }
 
@@ -94,10 +130,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         //Screenがスリープ状態になるのを拒否
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
-        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        )
 
         fileIOWrapper = FileIOWrapper(this)
         fileIOWrapper.loadNowAlarmSound()
@@ -113,7 +151,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             button_alarm.setOnClickListener { _ ->
                 showInterstitial()
                 if (listAlarmData.size == 0) {
-                    Toast.makeText(this, getString(R.string.alert_no_alarm_data), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.alert_no_alarm_data),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 mPopupAlarm = PopupAlarm(this)
@@ -199,6 +241,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume()")
         resetAlarmState()
         resetOverlayClockState()
         mLaunchOverlaySetting = false
@@ -225,7 +268,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
     }
 
     override fun onBackPressed() {
-        val dialog = AttentionDialog.newInstance(resources.getString(R.string.confirming_app_finish_dialog_message), getString(R.string.yes), getString(R.string.no))
+        val dialog = AttentionDialog.newInstance(
+            resources.getString(R.string.confirming_app_finish_dialog_message),
+            getString(R.string.yes),
+            getString(R.string.no)
+        )
         dialog.okListener = { finish() }
         dialog.show(supportFragmentManager, TAG)
     }
@@ -242,6 +289,25 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        Log.d(TAG, "onRequestPermissionsResult()")
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_POST_NOTIFICATION_PERMISSION -> {
+                // 使用が許可された
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mPopupSetting?.checkOverlayClockPermission()
+                } else {
+                    mPopupSetting?.checkOverlayClock?.isChecked = false
                 }
             }
         }
@@ -296,7 +362,8 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
      */
     fun gotoSettingOverlay() {
         mLaunchOverlaySetting = true
-        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+        val intent =
+            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
     }
 
@@ -321,18 +388,24 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         manager.setType(RingtoneManager.TYPE_ALL)
         val cursor = manager.cursor
         while (cursor.moveToNext()) {
-            listAlarmData.add(RingtoneData(cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
+            listAlarmData.add(
+                RingtoneData(
+                    cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
                     cursor.getString(RingtoneManager.ID_COLUMN_INDEX),
-                    cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(RingtoneManager.ID_COLUMN_INDEX)))
+                    cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" + cursor.getString(
+                        RingtoneManager.ID_COLUMN_INDEX
+                    )
+                )
+            )
         }
     }
 
     fun switchAlarmResource() =
-            if (ClockSettingDataHolder.alarmCheckState) {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
-            } else {
-                imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
-            }
+        if (ClockSettingDataHolder.alarmCheckState) {
+            imageAlarm?.setImageResource(R.drawable.icon_alarm_on)
+        } else {
+            imageAlarm?.setImageResource(R.drawable.icon_alarm_off)
+        }
 
     private fun resetAlarmState() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -371,9 +444,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "Overlay clock is invalid for api " + Build.VERSION.SDK_INT)
             return
         }
+
+        val overlayClockCondition =
+            Settings.canDrawOverlays(this) && isPostNotificationPermissionGranted()
         // 他のアプリに重ねての表示が許可されていなければ、
         // ホーム画面などで時計を表示させないようにする
-        if (!Settings.canDrawOverlays(this)) {
+        if (!overlayClockCondition) {
             if (ClockSettingDataHolder.validOverlayClock) {
                 ClockSettingDataHolder.validOverlayClock = false
                 fileIOWrapper.saveValidOverlayClock()
@@ -388,7 +464,7 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         if (mPopupSetting == null || mPopupSetting!!.popupWindow == null || !(mPopupSetting!!.popupWindow!!.isShowing)) {
             return
         }
-        if (Settings.canDrawOverlays(this)) {
+        if (overlayClockCondition) {
             mPopupSetting?.processCheckOverlayChanging(true)
         } else {
             mPopupSetting?.checkOverlayClock?.isChecked = false
@@ -401,7 +477,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         intent.putExtra("alarm_uri", ClockSettingDataHolder.nowAlarmSound?.uri)
         intent.putExtra("alarm_time", ClockSettingDataHolder.alarmTime)
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         } else {
             PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
@@ -421,12 +502,30 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
                 calForService.add(Calendar.DATE, 1)
             }
 
-            Log.i(TAG, "alarmTime = " + dateFormat.format(calForService.time) + " " + timeFormat.format(calForService.time))
+            Log.i(
+                TAG,
+                "alarmTime = " + dateFormat.format(calForService.time) + " " + timeFormat.format(
+                    calForService.time
+                )
+            )
 
             when {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(calForService.timeInMillis, null), pendingIntent)
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager.setExact(AlarmManager.RTC_WAKEUP, calForService.timeInMillis, pendingIntent)
-                else -> alarmManager.set(AlarmManager.RTC_WAKEUP, calForService.timeInMillis, pendingIntent)
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> alarmManager.setAlarmClock(
+                    AlarmManager.AlarmClockInfo(calForService.timeInMillis, null),
+                    pendingIntent
+                )
+
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    calForService.timeInMillis,
+                    pendingIntent
+                )
+
+                else -> alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    calForService.timeInMillis,
+                    pendingIntent
+                )
             }
         } else {
             pendingIntent.cancel()
@@ -442,10 +541,11 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         mp = MediaPlayer.create(this, Uri.parse(ClockSettingDataHolder.nowAlarmSound?.uri))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mp.setAudioAttributes(
-                    AudioAttributes
-                            .Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build())
+                AudioAttributes
+                    .Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
         } else {
             mp.setAudioStreamType(AudioManager.STREAM_ALARM)
         }
@@ -582,26 +682,47 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "premium member so do not load ad.")
             return
         }
-        MobileAds.initialize(this) {}
-        val adRequest = AdRequest.Builder().build()
+        MobileAds.initialize(this)
 
-        mInterAd0 = InterstitialAd(this)
-
-        mInterAd0!!.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                super.onAdClosed()
-                // 広告リロード
-                mInterAd0?.loadAd(adRequest)
-            }
-        }
-
-        if (isTest) {
-            mInterAd0!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        val adUnitId = if (isTest) {
+            "ca-app-pub-3940256099942544/1033173712"
         } else {
-            mInterAd0!!.adUnitId = "ca-app-pub-6669415411907480/8088997953"
+            "ca-app-pub-6669415411907480/8088997953"
         }
 
-        mInterAd0!!.loadAd(adRequest)
+        val adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(this, adUnitId, adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    Log.i(TAG, "onAdLoaded")
+                    mInterAd0 = interstitialAd
+                    interstitialAd.fullScreenContentCallback =
+                        object : FullScreenContentCallback() {
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                Log.d(TAG, "The ad0 failed to show.")
+                                mInterAd0 = null
+                                loadAds()
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                Log.d(TAG, "The ad0 was shown.")
+                                mInterAd0 = null
+                            }
+
+                            override fun onAdDismissedFullScreenContent() {
+                                Log.d(TAG, "The ad0 was dismissed.")
+                                loadAds()
+                            }
+                        }
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+                    Log.d(TAG, loadAdError.message)
+                    mInterAd0 = null
+                }
+            })
     }
 
     /**
@@ -612,13 +733,55 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             Log.d(TAG, "premium member so do not show ad.")
             return
         }
-        if (mInterAd0 == null || !mInterAd0!!.isLoaded) {
+        if (mInterAd0 == null) {
             Log.d(TAG, "Ad is finished loading so is not show.")
+            loadAds()
             return
         }
         if (countClickAdKey++ % 5 != 0) {
             return
         }
-        mInterAd0!!.show()
+        mInterAd0!!.show(this)
+    }
+
+    /**
+     * 通知権限要求処理
+     */
+    fun requestPostNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionArray = arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionArray,
+                REQUEST_POST_NOTIFICATION_PERMISSION
+            )
+        }
+    }
+
+    /**
+     * 通知権限許可状態
+     *
+     * @return true:許可済み/false:許可されていない
+     */
+    fun isPostNotificationPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            isEnableNotificationSetting()
+        }
+    }
+
+    private fun isEnableNotificationSetting(): Boolean {
+        val manager = NotificationManagerCompat.from(this)
+        val channel = manager.getNotificationChannel(NotificationCreator.CHANNEL_ID)
+        val isNotice = manager.areNotificationsEnabled()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            (channel == null || channel.importance != NotificationManager.IMPORTANCE_DEFAULT) && isNotice
+        } else {
+            isNotice
+        }
     }
 }

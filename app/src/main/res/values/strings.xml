@@ -45,4 +45,5 @@
     <string name="failed_to_purchase_item">Failed to purchase item.\nPlease check your payment method.</string>
     <string name="msg_update_premium_state_pending">The item you purchased will be reflected after the purchase process is completed.\n\n(※)Please display this screen again after a few minutes.</string>
     <string name="msg_must_upgrade_premium">You must upgrade this app to set background picture.\nDo you want to display operation screen?</string>
+    <string name="msg_grant_post_notification_permission">You must allow notification permission to enable the function.\nYou can also do it on your devices settings app.</string>
 </resources>
