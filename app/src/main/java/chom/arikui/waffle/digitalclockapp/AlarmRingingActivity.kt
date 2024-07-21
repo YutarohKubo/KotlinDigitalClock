@@ -11,7 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import kotlinx.android.synthetic.main.activity_alarm_ringing.*
+import android.widget.ImageButton
+import android.widget.TextView
 
 class AlarmRingingActivity : AppCommonActivity() {
 
@@ -47,8 +48,8 @@ class AlarmRingingActivity : AppCommonActivity() {
         }
         mediaPlayer?.isLooping = true
 
-        text_alarm_time_now_ringing.text = intentAlarm.getStringExtra("alarm_time")
-        button_alarm_stop.setOnClickListener { _ ->
+        findViewById<TextView>(R.id.text_alarm_time_now_ringing).text = intentAlarm.getStringExtra("alarm_time")
+        findViewById<ImageButton>(R.id.button_alarm_stop).setOnClickListener { _ ->
             if (mediaPlayer?.isPlaying!!) {
                 mediaPlayer?.stop()
             }
