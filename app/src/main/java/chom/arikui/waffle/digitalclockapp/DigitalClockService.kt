@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.view.*
@@ -60,13 +61,18 @@ class DigitalClockService : Service(), CoroutineScope {
         // Notification押下時のPendingIntent受信先のレシーバー登録
         switchDisplayReceiver = notificationCreator.SwitchDisplayReceiver()
         val switchDisplayFilter = IntentFilter(NotificationCreator.ACTION_SWITCH_DISPLAY)
-        registerReceiver(switchDisplayReceiver, switchDisplayFilter)
         notificationCreator.clockDisplayListener = { visibility ->
             clockView?.visibility = if (visibility) View.VISIBLE else View.GONE
         }
         exitReceiver = notificationCreator.ExitReceiver()
         val exitFilter = IntentFilter(NotificationCreator.ACTION_EXIT)
-        registerReceiver(exitReceiver, exitFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(switchDisplayReceiver, switchDisplayFilter, RECEIVER_NOT_EXPORTED)
+            registerReceiver(exitReceiver, exitFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(switchDisplayReceiver, switchDisplayFilter)
+            registerReceiver(exitReceiver, exitFilter)
+        }
 
         val overlayType = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
