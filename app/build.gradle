@@ -1,25 +1,21 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 33
     defaultConfig {
         applicationId "chom.arikui.waffle.digitalclockapp"
+        compileSdk 34
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdkVersion 34
         multiDexEnabled true
         versionCode 17
         versionName "2.2.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildTypes {
         release {
@@ -29,7 +25,9 @@ android {
     }
     buildFeatures {
         dataBinding true
+        viewBinding = true
     }
+    namespace 'chom.arikui.waffle.digitalclockapp'
 }
 
 dependencies {

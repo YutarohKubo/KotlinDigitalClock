@@ -38,30 +38,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import kotlinx.android.synthetic.main.activity_main.activity_root
-import kotlinx.android.synthetic.main.activity_main.bottom_area
-import kotlinx.android.synthetic.main.activity_main.button_alarm
-import kotlinx.android.synthetic.main.activity_main.frame_now_day
-import kotlinx.android.synthetic.main.activity_main.frame_now_hour
-import kotlinx.android.synthetic.main.activity_main.frame_now_minute
-import kotlinx.android.synthetic.main.activity_main.frame_now_month
-import kotlinx.android.synthetic.main.activity_main.frame_now_second
-import kotlinx.android.synthetic.main.activity_main.frame_now_year
-import kotlinx.android.synthetic.main.activity_main.frame_top_alarm_time
-import kotlinx.android.synthetic.main.activity_main.image_alarm
-import kotlinx.android.synthetic.main.activity_main.image_setting
-import kotlinx.android.synthetic.main.activity_main.text_divide_hour_and_minute
-import kotlinx.android.synthetic.main.activity_main.text_now_date
-import kotlinx.android.synthetic.main.activity_main.text_now_day
-import kotlinx.android.synthetic.main.activity_main.text_now_hour
-import kotlinx.android.synthetic.main.activity_main.text_now_minute
-import kotlinx.android.synthetic.main.activity_main.text_now_month
-import kotlinx.android.synthetic.main.activity_main.text_now_second
-import kotlinx.android.synthetic.main.activity_main.text_now_time
-import kotlinx.android.synthetic.main.activity_main.text_now_week
-import kotlinx.android.synthetic.main.activity_main.text_now_year
-import kotlinx.android.synthetic.main.activity_main.text_top_alarm_time
-import kotlinx.android.synthetic.main.activity_main.time_area
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -145,9 +121,9 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         fileIOWrapper.loadBackgroundPic()
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            imageAlarm = image_alarm
+            imageAlarm = findViewById(R.id.image_alarm)
             switchAlarmResource()
-            button_alarm.setOnClickListener { _ ->
+            findViewById<View>(R.id.button_alarm).setOnClickListener { _ ->
                 showInterstitial()
                 if (listAlarmData.size == 0) {
                     Toast.makeText(
@@ -161,50 +137,53 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
                 mPopupAlarm?.showPopup()
             }
 
-            frame_now_day.setOnLongClickListener(mLongClickListener)
-            textNowDay = text_now_day
+            findViewById<View>(R.id.frame_now_day).setOnLongClickListener(mLongClickListener)
+            textNowDay = findViewById(R.id.text_now_day)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_DAY_COLOR_FILE_NAME)
-            frame_now_month.setOnLongClickListener(mLongClickListener)
-            textNowMonth = text_now_month
+            findViewById<View>(R.id.frame_now_month).setOnLongClickListener(mLongClickListener)
+            textNowMonth = findViewById(R.id.text_now_month)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_MONTH_COLOR_FILE_NAME)
-            frame_now_year.setOnLongClickListener(mLongClickListener)
-            textNowYear = text_now_year
+            findViewById<View>(R.id.frame_now_year).setOnLongClickListener(mLongClickListener)
+            textNowYear = findViewById(R.id.text_now_year)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_YEAR_COLOR_FILE_NAME)
-            text_now_week.setOnLongClickListener(mLongClickListener)
-            textNowWeek = text_now_week
+            findViewById<TextView>(R.id.text_now_week).setOnLongClickListener(mLongClickListener)
+            textNowWeek = findViewById(R.id.text_now_week)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_WEEK_COLOR_FILE_NAME)
-            frame_now_hour.setOnLongClickListener(mLongClickListener)
-            textNowHour = text_now_hour
+            findViewById<View>(R.id.frame_now_hour).setOnLongClickListener(mLongClickListener)
+            textNowHour = findViewById(R.id.text_now_hour)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_HOUR_COLOR_FILE_NAME)
-            text_divide_hour_and_minute.setOnLongClickListener(mLongClickListener)
-            textDivideHourAndMinute = text_divide_hour_and_minute
+            findViewById<TextView>(R.id.text_divide_hour_and_minute).setOnLongClickListener(
+                mLongClickListener
+            )
+            textDivideHourAndMinute = findViewById(R.id.text_divide_hour_and_minute)
             fileIOWrapper.loadColor(FileIOWrapper.DIVIDE_HOUR_AND_MINUTE_COLOR_FILE_NAME)
-            frame_now_minute.setOnLongClickListener(mLongClickListener)
-            textNowMinute = text_now_minute
+            findViewById<View>(R.id.frame_now_minute).setOnLongClickListener(mLongClickListener)
+            textNowMinute = findViewById(R.id.text_now_minute)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_MINUTE_COLOR_FILE_NAME)
-            frame_now_second.setOnLongClickListener(mLongClickListener)
-            textNowSecond = text_now_second
+            findViewById<View>(R.id.frame_now_second).setOnLongClickListener(mLongClickListener)
+            textNowSecond = findViewById(R.id.text_now_second)
             fileIOWrapper.loadColor(FileIOWrapper.NOW_SECOND_COLOR_FILE_NAME)
-            activity_root.setOnLongClickListener(mLongClickListener)
-            backgroundFrame = activity_root
+            findViewById<View>(R.id.activity_root).setOnLongClickListener(mLongClickListener)
+            backgroundFrame = findViewById(R.id.activity_root)
             fileIOWrapper.loadColor(FileIOWrapper.CLOCK_BACKGROUND_COLOR)
-            frame_top_alarm_time.setOnLongClickListener(mLongClickListener)
-            textTopAlarmTime = text_top_alarm_time
+            findViewById<View>(R.id.frame_top_alarm_time).setOnLongClickListener(mLongClickListener)
+            textTopAlarmTime = findViewById(R.id.text_top_alarm_time)
             textTopAlarmTime.text = ClockSettingDataHolder.alarmTime
             imagePic = findViewById(R.id.image_pic)
             fileIOWrapper.loadColor(FileIOWrapper.TOP_ALARM_TIME_COLOR_FILE_NAME)
 
             // Android8.0以上の端末で、ホーム画面などで時計を表示可能にするため、
             // ギアメニューキーを非表示にする
+            val imageSetting = findViewById<ImageView>(R.id.image_setting)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                image_setting.visibility = View.VISIBLE
-                image_setting.setOnClickListener { _ ->
+                imageSetting.visibility = View.VISIBLE
+                imageSetting.setOnClickListener { _ ->
                     showInterstitial()
                     mPopupSetting = PopupSetting(this)
                     mPopupSetting?.showPopup()
                 }
             } else {
-                image_setting.visibility = View.GONE
+                imageSetting.visibility = View.GONE
             }
             updateClockColor()
             updateClockBackgroundPic()
@@ -212,12 +191,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
             updateNumBackgroundState()
 
             if (resources.getBoolean(R.bool.is_tablet)) {
-                val bottomArea = bottom_area
+                val bottomArea = findViewById<View>(R.id.bottom_area)
                 val lp = bottomArea.layoutParams
                 val mlp = lp as ViewGroup.MarginLayoutParams
                 mlp.topMargin = 40
                 bottomArea.layoutParams = mlp
-                val timeArea = time_area
+                val timeArea = findViewById<View>(R.id.time_area)
                 val lpTimeArea = timeArea.layoutParams
                 val mlpTimeArea = lpTimeArea as ViewGroup.MarginLayoutParams
                 mlpTimeArea.topMargin = 80
@@ -330,29 +309,27 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
         val cal = Calendar.getInstance()
         nowTime = cal.time
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (text_now_date != null) {
-                text_now_date.text = dateFormat.format(nowTime)
-                text_now_time.text = timeFormat.format(nowTime)
-            }
+            val textNowDate = findViewById<TextView>(R.id.text_now_date)
+            val textNowTime = findViewById<TextView>(R.id.text_now_time)
+            textNowDate.text = dateFormat.format(nowTime)
+            textNowTime.text = timeFormat.format(nowTime)
         } else {
-            if (text_now_day != null) {
-                text_now_day.text = dayFormat.format(nowTime)
-                text_now_month.text = monthFormat.format(nowTime)
-                text_now_year.text = yearFormat.format(nowTime)
-                text_now_week.text = when (cal.get(Calendar.DAY_OF_WEEK)) {
-                    Calendar.SUNDAY -> "SUN"
-                    Calendar.MONDAY -> "MON"
-                    Calendar.TUESDAY -> "TUE"
-                    Calendar.WEDNESDAY -> "WED"
-                    Calendar.THURSDAY -> "THU"
-                    Calendar.FRIDAY -> "FRI"
-                    Calendar.SATURDAY -> "SAT"
-                    else -> "ERR"
-                }
-                text_now_hour.text = hourFormat.format(nowTime)
-                text_now_minute.text = minuteFormat.format(nowTime)
-                text_now_second.text = secondFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_day).text = dayFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_month).text = monthFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_year).text = yearFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_week).text = when (cal.get(Calendar.DAY_OF_WEEK)) {
+                Calendar.SUNDAY -> "SUN"
+                Calendar.MONDAY -> "MON"
+                Calendar.TUESDAY -> "TUE"
+                Calendar.WEDNESDAY -> "WED"
+                Calendar.THURSDAY -> "THU"
+                Calendar.FRIDAY -> "FRI"
+                Calendar.SATURDAY -> "SAT"
+                else -> "ERR"
             }
+            findViewById<TextView>(R.id.text_now_hour).text = hourFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_minute).text = minuteFormat.format(nowTime)
+            findViewById<TextView>(R.id.text_now_second).text = secondFormat.format(nowTime)
         }
     }
 
