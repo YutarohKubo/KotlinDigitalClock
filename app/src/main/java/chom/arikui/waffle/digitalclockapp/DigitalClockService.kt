@@ -67,8 +67,8 @@ class DigitalClockService : Service(), CoroutineScope {
         exitReceiver = notificationCreator.ExitReceiver()
         val exitFilter = IntentFilter(NotificationCreator.ACTION_EXIT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(switchDisplayReceiver, switchDisplayFilter, RECEIVER_NOT_EXPORTED)
-            registerReceiver(exitReceiver, exitFilter, RECEIVER_NOT_EXPORTED)
+            registerReceiver(switchDisplayReceiver, switchDisplayFilter, RECEIVER_EXPORTED)
+            registerReceiver(exitReceiver, exitFilter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(switchDisplayReceiver, switchDisplayFilter)
             registerReceiver(exitReceiver, exitFilter)
