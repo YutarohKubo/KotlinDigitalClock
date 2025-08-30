@@ -5,9 +5,9 @@ apply plugin: 'kotlin-kapt'
 android {
     defaultConfig {
         applicationId "chom.arikui.waffle.digitalclockapp"
-        compileSdk 34
+        compileSdk 36
         minSdkVersion 19
-        targetSdkVersion 34
+        targetSdkVersion 36
         multiDexEnabled true
         versionCode 12
         versionName "0.0.0"

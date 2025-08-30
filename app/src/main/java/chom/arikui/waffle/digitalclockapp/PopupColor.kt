@@ -182,7 +182,7 @@ class PopupColor(private val activity: MainActivity) {
                 // 表示色の統一チェックボックスは非表示とする
                 checkBoxUnifyArea.visibility = View.GONE
                 val frameHeight = CalculateUtil.convertDp2Px(96, activity)
-                val frameWidth = frameHeight * (displaySize.x.toFloat() / displaySize.y)
+                val frameWidth = frameHeight * (displaySize.width().toFloat() / displaySize.height())
                 val lParam = RelativeLayout.LayoutParams(frameWidth.toInt(), frameHeight.toInt())
                 lParam.setMargins(0, 0, 0, CalculateUtil.convertDp2Px(5, activity).toInt())
                 sampleBackgroundFrame.layoutParams = lParam
@@ -498,8 +498,8 @@ class PopupColor(private val activity: MainActivity) {
         mPopupWindow?.isOutsideTouchable = true
         mPopupWindow?.isFocusable = true
 
-        mPopupWindow?.width = (displaySize.x * 1.0).toInt()
-        mPopupWindow?.height = (displaySize.y * 1.0).toInt()
+        mPopupWindow?.width = (displaySize.width() * 0.98).toInt()
+        mPopupWindow?.height = (displaySize.height() * 0.98).toInt()
 
         // 画面中央に表示
         mPopupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

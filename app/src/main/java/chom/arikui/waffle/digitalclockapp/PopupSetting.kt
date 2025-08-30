@@ -2,6 +2,7 @@ package chom.arikui.waffle.digitalclockapp
 
 import android.content.Intent
 import android.graphics.Point
+import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.view.Gravity
@@ -66,12 +67,11 @@ class PopupSetting(private val activity: MainActivity) {
         popupWindow?.isOutsideTouchable = true
         popupWindow?.isFocusable = true
 
-        val d = activity.windowManager.defaultDisplay
-        val p2 = Point()
         // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p2)
+        val size = Rect()
+        activity.window.decorView.getWindowVisibleDisplayFrame(size)
 
-        popupWindow?.width = (p2.x * 1.0).toInt()
+        popupWindow?.width = (size.width() * 0.98).toInt()
 
         // 画面中央に表示
         popupWindow?.showAtLocation(popupView, Gravity.CENTER, 0, 0)

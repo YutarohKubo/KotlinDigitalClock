@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Rect
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -622,13 +623,12 @@ class MainActivity : AppCommonActivity(), CoroutineScope {
     /**
      * ナビゲージョンバーを除く画面サイズを取得する
      */
-    fun displaySize(): Point {
-        val d = windowManager.defaultDisplay
-        val p = Point()
+    fun displaySize(): Rect {
         // ナビゲーションバーを除く画面サイズを取得
-        d.getSize(p)
+        val size = Rect()
+        window.decorView.getWindowVisibleDisplayFrame(size)
 
-        return p
+        return size
     }
 
     /**
